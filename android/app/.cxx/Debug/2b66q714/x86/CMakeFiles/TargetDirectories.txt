@@ -1,0 +1,2 @@
+D:/aimSwasthya/Aim_swasthya_app/android/app/.cxx/Debug/2b66q714/x86/CMakeFiles/edit_cache.dir
+D:/aimSwasthya/Aim_swasthya_app/android/app/.cxx/Debug/2b66q714/x86/CMakeFiles/rebuild_cache.dir

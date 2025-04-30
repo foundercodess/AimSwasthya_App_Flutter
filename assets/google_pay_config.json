@@ -1,0 +1,23 @@
+{
+  "provider": "google_pay",
+  "merchant_id": "your_merchant_id",
+  "merchant_name": "Your Merchant Name",
+  "gateway": {
+    "name": "stripe",
+    "merchant_id": "your_stripe_merchant_id"
+  },
+  "allowed_payment_methods": [
+    {
+      "type": "CARD",
+      "parameters": {
+        "allowed_auth_methods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+        "allowed_card_networks": ["AMEX", "DISCOVER", "MASTERCARD", "VISA"]
+      }
+    }
+  ],
+  "transaction_info": {
+    "total_price_status": "FINAL",
+    "total_price": "99.99",
+    "currency_code": "USD"
+  }
+}

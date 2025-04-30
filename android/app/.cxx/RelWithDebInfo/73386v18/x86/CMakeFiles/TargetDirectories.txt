@@ -1,0 +1,2 @@
+D:/anshika/aim_swasthya_latest-ui_almost_done/android/app/.cxx/RelWithDebInfo/73386v18/x86/CMakeFiles/edit_cache.dir
+D:/anshika/aim_swasthya_latest-ui_almost_done/android/app/.cxx/RelWithDebInfo/73386v18/x86/CMakeFiles/rebuild_cache.dir

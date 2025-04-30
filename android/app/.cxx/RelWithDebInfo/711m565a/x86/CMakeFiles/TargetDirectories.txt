@@ -1,0 +1,2 @@
+D:/projects/atul sir projects/AimSwasthya_App/android/app/.cxx/RelWithDebInfo/711m565a/x86/CMakeFiles/edit_cache.dir
+D:/projects/atul sir projects/AimSwasthya_App/android/app/.cxx/RelWithDebInfo/711m565a/x86/CMakeFiles/rebuild_cache.dir

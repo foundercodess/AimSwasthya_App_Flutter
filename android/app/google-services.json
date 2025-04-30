@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "855099095971",
+    "project_id": "aimswasthya-4f879",
+    "storage_bucket": "aimswasthya-4f879.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855099095971:android:c0576a8e0c813453d27816",
+        "android_client_info": {
+          "package_name": "com.aimswasthya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855099095971-3qfmnp79iiqs40en70ohrd24u9t469pm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aimswasthya",
+            "certificate_hash": "c7de8f09913b5d98abc2d7b828c76d802173420e"
+          }
+        },
+        {
+          "client_id": "855099095971-jeb131rjko424n74v78vnhugcb4qoedm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaFBrLaqWqXNhjPzXEXXu71n7WAPShLCY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855099095971-jeb131rjko424n74v78vnhugcb4qoedm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "855099095971-pepre4uhjlf8i8hlel4nghlra9o4e3lc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aimswasthya"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,2 @@
+D:/AimSwasthya_App-main/android/app/.cxx/RelWithDebInfo/2q1i6e6i/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/AimSwasthya_App-main/android/app/.cxx/RelWithDebInfo/2q1i6e6i/armeabi-v7a/CMakeFiles/rebuild_cache.dir
