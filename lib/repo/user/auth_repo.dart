@@ -1,5 +1,6 @@
 import 'package:aim_swasthya/helper/network/network_api_services.dart';
 import 'package:aim_swasthya/res/api_urls.dart';
+import 'package:aim_swasthya/utils/show_server_error.dart';
 import 'package:flutter/foundation.dart';
 
 class PatientAuthRepo{
@@ -12,6 +13,7 @@ class PatientAuthRepo{
       await _apiServices.getPostApiResponse(PatientApiUrl.sendOtp,data);
       return response;
     } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
       if (kDebugMode) {
         print('Error occurred during sendOtpApi: $e');
       }
@@ -26,6 +28,7 @@ class PatientAuthRepo{
       await _apiServices.getPostApiResponse(PatientApiUrl.isRegistered,data);
       return response;
     } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
       if (kDebugMode) {
         print('Error occurred during isRegisterApi: $e');
       }
@@ -40,6 +43,7 @@ class PatientAuthRepo{
       await _apiServices.getPostApiResponse(PatientApiUrl.verifyOtp,data);
       return response;
     } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
       if (kDebugMode) {
         print('Error occurred during verifyOtpApi: $e');
       }
@@ -55,6 +59,7 @@ class PatientAuthRepo{
       print(response);
       return response;
     } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
       if (kDebugMode) {
         print('Error occurred during patientRegisterApi: $e');
       }

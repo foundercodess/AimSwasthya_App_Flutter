@@ -134,7 +134,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   child: Pinput(
                     onChanged: (v) {
                       if (v.length == 4) {
-                        if(authCon.userRole==1){
+                        if( authCon.userRole == 1){
                           doctorAuthCon.verifyDocApi(context, otpController.text, authCon.userRole);
                         }
                        else {

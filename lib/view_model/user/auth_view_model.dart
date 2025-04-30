@@ -169,11 +169,12 @@ class PatientAuthViewModel extends ChangeNotifier {
       "email": _senOtpData['email'],
       "type": _senOtpData['type']
     };
+    print(jsonEncode(data));
     _patientAuthRepo.sendOtpApi(data).then((value) {
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         _senOtpData['id'] = value['user']['patient_id'];
-        if (_senOtpData['email'] != null && _senOtpData['email'] != "") {
+        if (_senOtpData['email'] != null && _senOtpData['email'] != "" ) {
           UserViewModel().saveUser(2);
         }
         LoaderOverlay().hide();
@@ -184,7 +185,7 @@ class PatientAuthViewModel extends ChangeNotifier {
             RoutesName.otpScreen,
             arguments: {
               'phone': _senOtpData['phone'],
-              'id': value['user']['patient_id']
+              'id': value['user']['doctor_id']
             },
           );
         }

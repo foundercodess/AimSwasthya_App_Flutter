@@ -164,7 +164,6 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
             _isListening = false;
             notifyListeners();
           }
-
         },
         onError: (error) {
           _isListening = false;
@@ -187,7 +186,7 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
 
   void launchPlayServices() async {
     const url =
-        "https://play.google.com/store/apps/details?id=com.google.android.gms";
+        "https://play.google.com/store/apps/details?id=com.google.android.tts";
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     }
@@ -197,7 +196,13 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
     showCupertinoDialog(
         context: context,
         builder: (_) => ActionOverlay(
+              height: Sizes.screenHeight / 3.8,
+              padding: EdgeInsets.only(
+                  left: Sizes.screenWidth * 0.03,
+                  right: Sizes.screenWidth * 0.03,
+                  top: Sizes.screenHeight * 0.02),
               onTap: () {
+                Navigator.pop(context);
                 launchPlayServices();
               },
               yesLabel: "Open Play Store",

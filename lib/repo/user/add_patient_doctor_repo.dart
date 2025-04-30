@@ -2,6 +2,8 @@ import 'package:aim_swasthya/helper/network/network_api_services.dart';
 import 'package:aim_swasthya/res/api_urls.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../utils/show_server_error.dart';
+
 class AddPatientDoctorRepo {
   final _apiServices = NetworkApiServices();
 
@@ -12,6 +14,7 @@ class AddPatientDoctorRepo {
       return response;
 
     } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
       if (kDebugMode) {
         print('Error occurred during addDoctorApi: $e');
       }

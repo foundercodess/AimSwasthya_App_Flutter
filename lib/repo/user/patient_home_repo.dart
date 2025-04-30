@@ -29,6 +29,7 @@ class PatientHomeRepo {
       await _apiServices.getPostApiResponse(PatientApiUrl.getLocation, data);
       return GetLocationModel.fromJson(response);
     } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
       if (kDebugMode) {
         print('Error occurred during getLocationApi: $e');
       }
