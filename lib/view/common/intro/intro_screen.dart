@@ -101,13 +101,13 @@ class _IntroScreenState extends State<IntroScreen> {
                     children: [
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, RoutesName.doctorBottomNevBar, (context) => false);
-                          // authCon.setUserRole(1);
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   RoutesName.onBodingScreen,
-                          // );
+                          // Navigator.pushNamedAndRemoveUntil(
+                          //     context, RoutesName.doctorBottomNevBar, (context) => false);
+                          authCon.setUserRole(1);
+                          Navigator.pushNamed(
+                            context,
+                            RoutesName.onBodingScreen,
+                          );
                         },
                         child: TextConst(AppLocalizations.of(context)!.are_doctor,
                             size: Sizes.fontSizeFourPFive,

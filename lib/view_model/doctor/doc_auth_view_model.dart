@@ -106,7 +106,13 @@ class DoctorAuthViewModel extends ChangeNotifier {
     final authCon = Provider.of<UserRegisterViewModel>(context, listen: false);
     LoaderOverlay().show(context);
     setLoading(true);
-    Map data = {"phone": phone, "email": email, "type": type};
+    print("ffktgtr");
+    Map data = {
+      "phone": phone,
+      "email": email,
+      "type": type
+    };
+    print(jsonEncode(data));
     _doctorAuthRepo.isRegisterDocApi(data).then((value) {
       print(value);
       Utils.show(value['message'], context);
@@ -163,10 +169,10 @@ class DoctorAuthViewModel extends ChangeNotifier {
       "email": _senOtpData['email'],
       "type": _senOtpData['type']
     };
+
     print(data);
     _doctorAuthRepo.docSendOtpApi(data).then((value) {
       Utils.show(value['message'], context);
-
       print(value);
       if (value['status'] == true) {
         _senOtpData['id'] = value['user']['doctor_id'];
@@ -289,12 +295,10 @@ class DoctorAuthViewModel extends ChangeNotifier {
       _doctorAuthRepo.doctorRegisterApi(data).then((value) {
         Utils.show(value['message'], context);
         if (value['status'] == true) {
-          UserViewModel()
-              .saveUser(value['data']['doctor_id']);
+          UserViewModel().saveUser(value['data']['doctor_id']);
           Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           UserViewModel().saveRole(2);
-        }
-        else {
+        } else {
           Utils.show(value['message'], context);
         }
       }).onError((error, stackTrace) {
