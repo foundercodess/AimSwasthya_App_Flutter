@@ -65,74 +65,82 @@ class Data {
   }
 }
 
-// class Doctors {
-//   int? doctorId;
-//   String? doctorName;
-//   String? qualification;
-//   String? email;
-//   String? imageUrl;
-//   String? experience;
-//   String? phoneNumber;
-//   String? gender;
-//   String? smcNumber;
-//   String? averageRating;
-//   int? specializationId;
-//   String? specializationName;
-//   int? sortNumber;
-//   String? signedImageUrl;
-//
-//   Doctors(
-//       {this.doctorId,
-//         this.doctorName,
-//         this.qualification,
-//         this.email,
-//         this.imageUrl,
-//         this.experience,
-//         this.phoneNumber,
-//         this.gender,
-//         this.smcNumber,
-//         this.averageRating,
-//         this.specializationId,
-//         this.specializationName,
-//         this.sortNumber,
-//         this.signedImageUrl});
-//
-//   Doctors.fromJson(Map<String, dynamic> json) {
-//     doctorId = json['doctor_id'];
-//     doctorName = json['doctor_name'];
-//     qualification = json['qualification'];
-//     email = json['email'];
-//     imageUrl = json['image_url'];
-//     experience = json['experience'];
-//     phoneNumber = json['phone_number'];
-//     gender = json['gender'];
-//     smcNumber = json['smc_number'];
-//     averageRating = json['average_rating'];
-//     specializationId = json['specialization_id'];
-//     specializationName = json['specialization_name'];
-//     sortNumber = json['sort_number'];
-//     signedImageUrl = json['signedImageUrl'];
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     data['doctor_id'] = doctorId;
-//     data['doctor_name'] = doctorName;
-//     data['qualification'] = qualification;
-//     data['email'] = email;
-//     data['image_url'] = imageUrl;
-//     data['experience'] = experience;
-//     data['phone_number'] = phoneNumber;
-//     data['gender'] = gender;
-//     data['smc_number'] = smcNumber;
-//     data['average_rating'] = averageRating;
-//     data['specialization_id'] = specializationId;
-//     data['specialization_name'] = specializationName;
-//     data['sort_number'] = sortNumber;
-//     data['signedImageUrl'] = signedImageUrl;
-//     return data;
-//   }
-// }
+class Doctors {
+  int? doctorId;
+  String? doctorName;
+  String? qualification;
+  String? email;
+  String? imageUrl;
+  String? experience;
+  String? phoneNumber;
+  String? gender;
+  String? smcNumber;
+  String? averageRating;
+  int? specializationId;
+  String? specializationName;
+  int? sortNumber;
+  dynamic mostBooked;
+  dynamic topRated;
+  String? signedImageUrl;
+
+  Doctors(
+      {this.doctorId,
+        this.doctorName,
+        this.qualification,
+        this.email,
+        this.imageUrl,
+        this.experience,
+        this.phoneNumber,
+        this.gender,
+        this.smcNumber,
+        this.averageRating,
+        this.specializationId,
+        this.specializationName,
+        this.sortNumber,
+        this.mostBooked,
+        this.topRated,
+        this.signedImageUrl});
+
+  Doctors.fromJson(Map<String, dynamic> json) {
+    doctorId = json['doctor_id'];
+    doctorName = json['doctor_name'];
+    qualification = json['qualification'];
+    email = json['email'];
+    imageUrl = json['image_url'];
+    experience = json['experience'];
+    phoneNumber = json['phone_number'];
+    gender = json['gender'];
+    smcNumber = json['smc_number'];
+    averageRating = json['average_rating'];
+    specializationId = json['specialization_id'];
+    specializationName = json['specialization_name'];
+    sortNumber = json['sort_number'];
+    mostBooked = json['most_booked'];
+    topRated = json['top_rated'];
+    signedImageUrl = json['signedImageUrl'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['doctor_id'] = doctorId;
+    data['doctor_name'] = doctorName;
+    data['qualification'] = qualification;
+    data['email'] = email;
+    data['image_url'] = imageUrl;
+    data['experience'] = experience;
+    data['phone_number'] = phoneNumber;
+    data['gender'] = gender;
+    data['smc_number'] = smcNumber;
+    data['average_rating'] = averageRating;
+    data['specialization_id'] = specializationId;
+    data['specialization_name'] = specializationName;
+    data['sort_number'] = sortNumber;
+    data['most_booked'] = mostBooked;
+    data['top_rated'] = topRated;
+    data['signedImageUrl'] = signedImageUrl;
+    return data;
+  }
+}
 
 class Appointments {
   int? appointmentId;

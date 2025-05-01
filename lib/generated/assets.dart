@@ -2,7 +2,8 @@
 class Assets {
   Assets._();
 
-  static const String aimSwasthyaAppAssetsNoDataFound = 'assets/no_data_found.png';
+  static const String aimSwasthyaAppFlutterAssetsNoDataFound = 'assets/no_data_found.png';
+  static const String assetsClinicLocation = 'assets/clinic_location.png';
   static const String assetsGooglePayConfig = 'assets/google_pay_config.json';
   static const String assetsGroupInfo = 'assets/groupInfo.png';
   static const String assetsIconsArrowDown = 'assets/icons/arrow_down.png';
@@ -100,6 +101,7 @@ class Assets {
   static const String logoAimswasthyaBox = 'assets/logo/aimswasthyaBox.png';
   static const String logoAppLogo = 'assets/logo/app_logo.png';
   static const String logoAppLogoTwo = 'assets/logo/app_logo_two.png';
+  static const String logoClinicImage = 'assets/logo/clinicImage.png';
   static const String logoDoctor = 'assets/logo/doctor.jpg';
   static const String logoMedicalDoctor = 'assets/logo/medical_doctor.png';
   static const String logoNoData = 'assets/logo/no_data.png';

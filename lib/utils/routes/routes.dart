@@ -37,6 +37,7 @@ import 'package:aim_swasthya/view/user/symptoms/all_symptoms_screen.dart';
 import 'package:aim_swasthya/view/user/user_home_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../view/doctor/schedule/clinic_location_screen.dart';
 import '../../view/user/drawer/med_reports/uploaded_on.dart';
 
 class Routers {
@@ -123,6 +124,8 @@ class Routers {
         return (context) => const UploadedOn();
       case RoutesName.aboutUsScreen:
         return (context) => const AboutUsScreen();
+        case RoutesName.clinicLocationScreen:
+        return (context) => const ClinicLocationScreen();
 
       default:
         return (context) => const Scaffold(

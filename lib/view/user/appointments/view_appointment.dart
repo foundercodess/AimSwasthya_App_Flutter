@@ -227,7 +227,6 @@ class _ViewAppointmentsScreenState extends State<ViewAppointmentsScreen> {
     final isCancelled = appointmentData.status.toLowerCase() == "cancelled";
     DateTime dateTime =
         DateFormat('dd-MM-yyyy').parse(appointmentData.bookingDate!);
-    // final dateTime = DateTime.parse(appointmentData.bookingDate!);
     final formattedDate = DateFormat('d MMMM').format(dateTime);
     final cancelRescheduleAllowed = isMoreThanOneHourAway(
         appointmentData.bookingDate!, appointmentData.hour24Format!);

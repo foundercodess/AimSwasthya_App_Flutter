@@ -1,10 +1,7 @@
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/switch_btn.dart';
-import 'package:aim_swasthya/utils/routes/routes_name.dart';
-import 'package:aim_swasthya/view/doctor/patients/patient_profile_screen.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_reg_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
 import 'package:aim_swasthya/view_model/user/slot_schedule_view_model.dart';
 import 'package:flutter/material.dart';

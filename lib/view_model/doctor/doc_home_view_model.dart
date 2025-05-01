@@ -26,7 +26,7 @@ class DoctorHomeViewModel extends ChangeNotifier {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
-      "doctor_id": 6,
+      "doctor_id": 8,
     };
     debugPrint("body: $data");
     _doctorHomeRepo.doctorHomeApi(data).then((value) {

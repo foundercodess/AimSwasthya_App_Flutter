@@ -1,4 +1,3 @@
-import 'package:aim_swasthya/model/doctor/revenue_doctor_model.dart';
 import 'package:aim_swasthya/res/border_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/const_drop_down.dart';
@@ -9,14 +8,10 @@ import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_home_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/schedule_doctor_view_model.dart';
-import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../model/doctor/doc_home_model.dart';
 
 class DoctorDashboardScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -44,7 +39,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
-    return  docHomeCon.doctorHomeModel ==null|| docHomeCon.loading
+    return docHomeCon.doctorHomeModel == null || docHomeCon.loading
         ? const Center(child: LoadData())
         : RefreshIndicator(
             color: AppColor.blue,
@@ -128,9 +123,13 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   }
 
   Widget appBarContainer() {
-    final profileCon =
-        Provider.of<DoctorProfileViewModel>(context).doctorProfileModel;
-    return profileCon!= null && profileCon.data!.doctors!.isNotEmpty
+    // final profileCon =
+    //     Provider.of<DoctorProfileViewModel>(context).doctorProfileModel;
+    // return profileCon!= null && profileCon.data!.doctors!.isNotEmpty
+    //     ?
+    final docHomeCon =
+        Provider.of<DoctorHomeViewModel>(context).doctorHomeModel;
+    return docHomeCon != null && docHomeCon.data!.doctors!.isNotEmpty
         ? Container(
             padding: EdgeInsets.only(top: Sizes.screenHeight * 0.015),
             width: Sizes.screenWidth,
@@ -175,7 +174,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                       Sizes.spaceWidth10,
                       TextConst(
-                        "Welcome ${profileCon!.data!.doctors![0].doctorName ?? ""}",
+                        "Welcome ${docHomeCon.data!.doctors![0].doctorName ?? ""}",
                         // AppLocalizations.of(context)!.welcome_Vikram,
                         size: Sizes.fontSizeFive,
                         fontWeight: FontWeight.w500,
@@ -202,10 +201,10 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                           topRight: Radius.circular(40),
                           bottomLeft: Radius.circular(40),
                         ),
-                        child: profileCon.data!.doctors![0].signedImageUrl !=
+                        child: docHomeCon.data!.doctors![0].signedImageUrl !=
                                 null
                             ? Image.network(
-                                profileCon.data!.doctors![0].signedImageUrl ??
+                                docHomeCon.data!.doctors![0].signedImageUrl ??
                                     "",
                                 height: Sizes.screenHeight * 0.155,
                                 width: Sizes.screenWidth * 0.4,
@@ -223,14 +222,14 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextConst(
-                            profileCon.data!.doctors![0].experience ?? "",
+                            docHomeCon.data!.doctors![0].experience ?? "",
                             size: Sizes.fontSizeFour,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,
                           ),
                           Sizes.spaceHeight5,
                           TextConst(
-                            profileCon.data!.doctors![0].doctorName ?? "",
+                            docHomeCon.data!.doctors![0].doctorName ?? "",
                             // "Dr. Vikram Batra",
                             // size: 18,
                             size: Sizes.fontSizeSix,
@@ -238,7 +237,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             color: AppColor.white,
                           ),
                           TextConst(
-                            profileCon.data!.doctors![0].qualification ?? "",
+                            docHomeCon.data!.doctors![0].qualification ?? "",
                             size: Sizes.fontSizeFivePFive,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,
@@ -256,10 +255,15 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                               ),
                               Sizes.spaceWidth5,
                               Sizes.spaceWidth3,
-                              proContainer(AppColor.lightGreen, 'Top choice'),
+                              docHomeCon.data!.doctors![0].mostBooked == "Y"
+                                  ? proContainer(
+                                      AppColor.lightGreen, 'Top choice')
+                                  : const SizedBox(),
                               Sizes.spaceWidth10,
-                              proContainer(
-                                  AppColor.conLightBlue, 'Most booked'),
+                              docHomeCon.data!.doctors![0].topRated == "Y"
+                                  ? proContainer(
+                                      AppColor.conLightBlue, 'Most booked')
+                                  : const SizedBox(),
                             ],
                           ),
                           Sizes.spaceHeight10,
@@ -271,8 +275,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
               ],
             ),
           )
-        : const Center(child: Center(
-          child:SizedBox()));
+        : const Center(child: Center(child: SizedBox()));
   }
 
   Widget proContainer(
@@ -307,123 +310,122 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   Widget seeSchedule() {
     final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
     return docHomeCon.doctorHomeModel != null &&
-        docHomeCon.doctorHomeModel!.data!.appointments!.isNotEmpty
-        ?
-      SizedBox(
-      height: Sizes.screenHeight * 0.1,
-      child:  ListView.builder(
-              padding: const EdgeInsets.all(0),
-              shrinkWrap: true,
-              itemCount: docHomeCon.doctorHomeModel!.data!.appointments!.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final schedule =
-                    docHomeCon.doctorHomeModel!.data!.appointments![index];
-                return Container(
-                  margin: EdgeInsets.only(
-                    left: index == 0
-                        ? Sizes.screenWidth * 0.06
-                        : Sizes.screenWidth * 0.03,
-                    right: index == 1 ? Sizes.screenWidth * 0.03 : 0,
-                  ),
-                  padding: EdgeInsets.only(
-                      left: Sizes.screenWidth * 0.02,
-                      right: Sizes.screenWidth * 0.04,
-                      top: Sizes.screenHeight * 0.01,
-                      bottom: Sizes.screenHeight * 0.01),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: AppColor.docProfileColor.withOpacity(0.5)),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: Sizes.screenHeight * 0.073,
-                            width: Sizes.screenHeight * 0.073,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage(Assets.imagesPatientImg),
-                                fit: BoxFit.cover,
+            docHomeCon.doctorHomeModel!.data!.appointments!.isNotEmpty
+        ? SizedBox(
+            height: Sizes.screenHeight * 0.1,
+            child: ListView.builder(
+                padding: const EdgeInsets.all(0),
+                shrinkWrap: true,
+                itemCount:
+                    docHomeCon.doctorHomeModel!.data!.appointments!.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final schedule =
+                      docHomeCon.doctorHomeModel!.data!.appointments![index];
+                  return Container(
+                    margin: EdgeInsets.only(
+                      left: index == 0
+                          ? Sizes.screenWidth * 0.06
+                          : Sizes.screenWidth * 0.03,
+                      right: index == 1 ? Sizes.screenWidth * 0.03 : 0,
+                    ),
+                    padding: EdgeInsets.only(
+                        left: Sizes.screenWidth * 0.02,
+                        right: Sizes.screenWidth * 0.04,
+                        top: Sizes.screenHeight * 0.01,
+                        bottom: Sizes.screenHeight * 0.01),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColor.docProfileColor.withOpacity(0.5)),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              height: Sizes.screenHeight * 0.073,
+                              width: Sizes.screenHeight * 0.073,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: AssetImage(Assets.imagesPatientImg),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          Sizes.spaceWidth5,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextConst(
-                                schedule.patientName ?? "",
-                                // size: 12,
-                                size: Sizes.fontSizeFour * 1.09,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              Sizes.spaceHeight3,
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    Assets.iconsSolarCalendar,
-                                    // height: 16,
-                                    width: Sizes.screenWidth * 0.04,
-                                  ),
-                                  Sizes.spaceWidth5,
-                                  TextConst(
-                                    DateFormat('d MMM').format(DateTime.parse(
-                                        schedule.appointmentDate.toString())),
-                                    size: Sizes.fontSizeThree * 1.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color(0xff535353),
-                                  ),
-                                  Sizes.spaceWidth5,
-                                  Image.asset(
-                                    Assets.iconsMdiClock,
-                                    // height: 16,
-                                    width: Sizes.screenWidth * 0.041,
-                                  ),
-                                  Sizes.spaceWidth5,
-                                  TextConst(
-                                    schedule.appointmentTime.toString(),
-                                    size: Sizes.fontSizeThree,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color(0xff535353),
-                                  ),
-                                ],
-                              ),
-                              Sizes.spaceHeight5,
-                              ButtonConst(
-                                  title: "Reschedule",
-                                  // size: 10,
-                                  size: Sizes.fontSizeThree * 1.05,
+                            Sizes.spaceWidth5,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextConst(
+                                  schedule.patientName ?? "",
+                                  // size: 12,
+                                  size: Sizes.fontSizeFour * 1.09,
                                   fontWeight: FontWeight.w400,
-                                  borderRadius: 7,
-                                  height: Sizes.screenHeight * 0.026,
-                                  width: Sizes.screenWidth * 0.33,
-                                  color: AppColor.blue,
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RoutesName.patientProfileScreen);
-                                  })
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              })
-
-    ):  const Center(
-      child: NoDataMessages(
-      ),
-    );
+                                ),
+                                Sizes.spaceHeight3,
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      Assets.iconsSolarCalendar,
+                                      // height: 16,
+                                      width: Sizes.screenWidth * 0.04,
+                                    ),
+                                    Sizes.spaceWidth5,
+                                    TextConst(
+                                      DateFormat('d MMM').format(DateTime.parse(
+                                          schedule.appointmentDate.toString())),
+                                      size: Sizes.fontSizeThree * 1.0,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff535353),
+                                    ),
+                                    Sizes.spaceWidth5,
+                                    Image.asset(
+                                      Assets.iconsMdiClock,
+                                      // height: 16,
+                                      width: Sizes.screenWidth * 0.041,
+                                    ),
+                                    Sizes.spaceWidth5,
+                                    TextConst(
+                                      schedule.appointmentTime.toString(),
+                                      size: Sizes.fontSizeThree,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff535353),
+                                    ),
+                                  ],
+                                ),
+                                Sizes.spaceHeight5,
+                                ButtonConst(
+                                    title: "Reschedule",
+                                    // size: 10,
+                                    size: Sizes.fontSizeThree * 1.05,
+                                    fontWeight: FontWeight.w400,
+                                    borderRadius: 7,
+                                    height: Sizes.screenHeight * 0.026,
+                                    width: Sizes.screenWidth * 0.33,
+                                    color: AppColor.blue,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RoutesName.patientProfileScreen);
+                                    })
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }))
+        : const Center(
+            child: NoDataMessages(),
+          );
   }
 
   Widget dashSchedule() {
     // final docScheduleCon = Provider.of<ScheduleDoctorViewModel>(context);
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutesName.scheduleScreen);
+        // Navigator.pushNamed(context, RoutesName.scheduleScreen);
+        Navigator.pushNamed(context, RoutesName.clinicLocationScreen);
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -1146,12 +1148,9 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
     //   ],
     // );
   }
+
   String? selectedMonth;
   Widget earningDetails() {
-    // const List<String> months = [
-    //   'January', 'February', 'March', 'April', 'May', 'June',
-    //   'July', 'August', 'September', 'October', 'November', 'December'
-    // ];
     final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     return SizedBox(
@@ -1197,7 +1196,9 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                       const Spacer(),
                       CustomDropdown<String>(
-                        items: docHomeCon.doctorHomeModel!.data!.earnings!.map((e)=> e.monthYear.toString()).toList(),
+                        items: docHomeCon.doctorHomeModel!.data!.earnings!
+                            .map((e) => e.monthYear.toString())
+                            .toList(),
                         selectedItem: selectedMonth,
                         hintText: 'Select Month',
                         onChanged: (value) {
@@ -1220,7 +1221,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       // )
                     ],
                   ),
-                  Sizes.spaceHeight20,
+                  // Sizes.spaceHeight20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1230,7 +1231,9 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                       Sizes.spaceWidth15,
                       TextConst(
-                        docHomeCon.doctorHomeModel!.data!.earnings![0].totalAmount.toString(),
+                        docHomeCon
+                            .doctorHomeModel!.data!.earnings![0].totalAmount
+                            .toString(),
                         // 'Rs. 20,000/-',
                         size: Sizes.fontSizeFivePFive,
                         fontWeight: FontWeight.w500,
@@ -1238,7 +1241,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                     ],
                   ),
-                  Sizes.spaceHeight20,
+                  // Sizes.spaceHeight20,
                 ],
               ),
             ),

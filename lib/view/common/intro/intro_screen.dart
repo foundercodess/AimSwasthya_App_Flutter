@@ -3,8 +3,6 @@ import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/doctor/language_change_view_model.dart';
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'
-    show SystemChrome, SystemUiMode, SystemUiOverlay, SystemUiOverlayStyle;
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -101,13 +99,13 @@ class _IntroScreenState extends State<IntroScreen> {
                     children: [
                       InkWell(
                         onTap: () {
-                          // Navigator.pushNamedAndRemoveUntil(
-                          //     context, RoutesName.doctorBottomNevBar, (context) => false);
-                          authCon.setUserRole(1);
-                          Navigator.pushNamed(
-                            context,
-                            RoutesName.onBodingScreen,
-                          );
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, RoutesName.doctorBottomNevBar, (context) => false);
+                          // authCon.setUserRole(1);
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   RoutesName.onBodingScreen,
+                          // );
                         },
                         child: TextConst(AppLocalizations.of(context)!.are_doctor,
                             size: Sizes.fontSizeFourPFive,

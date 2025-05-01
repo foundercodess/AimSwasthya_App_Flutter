@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:aim_swasthya/utils/show_server_error.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../model/doctor/doc_schedule_model.dart';
 import '../../repo/doctor/doc_schedule_repo.dart';
 
@@ -119,7 +116,6 @@ class SlotScheduleViewModel extends ChangeNotifier {
     } else {
       _allSlots[index]['available_flag'] = 'Y';
     }
-
     print("${_allSlots[index]['available_flag']}");
     notifyListeners();
   }
