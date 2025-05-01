@@ -13,23 +13,5 @@ class DocInsertScheduleViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> docScheduleInsertApi( ) async {
-    final userId = await UserViewModel().getUser();
-    setLoading(true);
-    Map data = {
-      "doctor_id" : "36"
-    };
-    print(jsonEncode(data));
-    _docInsertScheduleRepo.docInsertScheduleApi(data).then((value) {
-      if (value["status"] == true) {
-        // setRevenueDoctorData(value);
-      }
-      setLoading(false);
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print('error: $error');
-      }
-      setLoading(false);
-    });
-  }
+
 }

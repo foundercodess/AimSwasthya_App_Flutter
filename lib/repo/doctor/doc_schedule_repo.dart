@@ -19,4 +19,18 @@ class DocScheduleRepo {
       rethrow;
     }
   }
+
+  Future<dynamic> docInsertScheduleApi(dynamic data) async {
+    try {
+      dynamic response =
+      await _apiServices.getPostApiResponse(DoctorApiUrl.upsertScheduleDoctor, data);
+      return response;
+
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error occurred during docInsertScheduleApi: $e');
+      }
+      rethrow;
+    }
+  }
 }

@@ -34,8 +34,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       registerCon.resetValues();
       final slotScheduleCon =
           Provider.of<SlotScheduleViewModel>(context, listen: false);
-      slotScheduleCon.generateSlots(
-          doctorId: 6, clinicId: 6, startDate: DateTime.now());
+      slotScheduleCon.docScheduleApi('2');
     });
     super.initState();
   }
@@ -43,6 +42,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     final bottomCon = Provider.of<BottomNavProvider>(context);
+    final slotScheduleCon = Provider.of<SlotScheduleViewModel>(context);
     final registerCon = Provider.of<RegisterViewModel>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -94,9 +94,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 : scheduleHours(),
             SizedBox(
                 height: Sizes.screenHeight *
-                    (registerCon.isPersonalInfoSelected == true
-                        ? 0.045
-                        : 0.35)),
+                    (registerCon.isPersonalInfoSelected == true ? 0.045 : 0.1)),
             Padding(
               padding: EdgeInsets.only(
                   left: Sizes.screenWidth * 0.1,
@@ -113,7 +111,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 fontWidth: FontWeight.w400,
                 onTap: () {
                   if (registerCon.isPersonalInfoSelected == false) {
-                    Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);
+                    slotScheduleCon.docScheduleInsertApi();
+                    // Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);
                   } else {
                     registerCon.changeWidget(false);
                   }
@@ -153,6 +152,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   Widget scheduleDates() {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
+    final slotScheduleCon = Provider.of<SlotScheduleViewModel>(context);
+    print(docProfileCon.doctorProfileModel!.data!.clinics!.length);
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: Sizes.screenWidth * 0.08,
@@ -179,6 +180,44 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             SizedBox(
               height: Sizes.screenHeight * 0.09,
             ),
+            Center(
+              child: Container(
+                width: Sizes.screenWidth / 1.29,
+                height: 55,
+                decoration: BoxDecoration(
+                    color: AppColor.grey,
+                    borderRadius: BorderRadius.circular(15)),
+                padding: EdgeInsets.only(
+                    left: Sizes.screenWidth * 0.03,
+                    right: Sizes.screenWidth * 0.03),
+                child: DropdownButton<String>(
+                  value: slotScheduleCon.selectedClinicId,
+                  hint: TextConst(
+                    "Select option",
+                    size: Sizes.fontSizeFour,
+                    color: AppColor.textfieldTextColor,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  underline: const SizedBox(),
+                  isExpanded: true,
+                  items: docProfileCon.doctorProfileModel!.data!.clinics!
+                      .map((clinic) => DropdownMenuItem<String>(
+                            value: clinic.clinicId.toString(),
+                            child: TextConst(
+                              clinic.name.toString(),
+                              fontWeight: FontWeight.w500,
+                              size: Sizes.fontSizeFive,
+                              color: AppColor.blue,
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (String? newId) {
+                    slotScheduleCon.setSelectedClinicId(newId!);
+                  },
+                ),
+              ),
+            ),
+            Sizes.spaceHeight10,
             Container(
               padding: EdgeInsets.only(
                   left: Sizes.screenWidth * 0.03,
@@ -193,27 +232,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 cursorColor: AppColor.textGrayColor,
               ),
             ),
-            //         Container(
-            //           padding: EdgeInsets.only(
-            //               left: Sizes.screenWidth * 0.03,
-            //               right: Sizes.screenWidth * 0.03),
-            //           child: DropdownButton<String>(
-            // value: selectedValue,
-            // hint: Text("Select option"),
-            // underline: SizedBox(), // Removes the underline
-            // isExpanded: true,
-            // items: items.map((String value) {
-            // return DropdownMenuItem<String>(
-            // value: value,
-            // child: Text(value),
-            // );
-            // }).toList(),
-            // onChanged: (String? newValue) {
-            // setState(() {
-            // selectedValue = newValue!;
-            // });
-            // },),
-            //         ),
             SizedBox(
               height: Sizes.screenHeight * 0.08,
             ),
@@ -239,40 +257,70 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Widget timeDuration() {
+    final slotScheduleCon = Provider.of<SlotScheduleViewModel>(context);
+
     return Padding(
-      padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: Sizes.screenWidth * 0.04,
-                vertical: Sizes.screenHeight * 0.01),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColor.textfieldGrayColor),
-            child: TextConst(
-              "10 min",
-              size: Sizes.fontSizeFive,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Sizes.spaceWidth15,
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: Sizes.screenWidth * 0.04,
-                vertical: Sizes.screenHeight * 0.01),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColor.lightBlue),
-            child: TextConst(
-              "30 min",
-              size: Sizes.fontSizeFive,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
+        padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+        child: Row(
+          spacing: 10,
+          children: List.generate(
+              slotScheduleCon.appointmentDurationList.length, (index) {
+            final time = slotScheduleCon.appointmentDurationList[index];
+            return GestureDetector(
+              onTap: () {
+                slotScheduleCon.setAppointmentDuration(time);
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Sizes.screenWidth * 0.04,
+                    vertical: Sizes.screenHeight * 0.01),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: slotScheduleCon.appointmentDuration == time
+                        ? AppColor.lightBlue
+                        : AppColor.textfieldGrayColor),
+                child: TextConst(
+                  time,
+                  size: Sizes.fontSizeFive,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            );
+          }),
+        )
+        // Row(
+        //   children: [
+        //
+        //     Container(
+        //       padding: EdgeInsets.symmetric(
+        //           horizontal: Sizes.screenWidth * 0.04,
+        //           vertical: Sizes.screenHeight * 0.01),
+        //       decoration: BoxDecoration(
+        //           borderRadius: BorderRadius.circular(8),
+        //           color: AppColor.textfieldGrayColor),
+        //       child: TextConst(
+        //         "10 min",
+        //         size: Sizes.fontSizeFive,
+        //         fontWeight: FontWeight.w400,
+        //       ),
+        //     ),
+        //     Sizes.spaceWidth15,
+        //     Container(
+        //       padding: EdgeInsets.symmetric(
+        //           horizontal: Sizes.screenWidth * 0.04,
+        //           vertical: Sizes.screenHeight * 0.01),
+        //       decoration: BoxDecoration(
+        //           borderRadius: BorderRadius.circular(8),
+        //           color: AppColor.lightBlue),
+        //       child: TextConst(
+        //         "30 min",
+        //         size: Sizes.fontSizeFive,
+        //         fontWeight: FontWeight.w400,
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        );
   }
 
   Widget dataRange() {
@@ -461,7 +509,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget scheduleHours() {
     return Consumer<SlotScheduleViewModel>(
         builder: (context, slotScheduleCon, _) {
-      // final slotsData = slotScheduleCon.generateSlots(doctorId: , clinicId: clinicId, startDate: startDate)
+      print(slotScheduleCon.allSlots.length);
       return Padding(
         padding: EdgeInsets.symmetric(
             horizontal: Sizes.screenWidth * 0.05,
@@ -477,233 +525,423 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             SizedBox(
               height: Sizes.screenHeight * 0.05,
             ),
-            Row(
-              children: [
-                CustomSwitch(
-                  value: enable,
-                  onChanged: (bool val) {
-                    setState(() {
-                      enable = val;
-                    });
-                  },
-                ),
-                Sizes.spaceWidth15,
-                SizedBox(
-                  width: Sizes.screenWidth * 0.1,
-                  child: TextConst(
-                    "1 Jan",
-                    // size: 12,
-                    size: Sizes.fontSizeFourPFive,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.textfieldGrayColor,
-                  ),
-                ),
-                Sizes.spaceWidth5,
-                Sizes.spaceWidth3,
-                Container(
-                  alignment: Alignment.centerRight,
-                  width: Sizes.screenWidth * 0.61,
-                  child: Row(
-                    children: [
-                      Container(
-                        height: Sizes.screenHeight * 0.03,
-                        width: Sizes.screenWidth * 0.24,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color:
-                                AppColor.textfieldGrayColor.withOpacity(0.5)),
-                        child: Center(
-                          child: TextConst(
-                            "11.00 am",
-                            size: Sizes.fontSizeFourPFive,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.textfieldTextColor.withOpacity(0.8),
-                          ),
-                        ),
-                      ),
-                      Sizes.spaceWidth3,
-                      const Icon(
-                        Icons.remove,
-                        size: 15,
-                        color: AppColor.textfieldTextColor,
-                      ),
-                      Sizes.spaceWidth3,
-                      Container(
-                        height: Sizes.screenHeight * 0.03,
-                        width: Sizes.screenWidth * 0.24,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color:
-                                AppColor.textfieldGrayColor.withOpacity(0.5)),
-                        child: Center(
-                          child: TextConst(
-                            "11.20 am",
-                            size: Sizes.fontSizeFourPFive,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.textfieldTextColor.withOpacity(0.8),
-                          ),
-                        ),
-                      ),
-                      Sizes.spaceWidth10,
-                      const Icon(
-                        Icons.add_circle_outline,
-                        size: 15,
-                        color: AppColor.black,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Sizes.spaceHeight10,
-            Padding(
-              padding: EdgeInsets.only(left: Sizes.screenWidth * 0.225),
-              child: Row(
-                children: [
-                  Image.asset(
-                    Assets.iconsDeleteIcon,
-                    width: 15,
-                  ),
-                  Sizes.spaceWidth5,
-                  Sizes.spaceWidth3,
-                  SizedBox(
-                    width: Sizes.screenWidth * 0.61,
-                    child: Row(
-                      children: [
-                        // Sizes.spaceWidth10,
-                        Container(
-                          height: Sizes.screenHeight * 0.03,
-                          width: Sizes.screenWidth * 0.24,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              color:
-                                  AppColor.textfieldGrayColor.withOpacity(0.5)),
-                          child: Center(
-                            child: TextConst(
-                              "05.00 pm",
-                              size: Sizes.fontSizeFive,
-                              fontWeight: FontWeight.w400,
-                              color:
-                                  AppColor.textfieldTextColor.withOpacity(0.8),
-                            ),
-                          ),
-                        ),
-                        Sizes.spaceWidth3,
-                        const Icon(
-                          Icons.remove,
-                          size: 15,
-                          color: AppColor.textfieldTextColor,
-                        ),
-                        Sizes.spaceWidth3,
-                        Container(
-                          height: Sizes.screenHeight * 0.03,
-                          width: Sizes.screenWidth * 0.24,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              color:
-                                  AppColor.textfieldGrayColor.withOpacity(0.5)),
-                          child: Center(
-                            child: TextConst(
-                              "08.00 pm",
-                              size: Sizes.fontSizeFive,
-                              fontWeight: FontWeight.w400,
-                              color:
-                                  AppColor.textfieldTextColor.withOpacity(0.8),
-                            ),
-                          ),
-                        ),
-                        Sizes.spaceWidth10,
-                        const Icon(
-                          Icons.add_circle_outline,
-                          size: 15,
-                          color: AppColor.black,
-                        ),
-                      ],
+            Column(
+              spacing: 15,
+              children:
+                  List.generate(slotScheduleCon.allSlots.length, (slotIndex) {
+                final slotData = slotScheduleCon.allSlots[slotIndex];
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomSwitch(
+                      value: slotData['available_flag'] == 'Y',
+                      onChanged: (bool val) {
+                        slotScheduleCon
+                            .toggleSelectedDateAvailability(slotIndex);
+                      },
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Sizes.spaceHeight30,
-            Row(
-              children: [
-                CustomSwitch(
-                  value: enable,
-                  onChanged: (bool val) {
-                    setState(() {
-                      enable = val;
-                    });
-                  },
-                ),
-                Sizes.spaceWidth15,
-                SizedBox(
-                  width: Sizes.screenWidth * 0.1,
-                  child: TextConst(
-                    "2 Jan",
-                    // size: 12,
-                    size: Sizes.fontSizeFourPFive,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.textfieldGrayColor,
-                  ),
-                ),
-                Sizes.spaceWidth5,
-                Sizes.spaceWidth3,
-                Container(
-                  alignment: Alignment.centerRight,
-                  width: Sizes.screenWidth * 0.61,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: Sizes.screenHeight * 0.03,
-                        width: Sizes.screenWidth * 0.24,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color:
-                                AppColor.textfieldGrayColor.withOpacity(0.5)),
-                        child: Center(
-                          child: TextConst(
-                            "11.00 am",
-                            size: Sizes.fontSizeFourPFive,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.textfieldTextColor.withOpacity(0.8),
+                    Sizes.spaceWidth15,
+                    SizedBox(
+                      width: Sizes.screenWidth * 0.12,
+                      child: TextConst(
+                        slotData['dd_month_name'],
+                        size: Sizes.fontSizeFourPFive,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.textfieldGrayColor,
+                      ),
+                    ),
+                    Sizes.spaceWidth5,
+                    Sizes.spaceWidth3,
+                    Column(
+                      children:
+                          List.generate(slotData['timing'].length, (timeIndex) {
+                        final timingData = slotData['timing'][timeIndex];
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          alignment: Alignment.centerRight,
+                          width: Sizes.screenWidth * 0.61,
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  slotScheduleCon.selectTime(context, slotIndex,
+                                      timeIndex, 'start_time');
+                                },
+                                child: Container(
+                                  height: Sizes.screenHeight * 0.03,
+                                  width: Sizes.screenWidth * 0.24,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      color: AppColor.textfieldGrayColor
+                                          .withOpacity(0.5)),
+                                  child: Center(
+                                    child: TextConst(
+                                      timingData['start_time'],
+                                      size: Sizes.fontSizeFourPFive,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.textfieldTextColor
+                                          .withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Sizes.spaceWidth3,
+                              const Icon(
+                                Icons.remove,
+                                size: 15,
+                                color: AppColor.textfieldTextColor,
+                              ),
+                              Sizes.spaceWidth3,
+                              GestureDetector(
+                                onTap: () {
+                                  slotScheduleCon.selectTime(context, slotIndex,
+                                      timeIndex, 'end_time');
+                                },
+                                child: Container(
+                                  height: Sizes.screenHeight * 0.03,
+                                  width: Sizes.screenWidth * 0.24,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      color: AppColor.textfieldGrayColor
+                                          .withOpacity(0.5)),
+                                  child: Center(
+                                    child: TextConst(
+                                      timingData['end_time'],
+                                      size: Sizes.fontSizeFourPFive,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.textfieldTextColor
+                                          .withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Sizes.spaceWidth10,
+                              (timeIndex == 0)
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        if (slotData['timing'].length < 3) {
+                                          slotScheduleCon.addMoreTimeAtDate(
+                                              slotIndex,
+                                              slotData['timing'].length);
+                                        } else {
+                                          debugPrint(
+                                              "No more slot addition allowed");
+                                        }
+                                      },
+                                      child: const Icon(
+                                        Icons.add_circle_outline,
+                                        size: 15,
+                                        color: AppColor.black,
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        if (slotData['timing'].length > 1) {
+                                          slotScheduleCon.removeTimeAtDate(
+                                              slotIndex, timeIndex);
+                                        } else {
+                                          debugPrint(
+                                              "No more slot deletion allowed");
+                                        }
+                                      },
+                                      child: const Icon(
+                                        Icons.cancel_outlined,
+                                        size: 15,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                            ],
                           ),
-                        ),
-                      ),
-                      Sizes.spaceWidth3,
-                      const Icon(
-                        Icons.remove,
-                        size: 15,
-                        color: AppColor.textfieldTextColor,
-                      ),
-                      Sizes.spaceWidth3,
-                      Container(
-                        height: Sizes.screenHeight * 0.03,
-                        width: Sizes.screenWidth * 0.24,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color:
-                                AppColor.textfieldGrayColor.withOpacity(0.5)),
-                        child: Center(
-                          child: TextConst(
-                            "11.20 am",
-                            size: Sizes.fontSizeFourPFive,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.textfieldTextColor.withOpacity(0.8),
-                          ),
-                        ),
-                      ),
-                      Sizes.spaceWidth10,
-                      const Icon(
-                        Icons.add_circle_outline,
-                        size: 15,
-                        color: AppColor.black,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                        );
+                      }),
+                    )
+                    // Container(
+                    //   alignment: Alignment.centerRight,
+                    //   width: Sizes.screenWidth * 0.61,
+                    //   child: Row(
+                    //     children: [
+                    //       Container(
+                    //         height: Sizes.screenHeight * 0.03,
+                    //         width: Sizes.screenWidth * 0.24,
+                    //         decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(7),
+                    //             color: AppColor.textfieldGrayColor
+                    //                 .withOpacity(0.5)),
+                    //         child: Center(
+                    //           child: TextConst(
+                    //             "11.00 am",
+                    //             size: Sizes.fontSizeFourPFive,
+                    //             fontWeight: FontWeight.w400,
+                    //             color: AppColor.textfieldTextColor
+                    //                 .withOpacity(0.8),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Sizes.spaceWidth3,
+                    //       const Icon(
+                    //         Icons.remove,
+                    //         size: 15,
+                    //         color: AppColor.textfieldTextColor,
+                    //       ),
+                    //       Sizes.spaceWidth3,
+                    //       Container(
+                    //         height: Sizes.screenHeight * 0.03,
+                    //         width: Sizes.screenWidth * 0.24,
+                    //         decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(7),
+                    //             color: AppColor.textfieldGrayColor
+                    //                 .withOpacity(0.5)),
+                    //         child: Center(
+                    //           child: TextConst(
+                    //             "11.20 am",
+                    //             size: Sizes.fontSizeFourPFive,
+                    //             fontWeight: FontWeight.w400,
+                    //             color: AppColor.textfieldTextColor
+                    //                 .withOpacity(0.8),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Sizes.spaceWidth10,
+                    //       const Icon(
+                    //         Icons.add_circle_outline,
+                    //         size: 15,
+                    //         color: AppColor.black,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                );
+              }),
             ),
+            // Row(
+            //   children: [
+            //     CustomSwitch(
+            //       value: enable,
+            //       onChanged: (bool val) {
+            //         setState(() {
+            //           enable = val;
+            //         });
+            //       },
+            //     ),
+            //     Sizes.spaceWidth15,
+            //     SizedBox(
+            //       width: Sizes.screenWidth * 0.1,
+            //       child: TextConst(
+            //         "1 Jan",
+            //         // size: 12,
+            //         size: Sizes.fontSizeFourPFive,
+            //         fontWeight: FontWeight.w400,
+            //         color: AppColor.textfieldGrayColor,
+            //       ),
+            //     ),
+            //     Sizes.spaceWidth5,
+            //     Sizes.spaceWidth3,
+            //     Container(
+            //       alignment: Alignment.centerRight,
+            //       width: Sizes.screenWidth * 0.61,
+            //       child: Row(
+            //         children: [
+            //           Container(
+            //             height: Sizes.screenHeight * 0.03,
+            //             width: Sizes.screenWidth * 0.24,
+            //             decoration: BoxDecoration(
+            //                 borderRadius: BorderRadius.circular(7),
+            //                 color:
+            //                     AppColor.textfieldGrayColor.withOpacity(0.5)),
+            //             child: Center(
+            //               child: TextConst(
+            //                 "11.00 am",
+            //                 size: Sizes.fontSizeFourPFive,
+            //                 fontWeight: FontWeight.w400,
+            //                 color: AppColor.textfieldTextColor.withOpacity(0.8),
+            //               ),
+            //             ),
+            //           ),
+            //           Sizes.spaceWidth3,
+            //           const Icon(
+            //             Icons.remove,
+            //             size: 15,
+            //             color: AppColor.textfieldTextColor,
+            //           ),
+            //           Sizes.spaceWidth3,
+            //           Container(
+            //             height: Sizes.screenHeight * 0.03,
+            //             width: Sizes.screenWidth * 0.24,
+            //             decoration: BoxDecoration(
+            //                 borderRadius: BorderRadius.circular(7),
+            //                 color:
+            //                     AppColor.textfieldGrayColor.withOpacity(0.5)),
+            //             child: Center(
+            //               child: TextConst(
+            //                 "11.20 am",
+            //                 size: Sizes.fontSizeFourPFive,
+            //                 fontWeight: FontWeight.w400,
+            //                 color: AppColor.textfieldTextColor.withOpacity(0.8),
+            //               ),
+            //             ),
+            //           ),
+            //           Sizes.spaceWidth10,
+            //           const Icon(
+            //             Icons.add_circle_outline,
+            //             size: 15,
+            //             color: AppColor.black,
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // Sizes.spaceHeight10,
+            // Padding(
+            //   padding: EdgeInsets.only(left: Sizes.screenWidth * 0.225),
+            //   child: Row(
+            //     children: [
+            //       Image.asset(
+            //         Assets.iconsDeleteIcon,
+            //         width: 15,
+            //       ),
+            //       Sizes.spaceWidth5,
+            //       Sizes.spaceWidth3,
+            //       SizedBox(
+            //         width: Sizes.screenWidth * 0.61,
+            //         child: Row(
+            //           children: [
+            //             // Sizes.spaceWidth10,
+            //             Container(
+            //               height: Sizes.screenHeight * 0.03,
+            //               width: Sizes.screenWidth * 0.24,
+            //               decoration: BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(7),
+            //                   color:
+            //                       AppColor.textfieldGrayColor.withOpacity(0.5)),
+            //               child: Center(
+            //                 child: TextConst(
+            //                   "05.00 pm",
+            //                   size: Sizes.fontSizeFive,
+            //                   fontWeight: FontWeight.w400,
+            //                   color:
+            //                       AppColor.textfieldTextColor.withOpacity(0.8),
+            //                 ),
+            //               ),
+            //             ),
+            //             Sizes.spaceWidth3,
+            //             const Icon(
+            //               Icons.remove,
+            //               size: 15,
+            //               color: AppColor.textfieldTextColor,
+            //             ),
+            //             Sizes.spaceWidth3,
+            //             Container(
+            //               height: Sizes.screenHeight * 0.03,
+            //               width: Sizes.screenWidth * 0.24,
+            //               decoration: BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(7),
+            //                   color:
+            //                       AppColor.textfieldGrayColor.withOpacity(0.5)),
+            //               child: Center(
+            //                 child: TextConst(
+            //                   "08.00 pm",
+            //                   size: Sizes.fontSizeFive,
+            //                   fontWeight: FontWeight.w400,
+            //                   color:
+            //                       AppColor.textfieldTextColor.withOpacity(0.8),
+            //                 ),
+            //               ),
+            //             ),
+            //             Sizes.spaceWidth10,
+            //             const Icon(
+            //               Icons.add_circle_outline,
+            //               size: 15,
+            //               color: AppColor.black,
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Sizes.spaceHeight30,
+            // Row(
+            //   children: [
+            //     CustomSwitch(
+            //       value: enable,
+            //       onChanged: (bool val) {
+            //         setState(() {
+            //           enable = val;
+            //         });
+            //       },
+            //     ),
+            //     Sizes.spaceWidth15,
+            //     SizedBox(
+            //       width: Sizes.screenWidth * 0.1,
+            //       child: TextConst(
+            //         "2 Jan",
+            //         // size: 12,
+            //         size: Sizes.fontSizeFourPFive,
+            //         fontWeight: FontWeight.w400,
+            //         color: AppColor.textfieldGrayColor,
+            //       ),
+            //     ),
+            //     Sizes.spaceWidth5,
+            //     Sizes.spaceWidth3,
+            //     Container(
+            //       alignment: Alignment.centerRight,
+            //       width: Sizes.screenWidth * 0.61,
+            //       child: Row(
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: [
+            //           Container(
+            //             height: Sizes.screenHeight * 0.03,
+            //             width: Sizes.screenWidth * 0.24,
+            //             decoration: BoxDecoration(
+            //                 borderRadius: BorderRadius.circular(7),
+            //                 color:
+            //                     AppColor.textfieldGrayColor.withOpacity(0.5)),
+            //             child: Center(
+            //               child: TextConst(
+            //                 "11.00 am",
+            //                 size: Sizes.fontSizeFourPFive,
+            //                 fontWeight: FontWeight.w400,
+            //                 color: AppColor.textfieldTextColor.withOpacity(0.8),
+            //               ),
+            //             ),
+            //           ),
+            //           Sizes.spaceWidth3,
+            //           const Icon(
+            //             Icons.remove,
+            //             size: 15,
+            //             color: AppColor.textfieldTextColor,
+            //           ),
+            //           Sizes.spaceWidth3,
+            //           Container(
+            //             height: Sizes.screenHeight * 0.03,
+            //             width: Sizes.screenWidth * 0.24,
+            //             decoration: BoxDecoration(
+            //                 borderRadius: BorderRadius.circular(7),
+            //                 color:
+            //                     AppColor.textfieldGrayColor.withOpacity(0.5)),
+            //             child: Center(
+            //               child: TextConst(
+            //                 "11.20 am",
+            //                 size: Sizes.fontSizeFourPFive,
+            //                 fontWeight: FontWeight.w400,
+            //                 color: AppColor.textfieldTextColor.withOpacity(0.8),
+            //               ),
+            //             ),
+            //           ),
+            //           Sizes.spaceWidth10,
+            //           const Icon(
+            //             Icons.add_circle_outline,
+            //             size: 15,
+            //             color: AppColor.black,
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       );

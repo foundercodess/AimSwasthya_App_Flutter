@@ -1,4 +1,3 @@
-
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:flutter/material.dart';
 
@@ -18,19 +17,44 @@ class _CustomSwitchState extends State<CustomSwitch>
   late AnimationController _animationController;
   late Animation<Alignment> _circleAnimation;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   print("value gotten: ${widget.value}");
+  //   _animationController = AnimationController(
+  //     vsync: this,
+  //     duration: const Duration(milliseconds: 200),
+  //   );
+  //
+  //   _circleAnimation = AlignmentTween(
+  //     begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+  //     end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
+  //   ).animate(_animationController);
+  // }
+
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
 
-    _circleAnimation = AlignmentTween(
-      begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
-      end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
-    ).animate(_animationController);
+
+    // Add this to reflect the initial value visually
+    if (widget.value) {
+      _animationController.value = 1.0; // Blue, right-aligned
+      _circleAnimation = AlignmentTween(
+        begin: widget.value ? Alignment.centerLeft : Alignment.centerRight,
+        end: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+      ).animate(_animationController);
+    } else {
+      _animationController.value = 0.0; // Grey, left-aligned
+      _circleAnimation = AlignmentTween(
+        begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+        end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
+      ).animate(_animationController);
+    }
   }
 
   @override
@@ -70,11 +94,13 @@ class _CustomSwitchState extends State<CustomSwitch>
         animation: _animationController,
         builder: (context, child) {
           return Container(
-            width: 48.0,
-            height: 28.0,
+            width: 40.0,
+            height: 25.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.0),
-              color: _animationController.value < 0.5 ? AppColor.textfieldGrayColor : AppColor.blue,
+              color: _animationController.value < 0.5
+                  ? AppColor.textfieldGrayColor
+                  : AppColor.blue,
             ),
             child: Padding(
               padding: const EdgeInsets.all(2.0),
@@ -95,7 +121,6 @@ class _CustomSwitchState extends State<CustomSwitch>
       ),
     );
   }
-
 }
 
 // import 'package:flutter/material.dart';
@@ -138,5 +163,3 @@ class _CustomSwitchState extends State<CustomSwitch>
 //     );
 //   }
 // }
-
-

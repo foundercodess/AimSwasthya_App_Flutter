@@ -420,10 +420,9 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   }
 
   Widget dashSchedule() {
-    final docScheduleCon = Provider.of<ScheduleDoctorViewModel>(context);
+    // final docScheduleCon = Provider.of<ScheduleDoctorViewModel>(context);
     return GestureDetector(
       onTap: () {
-        // docScheduleCon.docScheduleApi(clinicId);
         Navigator.pushNamed(context, RoutesName.scheduleScreen);
       },
       child: Container(

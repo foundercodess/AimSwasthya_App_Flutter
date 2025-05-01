@@ -16,7 +16,7 @@ class PatientHomeRepo {
       print("ddddddd: $response");
       return PatientHomeModel.fromJson(response);
     } catch (e) {
-      showInfoOverlay(statusCode: "response.statusCode");
+      showInfoOverlay(statusCode: "");
       if (kDebugMode) {
         print('Error occurred during patientHomeApi: $e');
       }
