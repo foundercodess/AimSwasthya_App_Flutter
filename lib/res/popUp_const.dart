@@ -246,11 +246,12 @@ class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
                     if (voiceSearchCon.isListening) {
                       voiceSearchCon.stopListening();
                     } else {
-                      voiceSearchCon.initSpeech(context).then((_) {
-                        voiceSearchCon.startListening();
-                        voiceSearchCon.isListening
-                            ? voiceSearchCon.stopListening()
-                            : voiceSearchCon.startListening();
+                      voiceSearchCon.initSpeech(context,).then((data) {
+                        if (data == true) {
+                          voiceSearchCon.isListening
+                              ? voiceSearchCon.stopListening()
+                              : voiceSearchCon.startListening(singleSearch: true);
+                        }
                       });
                     }
                   },

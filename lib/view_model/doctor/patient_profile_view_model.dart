@@ -27,6 +27,7 @@ class PatientProfileViewModel extends ChangeNotifier {
     setLoading(true);
     Map data = {
       "patient_id": 16,
+      "doctor_id" : 8
     };
     debugPrint("body: $data");
     _patientProfileRepo.patientProfileApi(data).then((value) {

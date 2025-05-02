@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => RegisterViewModel()),
         ChangeNotifierProvider(create: (ctx) => ScheduleViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserRegisterViewModel()),
-        ChangeNotifierProvider(create: (ctx) => DocGraphViewModel()),
+        // ChangeNotifierProvider(create: (ctx) => DocGraphViewModel()),
         ChangeNotifierProvider(create: (ctx) => ChangeLanguageViewModel()),
         ChangeNotifierProvider(create: (ctx) => BottomNavProvider()),
         ChangeNotifierProvider(create: (ctx) => PatientAuthViewModel()),

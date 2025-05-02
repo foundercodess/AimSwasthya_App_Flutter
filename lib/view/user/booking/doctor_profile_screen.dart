@@ -880,7 +880,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         Consumer<DoctorAvlAppointmentViewModel>(
             builder: (context, docAppCon, _) {
           if (docAppCon.doctorAvlAppointmentModel!.data!.slots == null) {
-            return const NoDataFound();
+            return const NoDataMessages(
+              title:  "No slots found for the doctor",
+              message: "No available slots for this doctor at the moment.",
+            );
             const ConstText(title: "No slots found for the doctor");
           }
           return SizedBox(
@@ -977,7 +980,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           docAppCon.doctorAvlAppointmentModel!.data!.slots!.isEmpty ||
           docAppCon.selectedDate == null) {
         return const Center(
-          child: NoDataFound(),
+          child: NoDataMessages(
+            title:  "No slots found for the doctor",
+            message: "No available slots for this doctor at the moment.",
+          ),
         );
       }
       final getSelectedTimeList = docAppCon

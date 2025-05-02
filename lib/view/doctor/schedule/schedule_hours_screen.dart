@@ -3,7 +3,6 @@ import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_graph_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -175,9 +174,10 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
   }
 
   Widget scheduleGraph() {
-    final weekdayAnalytics = Provider.of<DocGraphViewModel>(context);
+    // final weekdayAnalytics = Provider.of<DocGraphViewModel>(context);
     final PageController pageController = PageController();
-    int itemCount = 2;
+    final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
+    int itemCount = revenueDocCon.revenueDoctorModel!.sevenDaysEarning!.length;
     return Column(
       children: [
         SizedBox(
@@ -233,11 +233,11 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                         child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: weekdayAnalytics.weekdayAnalytics.length,
+                            itemCount: revenueDocCon.revenueDoctorModel!.sevenDaysEarning!.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               final weekdays =
-                                  weekdayAnalytics.weekdayAnalytics[index];
+                              revenueDocCon.revenueDoctorModel!.sevenDaysEarning![index];
                               return SizedBox(
                                 width: Sizes.screenWidth * 0.11,
                                 child: Column(
@@ -253,7 +253,8 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                                             topRight: Radius.circular(5),
                                             bottomRight: Radius.circular(5),
                                           ),
-                                          value: weekdays['value'] / 100,
+                                          value:double.parse(weekdays.totalAmount.toString()) / 1000,
+                                          // double.parse(weekdays.totalAmount.toString() / 1000),
                                           backgroundColor: Colors.transparent,
                                           valueColor:
                                               const AlwaysStoppedAnimation<
@@ -263,7 +264,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                                     ),
                                     Sizes.spaceHeight5,
                                     TextConst(
-                                      weekdays["day"],
+                                      weekdays.dayName!.substring(0,3) ??"",
                                       size: Sizes.fontSizeFour,
                                       fontWeight: FontWeight.w400,
                                       color: AppColor.lightBlack,

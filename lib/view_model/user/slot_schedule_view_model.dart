@@ -39,16 +39,16 @@ class SlotScheduleViewModel extends ChangeNotifier {
   Future<void> docScheduleApi(dynamic clinicId) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    Map data = {"doctor_id": "6", "clinic_id": "6"};
+    Map data = {"doctor_id": "6", "clinic_id": clinicId};
     _docScheduleRepo.docScheduleApi(data).then((value) {
       if (value.status == true) {
         setDoctorScheduleData(value);
         if (value.doctorWorkingHours!.isNotEmpty &&
             value.doctorWorkingHours != []) {
           final lastDate = value.doctorWorkingHours!.last.availabilityDate;
-          generateSlots(startDate: DateTime.parse('20$lastDate 00:00:00'));
+          // generateSlots(startDate: DateTime.parse('20$lastDate 00:00:00'));
         } else {
-          generateSlots(startDate: DateTime.now());
+          // generateSlots(startDate: DateTime.now());
         }
       }
       setLoading(false);
@@ -58,6 +58,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
       }
       setLoading(false);
     });
+    generateSlots(startDate: DateTime.now());
   }
 
   setSelectedClinicId(String val) {

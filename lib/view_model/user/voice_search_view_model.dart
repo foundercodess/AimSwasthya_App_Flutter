@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aim_swasthya/repo/user/ai_search_repo.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/utils/const_config.dart';
@@ -299,6 +301,7 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
   Future<void> aiSearchApi(context, {bool isVoiceSearchReq = true}) async {
     setLoading(true);
     setAiSearchData(null);
@@ -326,7 +329,7 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
       "lat": latitude.toStringAsFixed(5),
       "lon": longitude.toStringAsFixed(5),
     };
-    print("dr suggestion: $data");
+    print("ansjnsj${jsonEncode(data)}");
     _aiSearchRepo.aiSearch(data).then((value) {
       if (value.success == true) {
         setAiSearchData(value);

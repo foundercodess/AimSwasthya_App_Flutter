@@ -26,12 +26,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final arguments =
+      ModalRoute.of(context)?.settings.arguments as int;
+      final clinicId = arguments.toString;
       final registerCon =
           Provider.of<RegisterViewModel>(context, listen: false);
       registerCon.resetValues();
       final slotScheduleCon =
           Provider.of<SlotScheduleViewModel>(context, listen: false);
-      slotScheduleCon.docScheduleApi('2');
+      slotScheduleCon.docScheduleApi(clinicId);
     });
     super.initState();
   }
@@ -177,49 +180,50 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             SizedBox(
               height: Sizes.screenHeight * 0.09,
             ),
-            Center(
-              child: Container(
-                width: Sizes.screenWidth / 1.29,
-                height: 55,
-                decoration: BoxDecoration(
-                    color: AppColor.grey,
-                    borderRadius: BorderRadius.circular(15)),
-                padding: EdgeInsets.only(
-                    left: Sizes.screenWidth * 0.03,
-                    right: Sizes.screenWidth * 0.03),
-                child: DropdownButton<String>(
-                  value: slotScheduleCon.selectedClinicId,
-                  hint: TextConst(
-                    "Select option",
-                    size: Sizes.fontSizeFour,
-                    color: AppColor.textfieldTextColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  underline: const SizedBox(),
-                  isExpanded: true,
-                  items: docProfileCon.doctorProfileModel!.data!.clinics!
-                      .map((clinic) => DropdownMenuItem<String>(
-                            value: clinic.clinicId.toString(),
-                            child: TextConst(
-                              clinic.name.toString(),
-                              fontWeight: FontWeight.w500,
-                              size: Sizes.fontSizeFive,
-                              color: AppColor.blue,
-                            ),
-                          ))
-                      .toList(),
-                  onChanged: (String? newId) {
-                    slotScheduleCon.setSelectedClinicId(newId!);
-                  },
-                ),
-              ),
-            ),
+            // Center(
+            //   child: Container(
+            //     width: Sizes.screenWidth / 1.29,
+            //     height: 55,
+            //     decoration: BoxDecoration(
+            //         color: AppColor.grey,
+            //         borderRadius: BorderRadius.circular(15)),
+            //     padding: EdgeInsets.only(
+            //         left: Sizes.screenWidth * 0.03,
+            //         right: Sizes.screenWidth * 0.03),
+            //     child: DropdownButton<String>(
+            //       value: slotScheduleCon.selectedClinicId,
+            //       hint: TextConst(
+            //         "Select option",
+            //         size: Sizes.fontSizeFour,
+            //         color: AppColor.textfieldTextColor,
+            //         fontWeight: FontWeight.w400,
+            //       ),
+            //       underline: const SizedBox(),
+            //       isExpanded: true,
+            //       items: docProfileCon.doctorProfileModel!.data!.clinics!
+            //           .map((clinic) => DropdownMenuItem<String>(
+            //                 value: clinic.clinicId.toString(),
+            //                 child: TextConst(
+            //                   clinic.name.toString(),
+            //                   fontWeight: FontWeight.w500,
+            //                   size: Sizes.fontSizeFive,
+            //                   color: AppColor.blue,
+            //                 ),
+            //               ))
+            //           .toList(),
+            //       onChanged: (String? newId) {
+            //         slotScheduleCon.setSelectedClinicId(newId!);
+            //       },
+            //     ),
+            //   ),
+            // ),
             Sizes.spaceHeight10,
             Container(
               padding: EdgeInsets.only(
                   left: Sizes.screenWidth * 0.03,
                   right: Sizes.screenWidth * 0.03),
               child: CustomTextField(
+                keyboardType: TextInputType.number,
                 contentPadding:
                     const EdgeInsets.only(top: 18, bottom: 18, left: 10),
                 fillColor: AppColor.grey,

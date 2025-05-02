@@ -139,6 +139,32 @@ class DoctorAuthViewModel extends ChangeNotifier {
           print("docSendOtpApi");
           docSendOtpApi(context);
         }
+      }else{
+        if (value['status'] == true) {
+          _senOtpData = {
+            'isReg': value['is_registered'],
+            "phone": phone,
+            "email": email,
+            "type": type
+          };
+          if (type == "email") {
+            if (!value['is_registered']) {
+              if (authCon.userRole == 1) {
+                Navigator.pushNamed(context, RoutesName.registerScreen);
+              } else {
+                print("docSendklk;o;Otp--]=]");
+                Navigator.pushNamed(context, RoutesName.userRegisterScreen);
+              }
+            } else {
+              print("docSendOtp--]=]");
+              Navigator.pushNamed(context, RoutesName.allSetDocScreen);
+            }
+          } else {
+            print("docSendOtpApi");
+            docSendOtpApi(context);
+          }
+        }
+        print("fghchugby");
       }
       LoaderOverlay().hide();
       // else if (value['status'] == true) {
@@ -157,6 +183,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
       notifyListeners();
       if (kDebugMode) {
         print('error: $error');
+        print("gygygyu");
       }
     });
   }
@@ -173,7 +200,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
     print(data);
     _doctorAuthRepo.docSendOtpApi(data).then((value) {
       Utils.show(value['message'], context);
-      print(value);
+      print("anshii${value}");
       if (value['status'] == true) {
         _senOtpData['id'] = value['user']['doctor_id'];
         if (_senOtpData['email'] != null && _senOtpData['email'] != "") {

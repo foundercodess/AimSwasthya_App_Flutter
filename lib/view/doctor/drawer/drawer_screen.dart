@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../view_model/doctor/doc_home_view_model.dart';
+
 class DoctorDrawerScreen extends StatefulWidget {
   const DoctorDrawerScreen({
     super.key,
@@ -21,6 +23,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
   @override
   Widget build(BuildContext context) {
     final bottomCon = Provider.of<BottomNavProvider>(context);
+    final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
 
     return Drawer(
       backgroundColor: Colors.transparent,
@@ -41,6 +44,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: Sizes.screenHeight * 0.06),
+            if(docHomeCon.doctorHomeModel !=null && docHomeCon.doctorHomeModel!.data !=null)
             ListTile(
               contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036),
               leading: const Image(
@@ -50,7 +54,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                 width: 22,
               ),
               title: TextConst(
-                "Dr. Vikram batra",
+                docHomeCon.doctorHomeModel!.data!.doctors![0].doctorName??"",
                 // size: 13,
                 size: Sizes.fontSizeSix,
                 fontWeight: FontWeight.w600,
