@@ -346,7 +346,8 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                       builder: (context) {
                         return const VoiceSearchDialog();
                       });
-                } else {
+                }
+                else {
                   showCupertinoDialog(
                       context: context,
                       builder: (context) {
