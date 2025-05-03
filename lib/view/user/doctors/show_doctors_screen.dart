@@ -46,7 +46,7 @@ class _ShowDoctorsScreenState extends State<ShowDoctorsScreen> {
              AppbarConst(
               title: AppLocalizations.of(context)!.symptoms,
             ),
-            Container(
+            SizedBox(
               width: Sizes.screenWidth,
               child: Column(
                 children: [

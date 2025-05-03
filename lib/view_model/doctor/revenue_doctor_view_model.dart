@@ -24,7 +24,7 @@ class RevenueDoctorViewModel extends ChangeNotifier {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
-      "doctor_id" : "36"
+      "doctor_id" : userId
     };
     print(jsonEncode(data));
     _revenueDoctorRepo.revenueDoctorApi(data).then((value) {

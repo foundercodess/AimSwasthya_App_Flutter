@@ -1,5 +1,6 @@
 import 'package:aim_swasthya/model/doctor/patient_profile_model.dart';
 import 'package:aim_swasthya/repo/doctor/patient_profile_repo.dart';
+import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
@@ -24,10 +25,12 @@ class PatientProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> patientProfileApi(patientId,context) async {
+    final userId = await UserViewModel().getUser();
+
     setLoading(true);
     Map data = {
-      "patient_id": 16,
-      "doctor_id" : 8
+      "patient_id": patientId,
+      "doctor_id" : userId
     };
     debugPrint("body: $data");
     _patientProfileRepo.patientProfileApi(data).then((value) {

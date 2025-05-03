@@ -47,7 +47,7 @@ class _AllSymptomsScreenState extends State<AllSymptomsScreen> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: homeCon!.patientHomeModel!.data!.symptomsDetails!.length,
+              itemCount: homeCon.patientHomeModel!.data!.symptomsDetails!.length,
               itemBuilder: (context, index) {
                 final currentItem = homeCon.patientHomeModel!.data!.symptomsDetails![index];
                 return Column(

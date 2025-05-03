@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PatientAuthViewModel extends ChangeNotifier {
@@ -304,7 +305,8 @@ class PatientAuthViewModel extends ChangeNotifier {
       Map data = {
         "name": name,
         "gender": gender,
-        "dob": dob.toString().substring(0,10),
+        // DateFormat('dd/MM/yyyy').format(DateTime.parse(appointmentData.dateOfBirth.toString()))
+        "dob": dob,
         "email": _senOtpData['email'],
         "phone": _senOtpData['phone'],
         "height": height,
@@ -312,33 +314,8 @@ class PatientAuthViewModel extends ChangeNotifier {
         "latitude": latitude.toStringAsFixed(5),
         "longitude": longitude.toStringAsFixed(5),
       };
+
       print(jsonEncode(data));
-      // _patientAuthRepo.patientRegisterApi(data).then((value) {
-      //   if (value['status'] == false &&
-      //       value['error'] != null &&
-      //       value['error'].toString().contains("Duplicate entry")) {
-      //     Utils.show("Phone number already registered. Try login instead.", context);
-      //     setLoading(false);
-      //     notifyListeners();
-      //     return;
-      //   }
-      //
-      //   Utils.show(value['message'], context);
-      //
-      //   if (value['status'] == true) {
-      //     if (_senOtpData['type'] == 'email') {
-      //       UserViewModel().saveUser(value['data']['patient']['patient_id']);
-      //     } else {
-      //       UserViewModel()
-      //           .saveUser(value['data']['updatedPatient']['patient_id']);
-      //     }
-      //     UserViewModel().saveRole(2);
-      //     Navigator.pushNamed(context, RoutesName.allSetDocScreen);
-      //   }
-      //
-      //   setLoading(false);
-      //   notifyListeners();
-      // }
 
     _patientAuthRepo.patientRegisterApi(data).then((value) {
         Utils.show(value['message'], context);

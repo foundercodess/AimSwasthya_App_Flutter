@@ -222,7 +222,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextConst(
-                            docHomeCon.data!.doctors![0].experience ?? "",
+                            docHomeCon.data!.doctors![0].experience ?? "5 years Experience",
                             size: Sizes.fontSizeFour,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,
@@ -237,7 +237,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             color: AppColor.white,
                           ),
                           TextConst(
-                            docHomeCon.data!.doctors![0].qualification ?? "",
+                            docHomeCon.data!.doctors![0].qualification ?? "MBBS, MD (Cardiology)",
                             size: Sizes.fontSizeFivePFive,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,

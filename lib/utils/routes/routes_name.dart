@@ -38,6 +38,7 @@ class RoutesName {
   static const uploadedOn = "/uploadedOn";
   static const aboutUsScreen = "/aboutUsScreen";
   static const clinicLocationScreen = "/clinicLocationScreen";
+  static const fullScreenMapPage = "/fullScreenMapPage";
 
 }
 

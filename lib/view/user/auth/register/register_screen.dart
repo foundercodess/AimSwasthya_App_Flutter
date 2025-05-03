@@ -20,6 +20,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   String selectedGender = '';
   dynamic dateTime;
@@ -91,8 +92,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                 onTap: () {
                   if (userRegCon.isPersonalInfoSelected == 1) {
                     userRegCon.changeWidget(2);
-                  }
-                  else if (userRegCon.isPersonalInfoSelected == 2) {
+                  } else if (userRegCon.isPersonalInfoSelected == 2) {
                     userRegCon.changeWidget(3);
                   } else if (userRegCon.isPersonalInfoSelected == 3) {
                     userRegCon.changeWidget(4);
@@ -100,7 +100,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                     patientAuthCon.patientRegisterApi(
                         _nameController.text,
                         selectedGender,
-                        dateTime,
+                        _dateController.text,
                         _heightController.text,
                         _weightController.text,
                         context);
@@ -283,16 +283,64 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
           ),
         ),
         Sizes.spaceHeight20,
-        CustomCalendar(
-          onDateSelected: (v) {
-            setState(() {
-              dateTime = v;
-            });
-          },
-        ),
+        Center(
+          child: Container(
+            width: 150,
+            child: TextField(
+              controller: _dateController,
+              readOnly: true,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: Sizes.fontSizeFivePFive,
+                fontWeight: FontWeight.w600,
+                color: AppColor.blue,
+              ),
+              onTap: () { _selectDate(context);
+
+              },
+              decoration: InputDecoration(
+                isDense: true,
+                prefixIcon: GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: const Icon(Icons.calendar_month, color: AppColor.blue,),
+                ),
+                contentPadding: const EdgeInsets.only(bottom: 0, left: 0, right: 0),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColor.white),
+                ),
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColor.white),
+                ),
+                // counterText: "",
+              ),
+              // cursorHeight: 20,
+            ),
+          ),
+        )
+
+
+
+
       ],
     );
   }
+  // _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1800),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
+  }
+
+
 
   Widget heightSection() {
     return Container(

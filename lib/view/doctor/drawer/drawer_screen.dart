@@ -1,9 +1,7 @@
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
-import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
-import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -120,7 +118,9 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                 color: AppColor.white,
               ),
               onTap: () {
-                Navigator.pushNamed(context, RoutesName.scheduleScreen);
+                Navigator.pushNamed(context, RoutesName.clinicLocationScreen);
+
+                // Navigator.pushNamed(context, RoutesName.scheduleScreen);
                 // Navigator.pop(context);
                 // bottomCon.setIndex(1);
               },

@@ -10,6 +10,7 @@ import 'package:aim_swasthya/view/doctor/profile/doctor_profile_screen.dart';
 import 'package:aim_swasthya/view/doctor/patients/patient_profile_screen.dart';
 import 'package:aim_swasthya/view/doctor/schedule/schedule_hours_screen.dart';
 import 'package:aim_swasthya/view/doctor/schedule/schedule_screen.dart';
+import 'package:aim_swasthya/view/doctor/test_project.dart';
 import 'package:aim_swasthya/view/doctor/transaction/view_all_transaction_screen.dart';
 import 'package:aim_swasthya/view/user/appointments/view_appointment.dart';
 import 'package:aim_swasthya/view/user/auth/register/register_screen.dart';
@@ -126,6 +127,8 @@ class Routers {
         return (context) => const AboutUsScreen();
         case RoutesName.clinicLocationScreen:
         return (context) => const ClinicLocationScreen();
+        case RoutesName.fullScreenMapPage:
+        return (context) =>  FullScreenMapPage();
 
       default:
         return (context) => const Scaffold(

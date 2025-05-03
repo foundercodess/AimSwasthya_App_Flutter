@@ -103,10 +103,10 @@ class PatientHomeViewModel extends ChangeNotifier {
     double longitude = lng ?? position.longitude;
     final userId = await UserViewModel().getUser();
     Map data = {
-      "lat": latitude.toStringAsFixed(5),
-      "lon": longitude.toStringAsFixed(5),
-      // "lat": "27.571410",
-      // "lon": "81.593142",
+      // "lat": latitude.toStringAsFixed(5),
+      // "lon": longitude.toStringAsFixed(5),
+      "lat": "27.571410",
+      "lon": "81.593142",
       "patient_id": userId
     };
     _patientHomeRepo.getLocationApi(data).then((value) {

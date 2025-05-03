@@ -24,7 +24,7 @@ class DocPatientAppointmentViewModel extends ChangeNotifier {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
-      "doctor_id": 36,
+      "doctor_id": userId,
     };
     debugPrint("body: $data");
     _doctorUpdateAppRepo.docUpdateAppointmentApi(data).then((value) {

@@ -22,7 +22,7 @@ class DocHealthReportViewModel extends ChangeNotifier {
   Future<void> medicalHealthReportApi(dynamic patientId, ) async {
     setLoading(true);
     Map data = {
-      "patient_id" : "42"
+      "patient_id" : patientId
     };
     print(jsonEncode(data));
     _docHealthReportRepo.docMedicalHealthReportApi(data).then((value) {
