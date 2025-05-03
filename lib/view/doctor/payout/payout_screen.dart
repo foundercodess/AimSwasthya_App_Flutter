@@ -48,7 +48,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
             paymentMethod("Use a card", Assets.iconsRazorpayIcon,
                 "Debit/Credit cards", 0),
             Sizes.spaceHeight3,
-            paymentMethod("Google pay", Assets.iconsGpayIcon, "", 1),
+            paymentMethod("PhonePe", Assets.iconsPaytmIcon, "", 1),
             // Sizes.spaceHeight3,
             // paymentMethod("PhonePe", Assets.iconsPaytmIcon, "", 2),
             // Sizes.spaceHeight3,

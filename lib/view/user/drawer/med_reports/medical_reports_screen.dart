@@ -262,8 +262,7 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
                                     loopAllowed: false)
                                 .then((_) {});
                             await Future.delayed(const Duration(seconds: 3));
-                            LocalImageHelper.instance.loadingComplete
-                                .then((_) {
+                            LocalImageHelper.instance.loadingComplete.then((_) {
                               showModalBottomSheet(
                                   isScrollControlled: true,
                                   context: context,
@@ -323,20 +322,63 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
     }
     if (medRecData.imageUrl!.endsWith('.pdf')) {
       print("pdfcase");
-      return Container(
-        width: Sizes.screenWidth,
-        height: Sizes.screenHeight,
-        child: PDFView(
-          filePath: imagePath,
-        ),
+      return Stack(
+        children: [
+          Container(
+            width: Sizes.screenWidth,
+            height: Sizes.screenHeight,
+            child: imagePath.toLowerCase().endsWith('.pdf')
+                ? PDFView(filePath: imagePath)
+                : Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(File(imagePath)),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+          ),
+          Positioned(
+              top: 40,
+              left: 16,
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.arrow_back, color: Colors.black))),
+        ],
       );
     }
-    return Container(
-      width: Sizes.screenWidth,
-      height: Sizes.screenHeight,
-      decoration: BoxDecoration(
-          image: DecorationImage(image: FileImage(File(imagePath.toString())))),
+
+    return Stack(
+      children: [
+        Container(
+          width: Sizes.screenWidth,
+          height: Sizes.screenHeight,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: FileImage(File(imagePath.toString())),
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        Positioned(
+            top: 40,
+            left: 16,
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Icon(Icons.arrow_back, color: Colors.black))),
+      ],
     );
+
+    // return Container(
+    //   width: Sizes.screenWidth,
+    //   height: Sizes.screenHeight,
+    //   decoration: BoxDecoration(
+    //       image: DecorationImage(image: FileImage(File(imagePath.toString())))),
+    // );
   }
 
   Widget showImageBottomSheet() {

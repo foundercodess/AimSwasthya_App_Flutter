@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:aim_swasthya/utils/show_server_error.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../model/doctor/doc_schedule_model.dart';
 import '../../repo/doctor/doc_schedule_repo.dart';
 
@@ -42,16 +39,16 @@ class SlotScheduleViewModel extends ChangeNotifier {
   Future<void> docScheduleApi(dynamic clinicId) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    Map data = {"doctor_id": "6", "clinic_id": "6"};
+    Map data = {"doctor_id": "6", "clinic_id": clinicId};
     _docScheduleRepo.docScheduleApi(data).then((value) {
       if (value.status == true) {
         setDoctorScheduleData(value);
         if (value.doctorWorkingHours!.isNotEmpty &&
             value.doctorWorkingHours != []) {
           final lastDate = value.doctorWorkingHours!.last.availabilityDate;
-          generateSlots(startDate: DateTime.parse('20$lastDate 00:00:00'));
+          // generateSlots(startDate: DateTime.parse('20$lastDate 00:00:00'));
         } else {
-          generateSlots(startDate: DateTime.now());
+          // generateSlots(startDate: DateTime.now());
         }
       }
       setLoading(false);
@@ -61,6 +58,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
       }
       setLoading(false);
     });
+    generateSlots(startDate: DateTime.now());
   }
 
   setSelectedClinicId(String val) {
@@ -119,7 +117,6 @@ class SlotScheduleViewModel extends ChangeNotifier {
     } else {
       _allSlots[index]['available_flag'] = 'Y';
     }
-
     print("${_allSlots[index]['available_flag']}");
     notifyListeners();
   }

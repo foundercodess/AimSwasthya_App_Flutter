@@ -276,30 +276,35 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.only(
-              left: Sizes.screenWidth * 0.03,
-              right: Sizes.screenWidth * 0.03,
-              top: Sizes.screenHeight * 0.017,
-              bottom: Sizes.screenHeight * 0.02),
-          // height: Sizes.screenHeight * 0.3,
-          width: Sizes.screenWidth,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: const Color(0xffececec),
-          ),
-          child: Column(
-            children: [
-              Sizes.spaceHeight3,
-              const Image(image: AssetImage(Assets.imagesMapImg)),
-              Sizes.spaceHeight25,
-              ButtonConst(
-                  title: "Set location",
-                  width: Sizes.screenWidth * 0.3,
-                  height: Sizes.screenHeight * 0.045,
-                  color: AppColor.blue,
-                  onTap: () {})
-            ],
+        GestureDetector(
+          onTap: (){
+            // Navigator.pushNamed(context, routeName)
+          },
+          child: Container(
+            padding: EdgeInsets.only(
+                left: Sizes.screenWidth * 0.03,
+                right: Sizes.screenWidth * 0.03,
+                top: Sizes.screenHeight * 0.017,
+                bottom: Sizes.screenHeight * 0.02),
+            // height: Sizes.screenHeight * 0.3,
+            width: Sizes.screenWidth,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xffececec),
+            ),
+            child: Column(
+              children: [
+                Sizes.spaceHeight3,
+                const Image(image: AssetImage(Assets.imagesMapImg)),
+                Sizes.spaceHeight25,
+                ButtonConst(
+                    title: "Set location",
+                    width: Sizes.screenWidth * 0.3,
+                    height: Sizes.screenHeight * 0.045,
+                    color: AppColor.blue,
+                    onTap: () {})
+              ],
+            ),
           ),
         )
       ],

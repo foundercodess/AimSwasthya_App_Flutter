@@ -66,6 +66,8 @@ class Doctors {
   int? specializationId;
   String? specializationName;
   int? sortNumber;
+  dynamic mostBooked;
+  dynamic topRated;
   String? signedImageUrl;
 
   Doctors(
@@ -82,6 +84,8 @@ class Doctors {
         this.specializationId,
         this.specializationName,
         this.sortNumber,
+        this.mostBooked,
+        this.topRated,
         this.signedImageUrl});
 
   Doctors.fromJson(Map<String, dynamic> json) {
@@ -98,6 +102,8 @@ class Doctors {
     specializationId = json['specialization_id'];
     specializationName = json['specialization_name'];
     sortNumber = json['sort_number'];
+    mostBooked = json['most_booked'];
+    topRated = json['top_rated'];
     signedImageUrl = json['signedImageUrl'];
   }
 
@@ -116,6 +122,8 @@ class Doctors {
     data['specialization_id'] = specializationId;
     data['specialization_name'] = specializationName;
     data['sort_number'] = sortNumber;
+    data['most_booked'] = mostBooked;
+    data['top_rated'] = topRated;
     data['signedImageUrl'] = signedImageUrl;
     return data;
   }

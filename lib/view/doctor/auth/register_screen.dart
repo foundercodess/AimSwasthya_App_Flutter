@@ -36,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
     final registerCon = Provider.of<RegisterViewModel>(context);
+    _numberController.text= doctorCon.senOtpData['phone'];
     return Scaffold(
       backgroundColor: AppColor.white,
       appBar: appBarConstant(context,
@@ -89,8 +90,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           title: AppLocalizations.of(context)!.continue_con,
           onTap: () {
             if (registerCon.isPersonalInfoSelected == false) {
-              Navigator.push(
-                  context, _cupertinoTopToBottomRoute(const AllSetDocScreen()));
               doctorCon.doctorRegisterApi(
                   _nameController.text,
                   _genderController.text,
@@ -181,6 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             keyboardType: TextInputType.number,
             cursorColor: AppColor.textGrayColor,
             maxLength: 10,
+            enabled: false,
           ),
           Sizes.spaceHeight25,
           CustomTextField(
@@ -333,7 +333,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
-Route _cupertinoTopToBottomRoute(Widget page) {
+Route cupertinoTopToBottomRoute(Widget page) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 1000),
     pageBuilder: (context, animation, secondaryAnimation) => page,

@@ -93,9 +93,11 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                             }
                             if (symptomsData.isEmpty) {
                               return const Center(
-                                  child: NoDataFound(
-                                message: "No matched specialties found",
-                              ));
+                                  child:NoMessage(
+                                    message: "No specialists around here, for now...",
+                                    title:
+                                    "We’re working to bring expert care to your area",
+                                  ));
                             }
                             return SizedBox(
                               height: Sizes.screenHeight * 0.15,
@@ -216,9 +218,11 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                     double.parse(a.averageRating.toString())));
                             if (topSpecialist.isEmpty) {
                               return const Center(
-                                  child: ImageContainer(
-                                      imagePath:
-                                          "assets/images/noDoctorFound.png"));
+                                  child: NoMessage(
+                                    message: "No specialists around here, for now...",
+                                    title:
+                                    "We’re working to bring expert care to your area",
+                                  ));
                             }
                             final List<Doctors> topDrSpecialist;
                             //
@@ -237,9 +241,11 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                             }
                             if (topDrSpecialist.isEmpty) {
                               return const Center(
-                                  child: NoDataFound(
-                                message: "No matched top specialist found",
-                              ));
+                                  child: NoMessage(
+                                    message: "No specialists around here, for now...",
+                                    title:
+                                    "We’re working to bring expert care to your area",
+                                  ));
                             }
                             return SizedBox(
                               height: Sizes.screenHeight * 0.262,
@@ -260,8 +266,11 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                             );
                           })
                         : const Center(
-                            child: ImageContainer(
-                                imagePath: "assets/images/noDoctorFound.png")),
+                            child: NoMessage(
+                              message: "No specialists around here, for now...",
+                              title:
+                              "We’re working to bring expert care to your area",
+                            )),
                     Sizes.spaceHeight10,
                     Row(
                       children: [
@@ -296,15 +305,20 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                         }
                         if (nearDrSpecialist.isEmpty) {
                           return const Center(
-                              child: NoDataFound(
-                            message: "No matched specialist found",
-                          ));
+                              child: NoMessage(
+                                message: "No specialists around here, for now...",
+                                title:
+                                "We’re working to bring expert care to your area",
+                              ));
                         }
                         return SpecialistsTopScreen(doctors: nearDrSpecialist);
                       }
                       return const Center(
-                          child: ImageContainer(
-                              imagePath: "assets/images/noDoctorFound.png"));
+                          child: NoMessage(
+                            message: "No specialists around here, for now...",
+                            title:
+                            "We’re working to bring expert care to your area",
+                          ));
                     }),
                     SizedBox(
                       height: Sizes.screenHeight * 0.06,
@@ -362,7 +376,14 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                               "We use your microphone so you can speak your symptoms instead of typing — making it faster and easier for you!",
                           onTap: () {
                             Navigator.pop(context);
-                            voiceSearchCon.initSpeech(context).then((_) {
+                            // voiceSearchCon.initSpeech(context).then((_) {
+                            //   voiceSearchCon.isListening
+                            //       ? voiceSearchCon.stopListening()
+                            //       : voiceSearchCon.startListening();
+                            // });
+                            voiceSearchCon
+                                .initSpeech(context)
+                                .then((_) {
                               voiceSearchCon.isListening
                                   ? voiceSearchCon.stopListening()
                                   : voiceSearchCon.startListening();

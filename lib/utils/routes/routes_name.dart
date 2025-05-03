@@ -37,6 +37,7 @@ class RoutesName {
   static const myAppointmentsScreen = "/myAppointmentsScreen";
   static const uploadedOn = "/uploadedOn";
   static const aboutUsScreen = "/aboutUsScreen";
+  static const clinicLocationScreen = "/clinicLocationScreen";
 
 }
 

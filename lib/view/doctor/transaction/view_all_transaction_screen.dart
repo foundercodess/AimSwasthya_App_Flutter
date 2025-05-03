@@ -66,6 +66,7 @@ class _ViewAllTransactionScreenState extends State<ViewAllTransactionScreen> {
                   )
                 ],
               ),
+
               Sizes.spaceHeight20,
               transaction(),
               Sizes.spaceHeight20,
@@ -158,6 +159,7 @@ class _ViewAllTransactionScreenState extends State<ViewAllTransactionScreen> {
                     size: Sizes.fontSizeFourPFive,
                     fontWeight: FontWeight.w400,
                   ),
+
                   subtitle: index == 1
                       ? TextConst(
                           "Cancellation charged",
@@ -180,7 +182,7 @@ class _ViewAllTransactionScreenState extends State<ViewAllTransactionScreen> {
                           color: const Color(0xffC10000),
                         )
                       : TextConst(
-                          "+450",
+                    revData.amount.toString(),
                           size: Sizes.fontSizeFourPFive,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xff36D000),

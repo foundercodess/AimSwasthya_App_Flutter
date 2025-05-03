@@ -34,6 +34,7 @@ import 'package:aim_swasthya/view_model/user/update_appointment_view_model.dart'
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:aim_swasthya/utils/routes/routes.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
+import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:aim_swasthya/view_model/user/voice_search_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => RegisterViewModel()),
         ChangeNotifierProvider(create: (ctx) => ScheduleViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserRegisterViewModel()),
-        ChangeNotifierProvider(create: (ctx) => DocGraphViewModel()),
+        // ChangeNotifierProvider(create: (ctx) => DocGraphViewModel()),
         ChangeNotifierProvider(create: (ctx) => ChangeLanguageViewModel()),
         ChangeNotifierProvider(create: (ctx) => BottomNavProvider()),
         ChangeNotifierProvider(create: (ctx) => PatientAuthViewModel()),

@@ -66,9 +66,11 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                                   .toList();
                               if (topSpecialist.isEmpty) {
                                 return const Center(
-                                    child: ImageContainer(
-                                        imagePath:
-                                            "assets/images/noDoctorFound.png"));
+                                    child: NoMessage(
+                                      message: "No specialists around here, for now...",
+                                      title:
+                                      "We’re working to bring expert care to your area",
+                                    ));
                               }
                               final List<Doctors> topDrSpecialist;
                               if (voiceSearchCon.searchCon.text.isEmpty) {
@@ -86,9 +88,11 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                               }
                               if (topDrSpecialist.isEmpty) {
                                 return const Center(
-                                    child: NoDataFound(
-                                  message: "No matched top specialist found",
-                                ));
+                                    child: NoMessage(
+                                      message: "No specialists around here, for now...",
+                                      title:
+                                      "We’re working to bring expert care to your area",
+                                    ));
                               }
                               return ListView.builder(
                                 shrinkWrap: true,
@@ -113,9 +117,11 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                               );
                             })
                           : const Center(
-                              child: ImageContainer(
-                              imagePath: 'assets/images/noDoctorFound.png',
-                            )
+                              child: NoMessage(
+                                message: "No specialists around here, for now...",
+                                title:
+                                "We’re working to bring expert care to your area",
+                              )
                       )),
                   Sizes.spaceHeight20,
                   Row(

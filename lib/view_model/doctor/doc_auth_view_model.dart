@@ -13,6 +13,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+import '../../view/common/intro/all_set_doc_screen.dart';
+import '../../view/doctor/auth/register_screen.dart';
+
 class DoctorAuthViewModel extends ChangeNotifier {
   final _doctorAuthRepo = DoctorAuthRepo();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -30,6 +33,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
   }
 
   dynamic _senOtpData;
+  dynamic get senOtpData=>_senOtpData;
   bool isSigningIn = false;
 
   int _navType = 1;
@@ -128,29 +132,36 @@ class DoctorAuthViewModel extends ChangeNotifier {
             if (authCon.userRole == 1) {
               Navigator.pushNamed(context, RoutesName.registerScreen);
             } else {
-              print("docSendklk;o;Otp--]=]");
               Navigator.pushNamed(context, RoutesName.userRegisterScreen);
             }
           } else {
-            print("docSendOtp--]=]");
             Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
         } else {
-          print("docSendOtpApi");
           docSendOtpApi(context);
         }
+      }else{
+          _senOtpData = {
+            'isReg': value['is_registered'],
+            "phone": phone,
+            "email": email,
+            "type": type
+          };
+          if (type == "email") {
+            if (!value['is_registered']) {
+              if (authCon.userRole == 1) {
+                Navigator.pushNamed(context, RoutesName.registerScreen);
+              } else {
+                Navigator.pushNamed(context, RoutesName.userRegisterScreen);
+              }
+            } else {
+              Navigator.pushNamed(context, RoutesName.allSetDocScreen);
+            }
+          } else {
+            docSendOtpApi(context);
+          }
       }
       LoaderOverlay().hide();
-      // else if (value['status'] == true) {
-      //   _senOtpData = {
-      //     'isReg': value['is_registered'],
-      //     "email": email,
-      //     "type": type
-      //   };
-      // }
-      // else{
-      //   Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-      // }
     }).onError((error, stackTrace) {
       LoaderOverlay().hide();
       setLoading(false);
@@ -173,7 +184,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
     print(data);
     _doctorAuthRepo.docSendOtpApi(data).then((value) {
       Utils.show(value['message'], context);
-      print(value);
+      print("anshii${value}");
       if (value['status'] == true) {
         _senOtpData['id'] = value['user']['doctor_id'];
         if (_senOtpData['email'] != null && _senOtpData['email'] != "") {
@@ -288,16 +299,17 @@ class DoctorAuthViewModel extends ChangeNotifier {
         "phone": _senOtpData['phone'],
         "specialization_id": speId,
         "practice_start_year": praYear,
-        "email": "priya.sharma@example.com",
+        "email": _senOtpData['email'],
         // "email": _senOtpData['email'],
       };
-      print(jsonEncode(data));
+      print("reg payload: ${jsonEncode(data)}");
       _doctorAuthRepo.doctorRegisterApi(data).then((value) {
         Utils.show(value['message'], context);
         if (value['status'] == true) {
-          UserViewModel().saveUser(value['data']['doctor_id']);
-          Navigator.pushNamed(context, RoutesName.allSetDocScreen);
-          UserViewModel().saveRole(2);
+          UserViewModel().saveUser(value['data']['doctor']['doctor_id']);
+          UserViewModel().saveRole(1);
+          Navigator.push(
+              context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
         } else {
           Utils.show(value['message'], context);
         }
