@@ -7,6 +7,7 @@ import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:aim_swasthya/res/common_material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -21,10 +22,9 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-
   String selectedGender = '';
   dynamic dateTime;
-
+  DateTime? _selectedDob;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -97,10 +97,12 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
                   } else if (userRegCon.isPersonalInfoSelected == 3) {
                     userRegCon.changeWidget(4);
                   } else if (userRegCon.isPersonalInfoSelected == 4) {
+
                     patientAuthCon.patientRegisterApi(
                         _nameController.text,
                         selectedGender,
-                        _dateController.text,
+                        dateTime,
+                        // _dateController.text,
                         _heightController.text,
                         _weightController.text,
                         context);
@@ -283,40 +285,47 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
           ),
         ),
         Sizes.spaceHeight20,
-        Center(
-          child: Container(
-            width: 150,
-            child: TextField(
-              controller: _dateController,
-              readOnly: true,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: Sizes.fontSizeFivePFive,
-                fontWeight: FontWeight.w600,
-                color: AppColor.blue,
-              ),
-              onTap: () { _selectDate(context);
-
-              },
-              decoration: InputDecoration(
-                isDense: true,
-                prefixIcon: GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: const Icon(Icons.calendar_month, color: AppColor.blue,),
-                ),
-                contentPadding: const EdgeInsets.only(bottom: 0, left: 0, right: 0),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColor.white),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColor.white),
-                ),
-                // counterText: "",
-              ),
-              // cursorHeight: 20,
-            ),
-          ),
-        )
+        CustomCalendar(
+          onDateSelected: (v) {
+            setState(() {
+              dateTime = v;
+            });
+          },
+        ),
+        // Center(
+        //   child: Container(
+        //     width: 150,
+        //     child: TextField(
+        //       controller: _dateController,
+        //       readOnly: true,
+        //       textAlign: TextAlign.center,
+        //       style: TextStyle(
+        //         fontSize: Sizes.fontSizeFivePFive,
+        //         fontWeight: FontWeight.w600,
+        //         color: AppColor.blue,
+        //       ),
+        //       onTap: () { _selectDate(context);
+        //
+        //       },
+        //       decoration: InputDecoration(
+        //         isDense: true,
+        //         prefixIcon: GestureDetector(
+        //           onTap: () => _selectDate(context),
+        //           child: const Icon(Icons.calendar_month, color: AppColor.blue,),
+        //         ),
+        //         contentPadding: const EdgeInsets.only(bottom: 0, left: 0, right: 0),
+        //         enabledBorder: const UnderlineInputBorder(
+        //           borderSide: BorderSide(color: AppColor.white),
+        //         ),
+        //         focusedBorder: const UnderlineInputBorder(
+        //           borderSide: BorderSide(color: AppColor.white),
+        //         ),
+        //         // counterText: "",
+        //       ),
+        //       // cursorHeight: 20,
+        //     ),
+        //   ),
+        // )
 
 
 
@@ -324,7 +333,6 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
       ],
     );
   }
-  // _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -339,8 +347,6 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
       });
     }
   }
-
-
 
   Widget heightSection() {
     return Container(

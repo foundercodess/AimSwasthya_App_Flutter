@@ -44,7 +44,7 @@ class _TermsOfUserScreenState extends State<TermsOfUserScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: HtmlWidget(body),
-              )
+              ),
             ],
           ),
         ),

@@ -1292,6 +1292,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         .doctorAvlAppointmentModel!.data!.slots![0].availabilityDate
         .toString());
     String formattedDate = DateFormat('yyyy-dd-mm').format(dateTime);
+    String currentDate = DateTime.now().toString().split(' ')[0];
     return SizedBox(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -1351,7 +1352,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                               ),
                               Sizes.spaceWidth5,
                               TextConst(
-                                "$formattedDate at ${docAppointmentCon.selectedTime!.slotTime}",
+                                "$currentDate at ${docAppointmentCon.selectedTime!.slotTime}",
                                 size: Sizes.fontSizeFour * 1.2,
                                 fontWeight: FontWeight.w500,
                                 color: AppColor.black,
@@ -1400,7 +1401,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             ),
             Sizes.spaceHeight10,
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, RoutesName.viewAppointmentsScreen);
+              },
               child: TextConst(
                 AppLocalizations.of(context)!.go_back,
                 size: Sizes.fontSizeFive,

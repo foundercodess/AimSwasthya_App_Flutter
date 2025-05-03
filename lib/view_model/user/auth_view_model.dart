@@ -14,7 +14,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PatientAuthViewModel extends ChangeNotifier {
@@ -102,6 +101,7 @@ class PatientAuthViewModel extends ChangeNotifier {
       );
     }
   }
+
 
   // OTP Registration Logic
 
@@ -305,8 +305,8 @@ class PatientAuthViewModel extends ChangeNotifier {
       Map data = {
         "name": name,
         "gender": gender,
-        // DateFormat('dd/MM/yyyy').format(DateTime.parse(appointmentData.dateOfBirth.toString()))
-        "dob": dob,
+       // "dob": dob,
+       "dob":  dob.toString().substring(0,10),
         "email": _senOtpData['email'],
         "phone": _senOtpData['phone'],
         "height": height,
