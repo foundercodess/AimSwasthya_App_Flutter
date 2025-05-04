@@ -21,6 +21,23 @@ class PatientAuthViewModel extends ChangeNotifier {
   final _patientAuthRepo = PatientAuthRepo();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController dateController = TextEditingController();
+
+  PatientAuthViewModel() {
+    dateController.addListener(() {
+      notifyListeners();
+    });
+  }
+
+  setDob(String val) {
+    dateController.text = val;
+    notifyListeners();
+  }
+
+  removeDob() {
+    dateController.clear();
+    notifyListeners();
+  }
 
   bool _loading = false;
   bool get loading => _loading;
@@ -55,7 +72,7 @@ class PatientAuthViewModel extends ChangeNotifier {
     setLoading(true);
     isSigningIn = true;
     notifyListeners();
-
+    signOutFromGoogle(context);
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -102,12 +119,11 @@ class PatientAuthViewModel extends ChangeNotifier {
     }
   }
 
-
   // OTP Registration Logic
 
   Future<void> isRegisterApi(
       dynamic phone, dynamic email, dynamic type, context) async {
-    signOutFromGoogle(context);
+    // signOutFromGoogle(context);
     final authCon = Provider.of<UserRegisterViewModel>(context, listen: false);
     LoaderOverlay().show(context);
     setLoading(true);
@@ -129,7 +145,8 @@ class PatientAuthViewModel extends ChangeNotifier {
                 builder: (context) {
                   return ActionOverlay(
                     text: "User not found",
-                    subtext: "Looks like you don’t have an account yet. Let’s get you registered!",
+                    subtext:
+                        "Looks like you don’t have an account yet. Let’s get you registered!",
                     noLabel: "Cancel",
                     yesLabel: "Continue",
                     onTap: () {
@@ -137,13 +154,13 @@ class PatientAuthViewModel extends ChangeNotifier {
                       if (authCon.userRole == 1) {
                         Navigator.pushNamed(context, RoutesName.registerScreen);
                       } else {
-                        Navigator.pushNamed(context, RoutesName.userRegisterScreen);
+                        Navigator.pushNamed(
+                            context, RoutesName.userRegisterScreen);
                       }
                     },
                   );
                 });
-      }
-        else {
+          } else {
             UserViewModel().saveUser(value['patient_id']);
             Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
@@ -175,7 +192,7 @@ class PatientAuthViewModel extends ChangeNotifier {
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         _senOtpData['id'] = value['user']['patient_id'];
-        if (_senOtpData['email'] != null && _senOtpData['email'] != "" ) {
+        if (_senOtpData['email'] != null && _senOtpData['email'] != "") {
           UserViewModel().saveUser(2);
         }
         LoaderOverlay().hide();
@@ -245,25 +262,27 @@ class PatientAuthViewModel extends ChangeNotifier {
         UserViewModel().saveBeToken(value['accessToken']);
         if (!_senOtpData['isReg']) {
           // if (userRole == 1) {
-            showCupertinoDialog(
-                context: context,
-                builder: (context) {
-                  return ActionOverlay(
-                    text: "User not found",
-                    subtext: "Looks like you don’t have an account yet. Let’s get you registered!",
-                    noLabel: "Cancel",
-                    yesLabel: "Continue",
-                    onTap: () {
-                      Navigator.pop(context);
-                      if (userRole == 1) {
-                        Navigator.pushNamed(context, RoutesName.registerScreen);
-                      } else {
-                        Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-                      }
-                    },
-                  );
-                });
-            // Navigator.pushNamed(context, RoutesName.registerScreen);
+          showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return ActionOverlay(
+                  text: "User not found",
+                  subtext:
+                      "Looks like you don’t have an account yet. Let’s get you registered!",
+                  noLabel: "Cancel",
+                  yesLabel: "Continue",
+                  onTap: () {
+                    Navigator.pop(context);
+                    if (userRole == 1) {
+                      Navigator.pushNamed(context, RoutesName.registerScreen);
+                    } else {
+                      Navigator.pushNamed(
+                          context, RoutesName.userRegisterScreen);
+                    }
+                  },
+                );
+              });
+          // Navigator.pushNamed(context, RoutesName.registerScreen);
           // }
           // else {
           //   Navigator.pushNamed(context, RoutesName.userRegisterScreen);
@@ -305,32 +324,32 @@ class PatientAuthViewModel extends ChangeNotifier {
       Map data = {
         "name": name,
         "gender": gender,
-       // "dob": dob,
-       "dob":  dob.toString().substring(0,10),
+        "dob": dob,
+        // "dob":  dob.toString().substring(0,10),
         "email": _senOtpData['email'],
         "phone": _senOtpData['phone'],
         "height": height,
         "weight": weight,
         "latitude": latitude.toStringAsFixed(5),
         "longitude": longitude.toStringAsFixed(5),
+        "blood_group": "",
+        "allergies": "",
       };
 
       print(jsonEncode(data));
 
-    _patientAuthRepo.patientRegisterApi(data).then((value) {
+      _patientAuthRepo.patientRegisterApi(data).then((value) {
         Utils.show(value['message'], context);
         if (value['status'] == true) {
           if (_senOtpData['type'] == 'email') {
             UserViewModel().saveUser(value['data']['patient']['patient_id']);
           } else {
-            UserViewModel()
-                .saveUser(value['data']['patient']['patient_id']);
+            UserViewModel().saveUser(value['data']['patient']['patient_id']);
           }
           Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           UserViewModel().saveRole(2);
         }
-      }
-      ).onError((error, stackTrace) {
+      }).onError((error, stackTrace) {
         setLoading(false);
         notifyListeners();
         if (kDebugMode) {

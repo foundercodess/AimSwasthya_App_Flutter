@@ -120,7 +120,7 @@ class PatientHomeViewModel extends ChangeNotifier {
       }
     });
     await Future.delayed(const Duration(minutes: 5), () async {
-      print("fun invoked");
+      debugPrint("fun invoked");
       await LocalImageHelper.instance.loadImages();
     });
   }

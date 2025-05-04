@@ -1352,7 +1352,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                               ),
                               Sizes.spaceWidth5,
                               TextConst(
-                                "$currentDate at ${docAppointmentCon.selectedTime!.slotTime}",
+                                "${DateFormat('yyyy-MM-dd').format(DateTime.parse(docAppointmentCon.selectedDate!.availabilityDate.toString()))} at ${docAppointmentCon.selectedTime!.slotTime}",
                                 size: Sizes.fontSizeFour * 1.2,
                                 fontWeight: FontWeight.w500,
                                 color: AppColor.black,

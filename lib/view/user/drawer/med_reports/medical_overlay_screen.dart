@@ -4,6 +4,7 @@ import 'package:aim_swasthya/res/color_const.dart';
 import 'package:aim_swasthya/res/size_const.dart';
 import 'package:aim_swasthya/res/text_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
+import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view_model/user/get_image_url_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,7 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
                   child: Container(
                     height: Sizes.screenHeight * 0.165,
                     width: Sizes.screenWidth,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: AppColor.black.withOpacity(0.5),
@@ -149,12 +151,15 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
             Sizes.spaceHeight20,
             ButtonConst(
               height: Sizes.screenHeight * 0.06,
-              title: "Next record",
+              title: widget.pickedFile.length == 1 || ((widget.pickedFile.length) == selectedIndex + 1) ? 'Next' : "Next record",
               width: Sizes.screenWidth,
               onTap: () async {
                 // print(object)
+                if (textController.text.isEmpty) {
+                  Utils.show("Please enter title to continue", context);
+                  return;
+                }
                 if ((widget.pickedFile.length) == selectedIndex + 1) {
-                  print("dffds");
                   setState(() {
                     filesWithFileName.add({
                       'path': widget.pickedFile[selectedIndex],
@@ -239,31 +244,6 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
               width: Sizes.screenWidth,
               onTap: () async {
                 Navigator.pop(context);
-                // for (var data in filesWithFileName) {
-                //   await Provider.of<GetImageUrlViewModel>(context,
-                //           listen: false)
-                //       .addMedicalRecord(
-                //           filePath: data['path'], fileName: data['fileName']);
-                // }
-                //   for (var data in widget.pickedFile) {
-                //     print("Uploading file: ${data.path}");
-                //     // await Provider.of<GetImageUrlViewModel>(context, listen: false)
-                //     //     .addMedicalRecord(data,);
-                //   }
-                //   Navigator.pop(context);
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //      const SnackBar(
-                //       content: Text( "Pre-signed URL generated successfully"),
-                //       backgroundColor: AppColor.lightBlue,
-                //     ),
-                //   );
-                // },
-
-                // onTap: () {
-                //   for (var data in widget.pickedFile) {
-                //     print("Uploading file: ${data.path}");
-                //     Provider.of<GetImageUrlViewModel>(context, listen: false).uploadImage(data,);
-                //   }
               },
             ),
           )
@@ -290,7 +270,9 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
                   return Container(
                     margin: const EdgeInsets.all(4),
                     height: Sizes.screenHeight * 0.3,
-                    width: Sizes.screenWidth * 0.38,
+                    width: filesWithFileName.length == 1
+                        ? Sizes.screenWidth * 0.9
+                        : Sizes.screenWidth * 0.38,
                     decoration: BoxDecoration(
                       color: AppColor.grey,
                       borderRadius: BorderRadius.circular(30),
@@ -305,6 +287,7 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
                       ),
                       child: Center(
                           child: TextConst(
+                        textAlign: TextAlign.center,
                         filesWithFileName[index]['path'],
                         size: Sizes.fontSizeFourPFive,
                         color: AppColor.white,
@@ -322,7 +305,9 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
                 return Container(
                   margin: const EdgeInsets.all(4),
                   height: Sizes.screenHeight * 0.3,
-                  width: Sizes.screenWidth * 0.38,
+                  width: filesWithFileName.length == 1
+                      ? Sizes.screenWidth * 0.9
+                      : Sizes.screenWidth * 0.38,
                   decoration: BoxDecoration(
                     color: AppColor.grey,
                     borderRadius: BorderRadius.circular(30),

@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../res/popUp_const.dart';
+import '../../../res/user_button_const.dart';
 import '../../../view_model/user/voice_search_view_model.dart';
 
 class SearchDoctorScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeCon = Provider.of<PatientHomeViewModel>(context).patientHomeModel;
+    final homeCon = Provider.of<PatientHomeViewModel>(context);
     final title = ModalRoute.of(context)?.settings.arguments as String;
     final doctorDetailCon = Provider.of<DoctorDetailsViewModel>(context);
     final voiceSearchCon = Provider.of<VoiceSymptomSearchViewModel>(context);
@@ -56,273 +57,316 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                     AppbarConst(
                       title: title,
                     ),
-                    Sizes.spaceHeight10,
-                    textFields(),
-                    Sizes.spaceHeight30,
-                    TextConst(
-                      AppLocalizations.of(context)!.specialties,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Sizes.screenWidth * 0.04,
+                    if(doctorDetailCon
+                        .filterDoctorDetailsModel!.isEmpty && homeCon.noServicesArea)
+                      SizedBox(
+                        height: Sizes.screenHeight/1.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Center(
+                                child: NoMessage(
+                                  message:
+                                  "No specialists around here, for now...",
+                                  title:
+                                  "We’re working to bring expert care to your area",
+                                )),
+                            Sizes.spaceHeight15,
+                            if(homeCon.noServicesArea)
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Sizes.screenWidth * 0.04),
+                                child: ButtonConst(
+                                  title:
+                                  'Change Location',
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  color: AppColor.btnPurpleColor,
+                                ),)
+                          ],
+                        ),
                       ),
-                      size: Sizes.fontSizeFivePFive,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    Sizes.spaceHeight25,
-                    homeCon!.data!.doctors!.isEmpty &&
-                                homeCon.data!.doctors!.isEmpty ||
-                            homeCon.data!.doctors == null
-                        ? const NoMessage(
-                            message: "No specialists around here, for now...",
-                            title:
-                                "We’re working to bring expert care to your area",
-                          )
-                        // const ImageContainer(
-                        //         imagePath: "assets/noDoctorFound.png")
-                        : Builder(builder: (context) {
-                            debugPrint(
-                                "sdde: ${voiceSearchCon.searchCon.text}");
-                            final List<Specializations> symptomsData;
-                            if (voiceSearchCon.searchCon.text.isEmpty) {
-                              symptomsData = homeCon.data!.specializations!;
-                            } else {
-                              symptomsData = homeCon.data!.specializations!
-                                  .where((e) => e.specializationName!
-                                      .toLowerCase()
-                                      .contains(voiceSearchCon.searchCon.text))
-                                  .toList();
-                            }
-                            if (symptomsData.isEmpty) {
-                              return const Center(
-                                  child:NoMessage(
-                                    message: "No specialists around here, for now...",
-                                    title:
-                                    "We’re working to bring expert care to your area",
-                                  ));
-                            }
-                            return SizedBox(
-                              height: Sizes.screenHeight * 0.15,
-                              child: ListView.builder(
-                                itemCount: symptomsData.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  final item = symptomsData[index];
-                                  bool isSelected = item.specializationId ==
-                                      (doctorDetailCon.selectedSpecialist ==
-                                              null
-                                          ? 0
-                                          : doctorDetailCon.selectedSpecialist!
-                                              .specializationId);
-                                  String? imagePath = LocalImageHelper.instance
-                                      .getImagePath(
-                                          item.specializationName ?? "");
-                                  return Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          doctorDetailCon
-                                              .getSpecialistById(item);
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                              right: index ==
-                                                      homeCon
-                                                              .data!
-                                                              .specializations!
-                                                              .length -
-                                                          1
-                                                  ? Sizes.screenWidth * 0.03
-                                                  : 0,
-                                              left: index == 0
-                                                  ? Sizes.screenWidth * 0.03
-                                                  : Sizes.screenWidth * 0.03),
-                                          height: 120,
-                                          width: 120,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: isSelected
-                                                ? const Color(0xff73CBFF)
-                                                : AppColor.grey,
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              if (imagePath != null)
-                                                Image.file(
-                                                  File(imagePath),
-                                                  height:
-                                                      Sizes.screenHeight * 0.05,
-                                                  width:
-                                                      Sizes.screenWidth * 0.11,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              else
-                                                Icon(
-                                                  Icons.image,
-                                                  size:
-                                                      Sizes.screenHeight * 0.05,
-                                                  color: AppColor.blue,
-                                                ),
-                                              Sizes.spaceHeight5,
-                                              Container(
-                                                alignment: Alignment.center,
-                                                height:
-                                                    Sizes.screenHeight * 0.041,
-                                                width: Sizes.screenWidth * 0.2,
-                                                child: Center(
-                                                  child: TextConst(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    item.specializationName ??
-                                                        "",
-                                                    size: Sizes.fontSizeFour *
-                                                        1.1,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColor.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            );
-                          }),
-                    Sizes.spaceHeight30,
-                    TextConst(
-                      doctorDetailCon.selectedSpecialist == null
-                          ? AppLocalizations.of(context)!.top_specialists
-                          : "Top ${doctorDetailCon.selectedSpecialist!.specializationName ?? ""}",
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Sizes.screenWidth * 0.04,
+                    if (doctorDetailCon
+                        .filterDoctorDetailsModel!.isNotEmpty) ...[
+                      Sizes.spaceHeight10,
+                      textFields(),
+                      Sizes.spaceHeight30,
+                      TextConst(
+                        AppLocalizations.of(context)!.specialties,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Sizes.screenWidth * 0.04,
+                        ),
+                        size: Sizes.fontSizeFivePFive,
+                        fontWeight: FontWeight.w500,
                       ),
-                      size: Sizes.fontSizeFivePFive,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    Sizes.spaceHeight10,
-                    doctorDetailCon.filterDoctorDetailsModel!.isNotEmpty
-                        ? Builder(builder: (context) {
-                            final topSpecialist = doctorDetailCon
-                                .filterDoctorDetailsModel!
-                                .where((e) =>
-                                    double.parse(e.averageRating.toString()) >=
-                                    Config.topSpecialistAverageReview)
-                                .toList();
-                            topSpecialist.sort((a, b) => double.parse(
-                                    b.averageRating.toString())
-                                .compareTo(
-                                    double.parse(a.averageRating.toString())));
-                            if (topSpecialist.isEmpty) {
-                              return const Center(
-                                  child: NoMessage(
-                                    message: "No specialists around here, for now...",
-                                    title:
-                                    "We’re working to bring expert care to your area",
-                                  ));
-                            }
-                            final List<Doctors> topDrSpecialist;
-                            //
-                            if (voiceSearchCon.searchCon.text.isEmpty) {
-                              topDrSpecialist = topSpecialist;
-                            } else {
-                              topDrSpecialist = topSpecialist
-                                  .where((e) =>
-                                      e.specializationName!
-                                          .toLowerCase()
-                                          .contains(
-                                              voiceSearchCon.searchCon.text) ||
-                                      e.doctorName!.toLowerCase().contains(
-                                          voiceSearchCon.searchCon.text))
-                                  .toList();
-                            }
-                            if (topDrSpecialist.isEmpty) {
-                              return const Center(
-                                  child: NoMessage(
-                                    message: "No specialists around here, for now...",
-                                    title:
-                                    "We’re working to bring expert care to your area",
-                                  ));
-                            }
-                            return SizedBox(
-                              height: Sizes.screenHeight * 0.262,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: topDrSpecialist.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  final doctor = topDrSpecialist[index];
-                                  return Container(
-                                      padding: const EdgeInsets.all(6),
-                                      margin: const EdgeInsets.all(10),
-                                      child: DoctorTile(
-                                        doctor: doctor,
-                                      ));
-                                },
-                              ),
-                            );
-                          })
-                        : const Center(
-                            child: NoMessage(
+                      Sizes.spaceHeight25,
+                      homeCon!.patientHomeModel!.data!.doctors!.isEmpty &&
+                                  homeCon.patientHomeModel!.data!.doctors!.isEmpty ||
+                              homeCon.patientHomeModel!.data!.doctors == null
+                          ? const NoMessage(
                               message: "No specialists around here, for now...",
                               title:
-                              "We’re working to bring expert care to your area",
-                            )),
-                    Sizes.spaceHeight10,
-                    Row(
-                      children: [
-                        TextConst(
-                          AppLocalizations.of(context)!.near_you,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Sizes.screenWidth * 0.04,
-                          ),
-                          size: Sizes.fontSizeFivePFive,
-                          fontWeight: FontWeight.w500,
+                                  "We’re working to bring expert care to your area",
+                            )
+                          // const ImageContainer(
+                          //         imagePath: "assets/noDoctorFound.png")
+                          : Builder(builder: (context) {
+                              debugPrint(
+                                  "sdde: ${voiceSearchCon.searchCon.text}");
+                              final List<Specializations> symptomsData;
+                              if (voiceSearchCon.searchCon.text.isEmpty) {
+                                symptomsData = homeCon.patientHomeModel!.data!.specializations!;
+                              } else {
+                                symptomsData = homeCon.patientHomeModel!.data!.specializations!
+                                    .where((e) => e.specializationName!
+                                        .toLowerCase()
+                                        .contains(
+                                            voiceSearchCon.searchCon.text))
+                                    .toList();
+                              }
+                              if (symptomsData.isEmpty) {
+                                return const Center(
+                                    child: NoMessage(
+                                  message:
+                                      "No specialists around here, for now...",
+                                  title:
+                                      "We’re working to bring expert care to your area",
+                                ));
+                              }
+                              return SizedBox(
+                                height: Sizes.screenHeight * 0.15,
+                                child: ListView.builder(
+                                  itemCount: symptomsData.length,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    final item = symptomsData[index];
+                                    bool isSelected = item.specializationId ==
+                                        (doctorDetailCon.selectedSpecialist ==
+                                                null
+                                            ? 0
+                                            : doctorDetailCon
+                                                .selectedSpecialist!
+                                                .specializationId);
+                                    String? imagePath =
+                                        LocalImageHelper.instance.getImagePath(
+                                            item.specializationName ?? "");
+                                    return Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            doctorDetailCon
+                                                .getSpecialistById(item);
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                right: index ==
+                                                        homeCon.patientHomeModel!
+                                                                .data!
+                                                                .specializations!
+                                                                .length -
+                                                            1
+                                                    ? Sizes.screenWidth * 0.03
+                                                    : 0,
+                                                left: index == 0
+                                                    ? Sizes.screenWidth * 0.03
+                                                    : Sizes.screenWidth * 0.03),
+                                            height: 120,
+                                            width: 120,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: isSelected
+                                                  ? const Color(0xff73CBFF)
+                                                  : AppColor.grey,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                if (imagePath != null)
+                                                  Image.file(
+                                                    File(imagePath),
+                                                    height: Sizes.screenHeight *
+                                                        0.05,
+                                                    width: Sizes.screenWidth *
+                                                        0.11,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                else
+                                                  Icon(
+                                                    Icons.image,
+                                                    size: Sizes.screenHeight *
+                                                        0.05,
+                                                    color: AppColor.blue,
+                                                  ),
+                                                Sizes.spaceHeight5,
+                                                Container(
+                                                  alignment: Alignment.center,
+                                                  height: Sizes.screenHeight *
+                                                      0.041,
+                                                  width:
+                                                      Sizes.screenWidth * 0.2,
+                                                  child: Center(
+                                                    child: TextConst(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      item.specializationName ??
+                                                          "",
+                                                      size: Sizes.fontSizeFour *
+                                                          1.1,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColor.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              );
+                            }),
+                      Sizes.spaceHeight30,
+                      TextConst(
+                        doctorDetailCon.selectedSpecialist == null
+                            ? AppLocalizations.of(context)!.top_specialists
+                            : "Top ${doctorDetailCon.selectedSpecialist!.specializationName ?? ""}",
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Sizes.screenWidth * 0.04,
                         ),
-                      ],
-                    ),
-                    Sizes.spaceHeight15,
-                    Builder(builder: (context) {
-                      if (doctorDetailCon
-                          .filterDoctorDetailsModel!.isNotEmpty) {
-                        final List<Doctors> nearDrSpecialist;
-                        if (voiceSearchCon.searchCon.text.isEmpty) {
-                          nearDrSpecialist =
-                              doctorDetailCon.filterDoctorDetailsModel!;
-                        } else {
-                          nearDrSpecialist = doctorDetailCon
-                              .filterDoctorDetailsModel!
-                              .where((e) =>
-                                  e.specializationName!.toLowerCase().contains(
-                                      voiceSearchCon.searchCon.text) ||
-                                  e.doctorName!
-                                      .toLowerCase()
-                                      .contains(voiceSearchCon.searchCon.text))
-                              .toList();
-                        }
-                        if (nearDrSpecialist.isEmpty) {
-                          return const Center(
+                        size: Sizes.fontSizeFivePFive,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      Sizes.spaceHeight10,
+                      doctorDetailCon.filterDoctorDetailsModel!.isNotEmpty
+                          ? Builder(builder: (context) {
+                              final topSpecialist = doctorDetailCon
+                                  .filterDoctorDetailsModel!
+                                  .where((e) =>
+                                      double.parse(
+                                          e.averageRating.toString()) >=
+                                      Config.topSpecialistAverageReview)
+                                  .toList();
+                              topSpecialist.sort((a, b) =>
+                                  double.parse(b.averageRating.toString())
+                                      .compareTo(double.parse(
+                                          a.averageRating.toString())));
+                              if (topSpecialist.isEmpty) {
+                                return const Center(
+                                    child: NoMessage(
+                                  message:
+                                      "No specialists around here, for now...",
+                                  title:
+                                      "We’re working to bring expert care to your area",
+                                ));
+                              }
+                              final List<Doctors> topDrSpecialist;
+                              //
+                              if (voiceSearchCon.searchCon.text.isEmpty) {
+                                topDrSpecialist = topSpecialist;
+                              } else {
+                                topDrSpecialist = topSpecialist
+                                    .where((e) =>
+                                        e.specializationName!
+                                            .toLowerCase()
+                                            .contains(voiceSearchCon
+                                                .searchCon.text) ||
+                                        e.doctorName!.toLowerCase().contains(
+                                            voiceSearchCon.searchCon.text))
+                                    .toList();
+                              }
+                              if (topDrSpecialist.isEmpty) {
+                                return const Center(
+                                    child: NoMessage(
+                                  message:
+                                      "No specialists around here, for now...",
+                                  title:
+                                      "We’re working to bring expert care to your area",
+                                ));
+                              }
+                              return SizedBox(
+                                height: Sizes.screenHeight * 0.262,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: topDrSpecialist.length,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    final doctor = topDrSpecialist[index];
+                                    return Container(
+                                        padding: const EdgeInsets.all(6),
+                                        margin: const EdgeInsets.all(10),
+                                        child: DoctorTile(
+                                          doctor: doctor,
+                                        ));
+                                  },
+                                ),
+                              );
+                            })
+                          : const Center(
                               child: NoMessage(
-                                message: "No specialists around here, for now...",
-                                title:
-                                "We’re working to bring expert care to your area",
-                              ));
+                              message: "No specialists around here, for now...",
+                              title:
+                                  "We’re working to bring expert care to your area",
+                            )),
+                      Sizes.spaceHeight10,
+                      Row(
+                        children: [
+                          TextConst(
+                            AppLocalizations.of(context)!.near_you,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Sizes.screenWidth * 0.04,
+                            ),
+                            size: Sizes.fontSizeFivePFive,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
+                      ),
+                      Sizes.spaceHeight15,
+                      Builder(builder: (context) {
+                        if (doctorDetailCon
+                            .filterDoctorDetailsModel!.isNotEmpty) {
+                          final List<Doctors> nearDrSpecialist;
+                          if (voiceSearchCon.searchCon.text.isEmpty) {
+                            nearDrSpecialist =
+                                doctorDetailCon.filterDoctorDetailsModel!;
+                          } else {
+                            nearDrSpecialist = doctorDetailCon
+                                .filterDoctorDetailsModel!
+                                .where((e) =>
+                                    e.specializationName!
+                                        .toLowerCase()
+                                        .contains(
+                                            voiceSearchCon.searchCon.text) ||
+                                    e.doctorName!.toLowerCase().contains(
+                                        voiceSearchCon.searchCon.text))
+                                .toList();
+                          }
+                          if (nearDrSpecialist.isEmpty) {
+                            return const Center(
+                                child: NoMessage(
+                              message: "No specialists around here, for now...",
+                              title:
+                                  "We’re working to bring expert care to your area",
+                            ));
+                          }
+                          return SpecialistsTopScreen(
+                              doctors: nearDrSpecialist);
                         }
-                        return SpecialistsTopScreen(doctors: nearDrSpecialist);
-                      }
-                      return const Center(
-                          child: NoMessage(
-                            message: "No specialists around here, for now...",
-                            title:
-                            "We’re working to bring expert care to your area",
-                          ));
-                    }),
-                    SizedBox(
-                      height: Sizes.screenHeight * 0.06,
-                    )
+                        return const Center(
+                            child: NoMessage(
+                          message: "No specialists around here, for now...",
+                          title:
+                              "We’re working to bring expert care to your area",
+                        ));
+                      }),
+                      SizedBox(
+                        height: Sizes.screenHeight * 0.06,
+                      )
+                    ]
                   ],
                 ),
               ));
@@ -360,8 +404,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                       builder: (context) {
                         return const VoiceSearchDialog();
                       });
-                }
-                else {
+                } else {
                   showCupertinoDialog(
                       context: context,
                       builder: (context) {
@@ -381,9 +424,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                             //       ? voiceSearchCon.stopListening()
                             //       : voiceSearchCon.startListening();
                             // });
-                            voiceSearchCon
-                                .initSpeech(context)
-                                .then((_) {
+                            voiceSearchCon.initSpeech(context).then((_) {
                               voiceSearchCon.isListening
                                   ? voiceSearchCon.stopListening()
                                   : voiceSearchCon.startListening();

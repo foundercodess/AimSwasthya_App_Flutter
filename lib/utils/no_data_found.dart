@@ -81,6 +81,7 @@ class NoDataMessages extends StatelessWidget {
           TextConst(
             message ?? "No Appointment yet",
             size: Sizes.fontSizeFive,
+            textAlign: TextAlign.center,
             // size: 14,
             fontWeight: FontWeight.w500,
           ),
