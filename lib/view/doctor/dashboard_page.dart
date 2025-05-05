@@ -255,12 +255,12 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                               ),
                               Sizes.spaceWidth5,
                               Sizes.spaceWidth3,
-                              docHomeCon.data!.doctors![0].mostBooked == "Y"
+                              docHomeCon.data!.doctors![0].topRated == "Y"
                                   ? proContainer(
                                       AppColor.lightGreen, 'Top choice')
                                   : const SizedBox(),
                               Sizes.spaceWidth10,
-                              docHomeCon.data!.doctors![0].topRated == "Y"
+                              docHomeCon.data!.doctors![0].mostBooked == "Y"
                                   ? proContainer(
                                       AppColor.conLightBlue, 'Most booked')
                                   : const SizedBox(),
@@ -344,10 +344,11 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             Container(
                               height: Sizes.screenHeight * 0.073,
                               width: Sizes.screenHeight * 0.073,
-                              decoration: const BoxDecoration(
+                              decoration:  const BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: AssetImage(Assets.imagesPatientImg),
+                                  image:
+                                  AssetImage(Assets.imagesPatientImg),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -396,7 +397,6 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                 Sizes.spaceHeight5,
                                 ButtonConst(
                                     title: "Reschedule",
-                                    // size: 10,
                                     size: Sizes.fontSizeThree * 1.05,
                                     fontWeight: FontWeight.w400,
                                     borderRadius: 7,

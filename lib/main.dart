@@ -7,6 +7,7 @@ import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_graph_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_health_report_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_home_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_update_appointment_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart'
     show DoctorProfileViewModel;
@@ -110,6 +111,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => ScheduleDoctorViewModel()),
         ChangeNotifierProvider(create: (ctx) => TCPPViewModel()),
         ChangeNotifierProvider(create: (ctx) => SlotScheduleViewModel()),
+        ChangeNotifierProvider(create: (ctx) => MapViewModel()),
       ],
       child: Consumer<ChangeLanguageViewModel>(
           builder: (context, provider, child) {

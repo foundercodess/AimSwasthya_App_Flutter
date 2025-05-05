@@ -117,7 +117,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                     ),
                     const Spacer(),
                     TextConst(
-                      revenueDocCon.revenueDoctorModel!.earning![0].monthYear ??
+                      revenueDocCon.revenueDoctorModel!.earningMonth![0].monthYear ??
                           "",
                       // "April",
                       size: Sizes.fontSizeFour,
@@ -142,7 +142,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                     ),
                     Sizes.spaceWidth10,
                     TextConst(
-                      revenueDocCon.revenueDoctorModel!.earning![0].totalAmount
+                      revenueDocCon.revenueDoctorModel!.earningMonth![0].totalAmount
                           .toString(),
                       // 'Rs. 20,000/-',
                       size: Sizes.fontSizeFivePFive,
@@ -177,7 +177,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     // final weekdayAnalytics = Provider.of<DocGraphViewModel>(context);
     final PageController pageController = PageController();
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
-    int itemCount = revenueDocCon.revenueDoctorModel!.sevenDaysEarning!.length;
+    int itemCount = revenueDocCon.revenueDoctorModel!.revenueAnalytics!.length;
     return Column(
       children: [
         SizedBox(
@@ -233,11 +233,11 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                         child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: revenueDocCon.revenueDoctorModel!.sevenDaysEarning!.length,
+                            itemCount: revenueDocCon.revenueDoctorModel!.revenueAnalytics!.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               final weekdays =
-                              revenueDocCon.revenueDoctorModel!.sevenDaysEarning![index];
+                              revenueDocCon.revenueDoctorModel!.revenueAnalytics![index];
                               return SizedBox(
                                 width: Sizes.screenWidth * 0.11,
                                 child: Column(
@@ -352,7 +352,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
               ),
               trailing: index == 1
                   ? TextConst(
-                      paymentData.amount ?? "",
+                      "+${paymentData.amount ?? ""}",
                       // "-50",
                       size: Sizes.fontSizeFive,
                       fontWeight: FontWeight.w600,

@@ -5,6 +5,7 @@ import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart'
     show DocComBottomNevBar;
+import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -325,12 +326,13 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   }
 
   Widget clinicDetails() {
+    final mapVM = Provider.of<MapViewModel>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, RoutesName.fullScreenMapPage);
+// mapVM.selectedLocation;
           },
           child: Container(
             padding: EdgeInsets.only(
@@ -354,7 +356,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     width: Sizes.screenWidth * 0.3,
                     height: Sizes.screenHeight * 0.045,
                     color: AppColor.blue,
-                    onTap: () {})
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesName.fullScreenMapPage);
+                    })
               ],
             ),
           ),

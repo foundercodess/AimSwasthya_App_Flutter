@@ -15,6 +15,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import '../../view/common/intro/all_set_doc_screen.dart';
 import '../../view/doctor/auth/register_screen.dart';
+import 'doc_reg_view_model.dart';
 
 class DoctorAuthViewModel extends ChangeNotifier {
   final _doctorAuthRepo = DoctorAuthRepo();
@@ -350,6 +351,8 @@ class DoctorAuthViewModel extends ChangeNotifier {
       _doctorAuthRepo.doctorRegisterApi(data).then((value) {
         Utils.show(value['message'], context);
         if (value['status'] == true) {
+          final registerCon = Provider.of<RegisterViewModel>(context,listen: false);
+          registerCon.changeWidget(false);
           UserViewModel().saveUser(value['data']['doctor']['doctor_id']);
           // UserViewModel().saveRole(1);
           // Navigator.push(

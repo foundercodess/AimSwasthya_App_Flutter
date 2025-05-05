@@ -1,30 +1,30 @@
 class RevenueDoctorModel {
   bool? status;
   String? message;
-  List<Earning>? earning;
-  List<SevenDaysEarning>? sevenDaysEarning;
+  List<EarningMonth>? earningMonth;
+  List<RevenueAnalytics>? revenueAnalytics;
   List<PatientPayment>? patientPayment;
 
   RevenueDoctorModel(
       {this.status,
         this.message,
-        this.earning,
-        this.sevenDaysEarning,
+        this.earningMonth,
+        this.revenueAnalytics,
         this.patientPayment});
 
   RevenueDoctorModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    if (json['earning'] != null) {
-      earning = <Earning>[];
-      json['earning'].forEach((v) {
-        earning!.add(Earning.fromJson(v));
+    if (json['earningMonth'] != null) {
+      earningMonth = <EarningMonth>[];
+      json['earningMonth'].forEach((v) {
+        earningMonth!.add(EarningMonth.fromJson(v));
       });
     }
-    if (json['seven_days_earning'] != null) {
-      sevenDaysEarning = <SevenDaysEarning>[];
-      json['seven_days_earning'].forEach((v) {
-        sevenDaysEarning!.add(SevenDaysEarning.fromJson(v));
+    if (json['revenue_Analytics'] != null) {
+      revenueAnalytics = <RevenueAnalytics>[];
+      json['revenue_Analytics'].forEach((v) {
+        revenueAnalytics!.add(RevenueAnalytics.fromJson(v));
       });
     }
     if (json['patient_payment'] != null) {
@@ -39,12 +39,12 @@ class RevenueDoctorModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['message'] = message;
-    if (earning != null) {
-      data['earning'] = earning!.map((v) => v.toJson()).toList();
+    if (earningMonth != null) {
+      data['earningMonth'] = earningMonth!.map((v) => v.toJson()).toList();
     }
-    if (sevenDaysEarning != null) {
-      data['seven_days_earning'] =
-          sevenDaysEarning!.map((v) => v.toJson()).toList();
+    if (revenueAnalytics != null) {
+      data['revenue_Analytics'] =
+          revenueAnalytics!.map((v) => v.toJson()).toList();
     }
     if (patientPayment != null) {
       data['patient_payment'] =
@@ -54,13 +54,13 @@ class RevenueDoctorModel {
   }
 }
 
-class Earning {
+class EarningMonth {
   String? monthYear;
   String? totalAmount;
 
-  Earning({this.monthYear, this.totalAmount});
+  EarningMonth({this.monthYear, this.totalAmount});
 
-  Earning.fromJson(Map<String, dynamic> json) {
+  EarningMonth.fromJson(Map<String, dynamic> json) {
     monthYear = json['month_year'];
     totalAmount = json['total_amount'];
   }
@@ -73,14 +73,14 @@ class Earning {
   }
 }
 
-class SevenDaysEarning {
+class RevenueAnalytics {
   String? date;
   String? dayName;
   String? totalAmount;
 
-  SevenDaysEarning({this.date, this.dayName, this.totalAmount});
+  RevenueAnalytics({this.date, this.dayName, this.totalAmount});
 
-  SevenDaysEarning.fromJson(Map<String, dynamic> json) {
+  RevenueAnalytics.fromJson(Map<String, dynamic> json) {
     date = json['date'];
     dayName = json['day_name'];
     totalAmount = json['total_amount'];

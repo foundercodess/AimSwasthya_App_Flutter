@@ -343,7 +343,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
         if (patientAuthCon.dateController.text.isNotEmpty)
           ConstText(
             title: "Selected birthday: ${patientAuthCon.dateController.text}",
-            color: Colors.black,
+            color: AppColor.naviBlue,
             size: Sizes.fontSizeFivePFive,
           ),
       ],
@@ -688,6 +688,7 @@ class _CustomCalendarDialogState extends State<CustomCalendarDialog> {
                       style: TextStyle(color: Colors.blue)),
                   onPressed: () {
                     patientAuthCon
+                        // .setDob(DateFormat('dd-MM-yyyy').format(selectedDate!));
                         .setDob(DateFormat('yyyy-MM-dd').format(selectedDate!));
                     widget.onSelect(selectedDate!);
                   },

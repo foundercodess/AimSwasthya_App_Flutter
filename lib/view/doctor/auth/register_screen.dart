@@ -78,6 +78,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Sizes.screenHeight * 0.06,
             Sizes.screenWidth * 0.1,
             Sizes.screenHeight * 0.12),
+        // child: registerCon.isPersonalInfoSelected
+        //     ? personalInfoScreen(onContinue: () => _registerDoctor(context))
+        //     : identityScreen(),
+
         child: registerCon.isPersonalInfoSelected == true
             ? personalInfoScreen()
             : identityScreen(),
@@ -89,16 +93,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           height: Sizes.screenHeight * 0.065,
           title: AppLocalizations.of(context)!.continue_con,
           onTap: () {
-            if (registerCon.isPersonalInfoSelected == false) {
+            if (registerCon.isPersonalInfoSelected == true) {
               doctorCon.doctorRegisterApi(
                   _nameController.text,
                   _genderController.text,
                   _speController.text,
                   _expController.text,
                   context);
-            } else{
-              registerCon.changeWidget(false);
             }
+            // else{
+            //   registerCon.changeWidget(false);
+            // }
+
           },
           color: AppColor.blue,
         ),

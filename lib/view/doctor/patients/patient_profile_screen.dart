@@ -26,70 +26,71 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    return patientProfileData.patientProfileModel ==null|| patientProfileData.loading
-        ? const Center(child: LoadData()): Scaffold(
-      extendBody: true,
-      primary: false,
-      backgroundColor: AppColor.white,
-      body:  SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            appBarConstant(
-              context,
-              isBottomAllowed: true,
-              child: Center(
-                child: TextConst(
-                  "Patient profile",
-                  size: Sizes.fontSizeSix * 1.1,
-                  fontWeight: FontWeight.w500,
-                ),
+    return patientProfileData.patientProfileModel == null ||
+            patientProfileData.loading
+        ? const Center(child: LoadData())
+        : Scaffold(
+            extendBody: true,
+            primary: false,
+            backgroundColor: AppColor.white,
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  appBarConstant(
+                    context,
+                    isBottomAllowed: true,
+                    child: Center(
+                      child: TextConst(
+                        "Patient profile",
+                        size: Sizes.fontSizeSix * 1.1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Sizes.spaceHeight30,
+                  TextConst(
+                    padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                    "General information",
+                    size: Sizes.fontSizeFourPFive,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  Sizes.spaceHeight15,
+                  patientProfile(),
+                  Sizes.spaceHeight20,
+                  TextConst(
+                    padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                    "Symptoms",
+                    size: Sizes.fontSizeFourPFive,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  Sizes.spaceHeight15,
+                  symptomsSec(),
+                  Sizes.spaceHeight20,
+                  TextConst(
+                    padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                    "Medical records",
+                    size: Sizes.fontSizeFourPFive,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  Sizes.spaceHeight5,
+                  uploadedRecords(),
+                  SizedBox(
+                    height: Sizes.screenHeight * 0.06,
+                  ),
+                  const SizedBox(
+                    height: kBottomNavigationBarHeight,
+                  )
+                ],
               ),
             ),
-
-            Sizes.spaceHeight30,
-            TextConst(
-              padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-              "General information",
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w400,
+            bottomNavigationBar: Container(
+              height: 70,
+              width: Sizes.screenWidth,
+              color: Colors.transparent,
+              child: const DocComBottomNevBar(),
             ),
-            Sizes.spaceHeight15,
-            patientProfile(),
-            Sizes.spaceHeight20,
-            TextConst(
-              padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-              "Symptoms",
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w400,
-            ),
-            Sizes.spaceHeight15,
-            symptomsSec(),
-            Sizes.spaceHeight20,
-            TextConst(
-              padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-              "Medical records",
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w400,
-            ),
-            Sizes.spaceHeight5,
-            uploadedRecords(),
-            SizedBox(
-              height: Sizes.screenHeight * 0.06,
-            ),
-            const SizedBox(
-              height: kBottomNavigationBarHeight,
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: 70,
-        width: Sizes.screenWidth,
-        color: Colors.transparent,
-        child: const DocComBottomNevBar(),
-      ),
-    );
+          );
   }
 
   Widget patientProfile() {
@@ -276,46 +277,54 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     //     "date": "12/02/2025"
     //   },
     // ];
-    return  patientProfileData.patientProfileModel != null && patientProfileData.patientProfileModel!.medicalRecords!= null&& patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty ? Container(
-      margin: const EdgeInsets.all(12),
-      padding: EdgeInsets.symmetric(
-          horizontal: Sizes.screenWidth * 0.035,
-          vertical: Sizes.screenHeight * 0.015),
-      width: Sizes.screenWidth,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12), color: AppColor.grey),
-      child: Column(
-        children: [
-          SizedBox(
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(0),
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: patientProfileData.patientProfileModel!.medicalRecords!.length,
-              itemBuilder: (context, index) {
-                final docData = patientProfileData.patientProfileModel!.medicalRecords![index];
-                return index == 0
-                    ? DottedBorder(
-                  color: AppColor.lightBlue,
-                  strokeWidth: 1,
-                  borderType: BorderType.RRect,
-                  radius: const Radius.circular(8),
-                  dashPattern: const [3, 2],
-                  padding: EdgeInsets.zero,
-                        child:reportData(docData, true),
-                      )
-                    :  reportData(docData, false);
-              },
+    return patientProfileData.patientProfileModel != null &&
+            patientProfileData.patientProfileModel!.medicalRecords != null &&
+            patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
+        ? Container(
+            margin: const EdgeInsets.all(12),
+            padding: EdgeInsets.symmetric(
+                horizontal: Sizes.screenWidth * 0.035,
+                vertical: Sizes.screenHeight * 0.015),
+            width: Sizes.screenWidth,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12), color: AppColor.grey),
+            child: Column(
+              children: [
+                SizedBox(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: patientProfileData
+                        .patientProfileModel!.medicalRecords!.length,
+                    itemBuilder: (context, index) {
+                      final docData = patientProfileData
+                          .patientProfileModel!.medicalRecords![index];
+                      return index == 0
+                          ? DottedBorder(
+                              color: AppColor.lightBlue,
+                              strokeWidth: 1,
+                              borderType: BorderType.RRect,
+                              radius: const Radius.circular(8),
+                              dashPattern: const [3, 2],
+                              padding: EdgeInsets.zero,
+                              child: reportData(docData, true),
+                            )
+                          : reportData(docData, false);
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    ) :const Center(child: NoDataMessages());
+          )
+        : const Center(child: NoDataMessages());
   }
 
   Widget reportData(MedicalRecords docData, bool isDate) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.02,vertical: Sizes.screenHeight*0.009),
+      padding: EdgeInsets.symmetric(
+          horizontal: Sizes.screenWidth * 0.02,
+          vertical: Sizes.screenHeight * 0.009),
       child: Row(
         children: [
           Image.asset(
@@ -329,26 +338,25 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextConst(
-                  docData.documentName??"",
+                  docData.documentName ?? "",
                   size: Sizes.fontSizeFour,
                   fontWeight: FontWeight.w400,
                 ),
 
                 isDate == 0
-                    ?
-                TextConst(
-                  DateFormat('dd/MM/yyyy').format(DateTime.parse(docData.uploadedAt.toString())),
-                  size: Sizes.fontSizeTwo,
-                  color: AppColor.blue,
-                  fontWeight: FontWeight.w400,
-                )
-                    :
-                TextConst(
-                  "Tap to view",
-                  size: Sizes.fontSizeFour,
-                  color: AppColor.textGrayColor,
-                  fontWeight: FontWeight.w400,
-                ),
+                    ? TextConst(
+                        DateFormat('dd/MM/yyyy').format(
+                            DateTime.parse(docData.uploadedAt.toString())),
+                        size: Sizes.fontSizeTwo,
+                        color: AppColor.blue,
+                        fontWeight: FontWeight.w400,
+                      )
+                    : TextConst(
+                        "Tap to view",
+                        size: Sizes.fontSizeFour,
+                        color: AppColor.textGrayColor,
+                        fontWeight: FontWeight.w400,
+                      ),
                 // TextConst(
                 //   DateFormat('dd/MM/yyyy').format(DateTime.parse(docData.uploadedAt.toString())),
                 //   size: isDate ? Sizes.fontSizeTwo : Sizes.fontSizeFour,
@@ -362,5 +370,4 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
       ),
     );
   }
-
 }
