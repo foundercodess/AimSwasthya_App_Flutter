@@ -113,7 +113,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   bottomLeft: Radius.circular(15),
                 ),
                 image: DecorationImage(
-                    image: AssetImage(Assets.imagesPatientImage),
+                    image: AssetImage(Assets.logoDoctor),
                     fit: BoxFit.cover)),
           ),
           Sizes.spaceWidth15,
@@ -136,7 +136,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                       ),
                       Sizes.spaceWidth5,
                       TextConst(
-                        "7 June",
+                        "10 june",
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,
                       ),
@@ -156,26 +156,26 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                 ),
                 Sizes.spaceHeight30,
                 TextConst(
-                  "Kartik Mahajan",
+                  patientProfileData.patientProfileModel!.patientProfile![0].name??"",
                   // size: 16,
                   size: Sizes.fontSizeSix,
                   fontWeight: FontWeight.w500,
                 ),
                 Sizes.spaceHeight10,
                 TextConst(
-                  "Date of birth : 01/01/1992",
+                  "Date of birth : ${patientProfileData.patientProfileModel!.patientProfile![0].dateOfBirth}",
                   size: Sizes.fontSizeFour,
                   fontWeight: FontWeight.w400,
                 ),
                 Sizes.spaceHeight5,
                 TextConst(
-                  "Weight : 75 Kg",
+                  "Weight : ${patientProfileData.patientProfileModel!.patientProfile![0].weight}",
                   size: Sizes.fontSizeFour,
                   fontWeight: FontWeight.w400,
                 ),
                 Sizes.spaceHeight5,
                 TextConst(
-                  "Height : 178 Cm",
+                  "Height : ${patientProfileData.patientProfileModel!.patientProfile![0].height}",
                   size: Sizes.fontSizeFour,
                   fontWeight: FontWeight.w400,
                 ),

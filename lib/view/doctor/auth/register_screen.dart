@@ -1,7 +1,9 @@
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/view/common/intro/all_set_doc_screen.dart';
+import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_reg_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +24,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _speController = TextEditingController();
   final TextEditingController _expController = TextEditingController();
   final TextEditingController _smcNumController = TextEditingController();
+
+  void _selectGender(String gender) {
+    setState(() {
+      _genderController.text = gender;
+    });
+  }
+
+  // void _selectSpecialization(String name) {
+  //   setState(() {
+  //     _speController.text = name;
+  //   });
+  // }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final registerCon =
           Provider.of<RegisterViewModel>(context, listen: false);
       registerCon.resetValues();
+      Provider.of<AllSpecializationViewModel>(context, listen: false)
+          .docAllSpecializationApi();
     });
     super.initState();
   }
@@ -36,7 +53,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
     final registerCon = Provider.of<RegisterViewModel>(context);
-    _numberController.text= doctorCon.senOtpData['phone'];
+    _numberController.text = doctorCon.senOtpData['phone'];
+    final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
+
     return Scaffold(
       backgroundColor: AppColor.white,
       appBar: appBarConstant(context,
@@ -78,10 +97,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Sizes.screenHeight * 0.06,
             Sizes.screenWidth * 0.1,
             Sizes.screenHeight * 0.12),
-        // child: registerCon.isPersonalInfoSelected
-        //     ? personalInfoScreen(onContinue: () => _registerDoctor(context))
-        //     : identityScreen(),
-
         child: registerCon.isPersonalInfoSelected == true
             ? personalInfoScreen()
             : identityScreen(),
@@ -92,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: AppBtn(
           height: Sizes.screenHeight * 0.065,
           title: AppLocalizations.of(context)!.continue_con,
-          onTap: () {
+          onTap: () async {
             if (registerCon.isPersonalInfoSelected == true) {
               doctorCon.doctorRegisterApi(
                   _nameController.text,
@@ -101,9 +116,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   _expController.text,
                   context);
             }
-            // else{
-            //   registerCon.changeWidget(false);
-            // }
+            else{
+              await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text);
+
+              final verified =
+                  smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
+              if (verified) {
+                Navigator.push(
+                    context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("SMC Number not verified.")),
+                );
+              }
+            }
 
           },
           color: AppColor.blue,
@@ -132,7 +158,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             : null);
   }
 
+  final List<String> genderOptions = ['Male', 'Female', 'Other'];
+
   Widget personalInfoScreen() {
+    final docSpecialization = Provider.of<AllSpecializationViewModel>(context);
+    final specializations = docSpecialization.allSpecializationDocModel;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -166,13 +196,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.textfieldGrayColor,
             hintText: "Gender",
-            suffixIcon: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColor.textfieldTextColor,
-                  size: 20,
-                )),
+            suffixIcon: PopupMenuButton<String>(
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.grey,
+                size: 20,
+              ),
+              onSelected: _selectGender,
+              itemBuilder: (BuildContext context) {
+                return genderOptions.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
             controller: _genderController,
             cursorColor: AppColor.textGrayColor,
           ),
@@ -196,7 +235,72 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: "Specialisation",
             controller: _speController,
             cursorColor: AppColor.textGrayColor,
+            // readOnly: true,
+            suffixIcon: PopupMenuButton<String>(
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.grey,
+                size: 20,
+              ),
+              onSelected: (String value) {
+                setState(() {
+                  _speController.text = value;
+                });
+              },
+              itemBuilder: (BuildContext context) {
+                if (specializations!.specializations!.isEmpty) {
+                  return [const PopupMenuItem(child: Text('Loading...'))];
+                }
+                return specializations.specializations!.map((spec) {
+                  return PopupMenuItem<String>(
+                    value: spec.specializationName,
+                    child: Text(spec.specializationName.toString()),
+                  );
+                }).toList();
+              },
+            ),
           ),
+          // CustomTextField(
+          //   contentPadding:
+          //       const EdgeInsets.only(top: 18, bottom: 20, left: 10),
+          //   fillColor: AppColor.textfieldGrayColor,
+          //   hintText: "Specialisation",
+          //   suffixIcon: PopupMenuButton<String>(
+          //     icon: const Icon(
+          //       Icons.keyboard_arrow_down,
+          //       color: Colors.grey,
+          //       size: 20,
+          //     ),
+          //     onSelected: _selectSpecialization,
+          //     itemBuilder: (BuildContext context) {
+          //       return docSpecialization.allSpecializationDocModel == null
+          //           ? [const PopupMenuItem(child: Text('Loading...'))]
+          //           : docSpecialization.allSpecializationDocModel!.specializations!.map((spec) {
+          //         return PopupMenuItem<String>(
+          //           value: spec.specializationName,
+          //           child: Text(spec.specializationName.toString()),
+          //         );
+          //       }).toList();
+          //
+          //       // PopupMenuButton(
+          //   //   icon: const Icon(
+          //   //     Icons.keyboard_arrow_down,
+          //   //     color: Colors.grey,
+          //   //     size: 20,
+          //   //   ),
+          //   //   onSelected: _selectGender,
+          //   //   itemBuilder: (BuildContext context) {
+          //   //     return docSpecialization.allSpecializationDocModel.map((String choice) {
+          //   //       return PopupMenuItem(
+          //   //         value: choice,
+          //   //         child: Text(choice),
+          //   //       );
+          //   //     }).toList();
+          //     },
+          //   ),
+          //   controller: _speController,
+          //   cursorColor: AppColor.textGrayColor,
+          // ),
           Sizes.spaceHeight25,
           CustomTextField(
             contentPadding:
@@ -213,6 +317,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget identityScreen() {
+    final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
+    final isVerified = smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -234,16 +341,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               hintText: "SMC number",
               hintSize: 10,
               hintWeight: FontWeight.w400,
+              // onChanged: (value) {
+              //   if (value.length >= 6) {
+              //     smcViewModel.docUpsertSmcNumberApi(value);
+              //   }
+              // },
               suffixIcon: Icon(
                 Icons.check_circle,
                 size: Sizes.screenWidth * 0.1,
-                color: Color(0xff4ECB71),
+                // color: Color(0xff4ECB71),
+                color: isVerified ? const Color(0xff4ECB71) : Colors.grey,
               ),
-              // Image.asset(Assets.iconsCircleCheck,height: 5,fit: BoxFit.contain,),
-              // suffixIcon: const Image(
-              //   image: AssetImage(Assets.iconsCircleCheck),
-              //   width: 20,
-              //
               controller: _smcNumController,
               cursorColor: AppColor.textGrayColor,
             ),

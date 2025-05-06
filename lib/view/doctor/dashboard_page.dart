@@ -344,11 +344,11 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             Container(
                               height: Sizes.screenHeight * 0.073,
                               width: Sizes.screenHeight * 0.073,
-                              decoration:  const BoxDecoration(
+                              decoration:   BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image:
-                                  AssetImage(Assets.imagesPatientImg),
+                                  image:schedule.signInImageUrl != null?
+                                  NetworkImage(schedule.signInImageUrl):const AssetImage(Assets.logoDoctor),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -521,6 +521,16 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   }
 
   Widget appointmentSection() {
+    final docHomeCon =
+        Provider.of<DoctorHomeViewModel>(context).doctorHomeModel;
+
+    final todayAppointments = docHomeCon!.data!.appointments!.where((item) {
+      final apptDate = DateTime.parse(item.appointmentDate.toString());
+      final now = DateTime.now();
+      return apptDate.year == now.year &&
+          apptDate.month == now.month &&
+          apptDate.day == now.day;
+    }).toList();
     List<Map<String, dynamic>> todayAppointmentList = [
       {"date": "7 June", "time": "10:30", "name": "Alice", "status": 1},
       {"date": "7 June", "time": "12:00", "name": "Bob", "status": 2},
@@ -539,12 +549,22 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: [
+          todayAppointments.isEmpty
+              ? Center(
+            child: TextConst(
+              "No Today Appointment",
+              size: Sizes.fontSizeFour,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          )
+              :
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.only(top: 15, left: 4, right: 5),
-            itemCount: todayAppointmentList.length,
+            itemCount: todayAppointments.length,
             itemBuilder: (context, index) {
-              final item = todayAppointmentList[index];
+              final item = todayAppointments[index];
               return Stack(
                 clipBehavior: Clip.none,
                 alignment: Alignment.center,
@@ -571,7 +591,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                           children: [
                             Sizes.spaceHeight3,
                             TextConst(
-                              item["name"],
+                              item.patientName??"",
                               size: Sizes.fontSizeFour,
                               // size: Sizes.fontSizeThree,
                               fontWeight: FontWeight.w500,
@@ -590,7 +610,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                     ),
                                     Sizes.spaceWidth3,
                                     TextConst(
-                                      item["date"],
+                                        DateFormat('d MMM').format(DateTime.parse(
+                                            item.appointmentDate.toString())),
                                       size: Sizes.fontSizeThree,
                                       // size: Sizes.fontSizeThree,
                                       fontWeight: FontWeight.w400,
@@ -606,7 +627,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                     ),
                                     Sizes.spaceWidth3,
                                     TextConst(
-                                      "${item["time"]} PM",
+                                      item.appointmentTime.toString(),
                                       size: Sizes.fontSizeThree,
                                       // size: Sizes.fontSizeThree,
                                       fontWeight: FontWeight.w400,
@@ -643,11 +664,11 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       child: Column(
                         children: [
                           TextConst(
-                            item['time'],
+                            item.appointmentTime.toString(),
                             size: Sizes.fontSizeFour,
                           ),
-                          if (item['status'] != null && item['status'] != 0)
-                            item['status'] == 1
+                          if (item.status != null && item.status!= 0)
+                            item.status == 1
                                 ? appContainer(Colors.green, "Completed")
                                 : appContainer(
                                     const Color(0xff0A2A5B), "In progress")
@@ -655,7 +676,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                     ),
                   ),
-                  if (item['status'] == 2)
+                  if (item.status == 2)
                     Positioned(
                       bottom: 6,
                       child: SizedBox(

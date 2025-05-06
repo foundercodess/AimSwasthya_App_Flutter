@@ -138,7 +138,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                           ? NetworkImage(
                                               schedule.signedImageUrl!)
                                           : const AssetImage(
-                                              Assets.imagesPatientImage),
+                                              Assets.logoDoctor),
                                       fit: BoxFit.fitHeight)),
                             ),
                             Sizes.spaceWidth10,

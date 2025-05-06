@@ -3,6 +3,7 @@ import 'package:aim_swasthya/view/animation_con.dart';
 import 'package:aim_swasthya/view/user/symptoms/dowenloade_image.dart';
 import 'package:aim_swasthya/view/user/user_home_screen.dart';
 import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_graph_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_health_report_view_model.dart';
@@ -15,6 +16,7 @@ import 'package:aim_swasthya/view_model/doctor/language_change_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/schedule_doctor_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart';
 import 'package:aim_swasthya/view_model/user/add_doctor_view_model.dart';
 import 'package:aim_swasthya/view_model/user/add_review_view_model.dart';
 import 'package:aim_swasthya/view_model/user/auth_view_model.dart';
@@ -112,6 +114,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => TCPPViewModel()),
         ChangeNotifierProvider(create: (ctx) => SlotScheduleViewModel()),
         ChangeNotifierProvider(create: (ctx) => MapViewModel()),
+        ChangeNotifierProvider(create: (ctx) => AllSpecializationViewModel()),
+        ChangeNotifierProvider(create: (ctx) => UpsertSmcNumberViewModel()),
       ],
       child: Consumer<ChangeLanguageViewModel>(
           builder: (context, provider, child) {

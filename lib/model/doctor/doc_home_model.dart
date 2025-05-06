@@ -149,9 +149,11 @@ class Appointments {
   int? clinicId;
   String? appointmentDate;
   int? timeId;
+  dynamic imageUrl;
   String? status;
   String? patientName;
   String? appointmentTime;
+  dynamic signInImageUrl;
 
   Appointments(
       {this.appointmentId,
@@ -160,9 +162,12 @@ class Appointments {
         this.clinicId,
         this.appointmentDate,
         this.timeId,
+        this.imageUrl,
         this.status,
         this.patientName,
-        this.appointmentTime});
+        this.appointmentTime,
+        this.signInImageUrl
+      });
 
   Appointments.fromJson(Map<String, dynamic> json) {
     appointmentId = json['appointment_id'];
@@ -171,9 +176,11 @@ class Appointments {
     clinicId = json['clinic_id'];
     appointmentDate = json['appointment_date'];
     timeId = json['time_id'];
+    imageUrl = json['image_url'];
     status = json['status'];
     patientName = json['patient_name'];
     appointmentTime = json['appointment_time'];
+    signInImageUrl = json['signedImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -184,9 +191,11 @@ class Appointments {
     data['clinic_id'] = clinicId;
     data['appointment_date'] = appointmentDate;
     data['time_id'] = timeId;
+    data['image_url'] = imageUrl;
     data['status'] = status;
     data['patient_name'] = patientName;
     data['appointment_time'] = appointmentTime;
+    data['signedImageUrl'] = signInImageUrl;
     return data;
   }
 }
@@ -194,6 +203,7 @@ class Appointments {
 class Earnings {
   String? monthYear;
   String? totalAmount;
+  
 
   Earnings({this.monthYear, this.totalAmount});
 

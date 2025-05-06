@@ -354,7 +354,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
           final registerCon = Provider.of<RegisterViewModel>(context,listen: false);
           registerCon.changeWidget(false);
           UserViewModel().saveUser(value['data']['doctor']['doctor_id']);
-          // UserViewModel().saveRole(1);
+          UserViewModel().saveRole(1);
           // Navigator.push(
           //     context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
         } else {
@@ -362,8 +362,8 @@ class DoctorAuthViewModel extends ChangeNotifier {
               .saveUser(value['data']['doctor']['doctor_id']);
         }
         UserViewModel().saveRole(1);
-        Navigator.push(
-            context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
+        // Navigator.push(
+        //     context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
         Utils.show(value['message'], context);
         // else {
         //   Utils.show(value['message'], context);

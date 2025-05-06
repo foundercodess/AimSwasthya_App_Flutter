@@ -135,7 +135,9 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesName.aboutUsScreen);
+                    },
                     child: TextConst(
                       "About Us",
                       size: Sizes.fontSizeFivePFive,
