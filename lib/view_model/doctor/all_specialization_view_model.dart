@@ -14,6 +14,11 @@ class AllSpecializationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _selectedSpecializationId;
+  String? get selectedSpecializationId=>_selectedSpecializationId;
+  setSelectedSpecialization(String data){
+    _selectedSpecializationId=data;
+  }
   setLoading(bool value) {
     _loading = value;
     notifyListeners();

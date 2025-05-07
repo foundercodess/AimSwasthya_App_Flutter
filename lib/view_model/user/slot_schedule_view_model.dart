@@ -11,97 +11,48 @@ class SlotScheduleViewModel extends ChangeNotifier {
   final _docScheduleRepo = DocScheduleRepo();
   bool _loading = false;
   bool get loading => _loading;
-  List<String> appointmentDurationList = ['10 min', '30 min'];
+  List<String> appointmentDurationList = ['15 min', '30 min'];
   String? _selectedClinicId;
   String? get selectedClinicId => _selectedClinicId;
-  String _appointmentDuration = '10 min';
+  String _appointmentDuration = '15 min';
   String get appointmentDuration => _appointmentDuration;
-  setAppointmentDuration(String value) {
-    _appointmentDuration = value;
-    notifyListeners();
+
+  DateTimeRange? _selectedRange;
+
+  DateTimeRange? get selectedRange => _selectedRange;
+
+  void setRange(DateTimeRange? range) {
+    if (range == null) {
+      _selectedRange = null;
+      notifyListeners();
+      return;
+    }
+    final days = range.end.difference(range.start).inDays + 1;
+    if (days <= 7) {
+      _selectedRange = range;
+      notifyListeners();
+    }
   }
 
-  List<Map<String, dynamic>> _allSlots = [];
-  List<Map<String, dynamic>> get allSlots => _allSlots;
-
-  setLoading(bool value) {
-    _loading = value;
-    notifyListeners();
-  }
-
-  ScheduleDoctorModel? _scheduleDoctorModel;
-  ScheduleDoctorModel? get scheduleDoctorModel => _scheduleDoctorModel;
-  setDoctorScheduleData(ScheduleDoctorModel value) {
-    _scheduleDoctorModel = value;
-    notifyListeners();
-  }
-
-  Future<void> docScheduleApi(dynamic clinicId) async {
-    final userId = await UserViewModel().getUser();
-    setLoading(true);
-    Map data = {"doctor_id": "6", "clinic_id": clinicId};
-    _docScheduleRepo.docScheduleApi(data).then((value) {
-      if (value.status == true) {
-        setDoctorScheduleData(value);
-        if (value.doctorWorkingHours!.isNotEmpty &&
-            value.doctorWorkingHours != []) {
-          final lastDate = value.doctorWorkingHours!.last.availabilityDate;
-          // generateSlots(startDate: DateTime.parse('20$lastDate 00:00:00'));
-        } else {
-          // generateSlots(startDate: DateTime.now());
-        }
-      }
-      setLoading(false);
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print('error: $error');
-      }
-      setLoading(false);
-    });
-    generateSlots(startDate: DateTime.now());
-  }
-
-  setSelectedClinicId(String val) {
-    _selectedClinicId = val;
-    notifyListeners();
-  }
-
-  final timeSlots = [
-    {'start_time': '08:00 AM', 'end_time': '11:00 AM'},
-    {'start_time': '02:00 PM', 'end_time': '04:00 PM'},
-    {'start_time': '06:00 PM', 'end_time': '08:00 PM'},
-  ];
-
-  Future<void> generateSlots({
-    required DateTime startDate,
-    int days = 7,
-  }) async {
+  Future<void> generateSlots() async {
     _allSlots = [];
-    // final timeSlots = {'start_time': '08:00 AM', 'end_time': '11:00 AM'};
-    // [
-    //   {'start_time': '08:00 AM', 'end_time': '11:00 AM'},
-    //   {'start_time': '02:00 PM', 'end_time': '04:00 PM'},
-    //   {'start_time': '06:00 PM', 'end_time': '08:00 PM'},
-    // ];
     final doctorId = await UserViewModel().getUser();
     List<Map<String, dynamic>> allSlots = [];
-
-    for (int i = 0; i < days; i++) {
-      DateTime currentDate = startDate.add(Duration(days: i));
-      String availabilityDate = DateFormat('yy-MM-dd').format(currentDate);
-      String ddMonthName = DateFormat('dd MMM').format(currentDate);
+    for (int i = 0;
+        i <= _selectedRange!.end.difference(_selectedRange!.start).inDays;
+        i++) {
+      final date = _selectedRange!.start.add(Duration(days: i));
+      // for (int i = 0; i < days; i++) {
+      String availabilityDate = DateFormat('yy-MM-dd').format(date);
+      String ddMonthName = DateFormat('dd MMM').format(date);
 
       _allSlots.add({
-        'doctor_id': doctorId ?? 6,
-        'clinic_id': _selectedClinicId ?? 6,
         'availability_date': availabilityDate,
-        'dd_month_name': ddMonthName,
-        'available_flag': 'Y',
-        'doctor_working_hour_id': 3,
-        'timing': [
+        'timings': [
           {
             'start_time': timeSlots[0]['start_time'],
             'end_time': timeSlots[0]['end_time'],
+            'available_flag': 'Y'
           }
         ],
       });
@@ -117,7 +68,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
     } else {
       _allSlots[index]['available_flag'] = 'Y';
     }
-    print("${_allSlots[index]['available_flag']}");
+    debugPrint("${_allSlots[index]['available_flag']}");
     notifyListeners();
   }
 
@@ -134,6 +85,17 @@ class SlotScheduleViewModel extends ChangeNotifier {
     _allSlots[index]['timing'].removeAt(timeIndex);
     notifyListeners();
   }
+
+  setAppointmentDuration(String value) {
+    _appointmentDuration = value;
+    notifyListeners();
+  }
+
+  final timeSlots = [
+    {'start_time': '08:00 AM', 'end_time': '11:00 AM'},
+    {'start_time': '02:00 PM', 'end_time': '04:00 PM'},
+    {'start_time': '06:00 PM', 'end_time': '08:00 PM'},
+  ];
 
   Future<void> selectTime(
       BuildContext context, int slotIndex, int timeIndex, String key) async {
@@ -156,31 +118,84 @@ class SlotScheduleViewModel extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>> flattenTimingsWith24HrFormat() {
-    final inputFormat = DateFormat.jm(); // Example: 06:00 PM
-    final outputFormat = DateFormat.Hm(); // Output: 18:00
+    final inputFormat = DateFormat.jm();
+    final outputFormat = DateFormat.Hm();
 
     List<Map<String, dynamic>> result = [];
 
     for (var item in _allSlots) {
-      List timings = item['timing'];
+      List timings = item['timings'];
       for (var t in timings) {
-        // Convert to 24-hour format
         final parsedStart = inputFormat.parse(t['start_time']);
         final parsedEnd = inputFormat.parse(t['end_time']);
-
         result.add({
-          "doctor_id": item["doctor_id"],
-          "clinic_id": item["clinic_id"],
-          "availability_date": item["availability_date"],
-          "dd_month_name": item["dd_month_name"],
-          "available_flag": item["available_flag"],
-          "start_time": outputFormat.format(parsedStart), // 24-hour
-          "end_time": outputFormat.format(parsedEnd), // 24-hour
+          'availability_date': item['availability_date'],
+          'timings': [
+            {
+              'start_time': outputFormat.format(parsedStart),
+              'end_time': outputFormat.format(parsedEnd),
+              'available_flag': 'Y'
+            }
+          ],
         });
       }
     }
-
     return result;
+  }
+
+  int _widgetIndex = 1;
+  int get widgetIndex => _widgetIndex;
+
+  setWidgetIndex(int i) {
+    _widgetIndex = i;
+    notifyListeners();
+  }
+
+  clearSelectedValues() {
+    _selectedClinicId = null;
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> _allSlots = [];
+  List<Map<String, dynamic>> get allSlots => _allSlots;
+
+  setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
+  ScheduleDoctorModel? _scheduleDoctorModel;
+  ScheduleDoctorModel? get scheduleDoctorModel => _scheduleDoctorModel;
+  setDoctorScheduleData(ScheduleDoctorModel value) {
+    _scheduleDoctorModel = value;
+    notifyListeners();
+  }
+
+  Future<void> docScheduleApi() async {
+    final userId = await UserViewModel().getUser();
+    setLoading(true);
+    Map data = {"doctor_id": "6", "clinic_id": _selectedClinicId};
+    _docScheduleRepo.docScheduleApi(data).then((value) {
+      if (value.status == true) {
+        setDoctorScheduleData(value);
+        if (value.doctorWorkingHours!.isNotEmpty &&
+            value.doctorWorkingHours != []) {
+          final lastDate = value.doctorWorkingHours!.last.availabilityDate;
+        } else {}
+      }
+      setLoading(false);
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print('error: $error');
+      }
+      setLoading(false);
+    });
+    generateSlots();
+  }
+
+  setSelectedClinicId(String val) {
+    _selectedClinicId = val;
+    notifyListeners();
   }
 
   // List<Map<String, dynamic>> flattenTimings() {
@@ -208,11 +223,14 @@ class SlotScheduleViewModel extends ChangeNotifier {
   Future<void> docScheduleInsertApi() async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    final data = flattenTimingsWith24HrFormat();
-    print(jsonEncode(data));
+    final schedule = flattenTimingsWith24HrFormat();
+    final data = {
+      "doctor_id": userId,
+      "clinic_id": _selectedClinicId,
+      "schedules": schedule
+    };
+    debugPrint(jsonEncode(data));
     _docScheduleRepo.docInsertScheduleApi(data).then((value) {
-      print("data outcome");
-      print("sadsdssd: $value");
       if (value["status"] == true) {
         showInfoOverlay(title: "Success", errorMessage: value['message']);
       }

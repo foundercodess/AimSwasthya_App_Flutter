@@ -34,7 +34,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
   }
 
   dynamic _senOtpData;
-  dynamic get senOtpData=>_senOtpData;
+  dynamic get senOtpData => _senOtpData;
   bool isSigningIn = false;
 
   int _navType = 1;
@@ -56,7 +56,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
     setLoading(true);
     isSigningIn = true;
     notifyListeners();
-
+    signOutFromGoogle(context);
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -85,7 +85,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
       isSigningIn = false;
       setLoading(false);
       notifyListeners();
-      print('Error during Google sign-in: $e');
+      debugPrint('Error during Google sign-in: $e');
       return null;
     }
   }
@@ -111,16 +111,10 @@ class DoctorAuthViewModel extends ChangeNotifier {
 
   Future<void> isRegisterDocApi(
       dynamic phone, dynamic email, dynamic type, context) async {
-    signOutFromGoogle(context);
     final authCon = Provider.of<UserRegisterViewModel>(context, listen: false);
     LoaderOverlay().show(context);
     setLoading(true);
-    print("ffktgtr");
-    Map data = {
-      "phone": phone,
-      "email": email,
-      "type": type
-    };
+    Map data = {"phone": phone, "email": email, "type": type};
     print(jsonEncode(data));
     _doctorAuthRepo.isRegisterDocApi(data).then((value) {
       print(value);
@@ -139,7 +133,8 @@ class DoctorAuthViewModel extends ChangeNotifier {
                 builder: (context) {
                   return ActionOverlay(
                     text: "User not found",
-                    subtext: "Looks like you don’t have an account yet. Let’s get you registered!",
+                    subtext:
+                        "Looks like you don’t have an account yet. Let’s get you registered!",
                     noLabel: "Cancel",
                     yesLabel: "Continue",
                     onTap: () {
@@ -147,43 +142,38 @@ class DoctorAuthViewModel extends ChangeNotifier {
                       if (authCon.userRole == 1) {
                         Navigator.pushNamed(context, RoutesName.registerScreen);
                       } else {
-                        Navigator.pushNamed(context, RoutesName.userRegisterScreen);
+                        Navigator.pushNamed(
+                            context, RoutesName.userRegisterScreen);
                       }
                     },
                   );
                 });
-            // if (authCon.userRole == 1) {
-            //
-            //   Navigator.pushNamed(context, RoutesName.registerScreen);
-            // } else {
-            //   Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-            // }
           } else {
             Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
         } else {
           docSendOtpApi(context);
         }
-      }else{
-          _senOtpData = {
-            'isReg': value['is_registered'],
-            "phone": phone,
-            "email": email,
-            "type": type
-          };
-          if (type == "email") {
-            if (!value['is_registered']) {
-              if (authCon.userRole == 1) {
-                Navigator.pushNamed(context, RoutesName.registerScreen);
-              } else {
-                Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-              }
+      } else {
+        _senOtpData = {
+          'isReg': value['is_registered'],
+          "phone": phone,
+          "email": email,
+          "type": type
+        };
+        if (type == "email") {
+          if (!value['is_registered']) {
+            if (authCon.userRole == 1) {
+              Navigator.pushNamed(context, RoutesName.registerScreen);
             } else {
-              Navigator.pushNamed(context, RoutesName.allSetDocScreen);
+              Navigator.pushNamed(context, RoutesName.userRegisterScreen);
             }
           } else {
-            docSendOtpApi(context);
+            Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
+        } else {
+          docSendOtpApi(context);
+        }
       }
       LoaderOverlay().hide();
     }).onError((error, stackTrace) {
@@ -237,7 +227,6 @@ class DoctorAuthViewModel extends ChangeNotifier {
     });
   }
 
-
   int _seconds = 60;
   int get seconds => _seconds;
   Timer? _timer;
@@ -245,12 +234,13 @@ class DoctorAuthViewModel extends ChangeNotifier {
   bool get resendOtp => _resendOtp;
 
   void startTimer() {
-    _timer?.cancel(); // Cancel any existing timer
-    _seconds = 60; // Reset the counter
+    print("fun invoked");
+    _timer?.cancel();
+    _seconds = 60;
     _resendOtp = false;
-    notifyListeners(); // Notify UI about reset
-    print(":srfee");
+    notifyListeners();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      print("jljnkjjnjnj");
       if (_seconds > 0) {
         _seconds--;
         notifyListeners();
@@ -261,7 +251,6 @@ class DoctorAuthViewModel extends ChangeNotifier {
       }
     });
   }
-
 
   clearOtpTimer() {
     _timer!.cancel();
@@ -284,13 +273,13 @@ class DoctorAuthViewModel extends ChangeNotifier {
         LoaderOverlay().hide();
         UserViewModel().saveBeToken(value['accessToken']);
         if (!_senOtpData['isReg']) {
-
           showCupertinoDialog(
               context: context,
               builder: (context) {
                 return ActionOverlay(
                   text: "User not found",
-                  subtext: "Looks like you don’t have an account yet. Let’s get you registered!",
+                  subtext:
+                      "Looks like you don’t have an account yet. Let’s get you registered!",
                   noLabel: "Cancel",
                   yesLabel: "Continue",
                   onTap: () {
@@ -298,7 +287,8 @@ class DoctorAuthViewModel extends ChangeNotifier {
                     if (userRole == 1) {
                       Navigator.pushNamed(context, RoutesName.registerScreen);
                     } else {
-                      Navigator.pushNamed(context, RoutesName.userRegisterScreen);
+                      Navigator.pushNamed(
+                          context, RoutesName.userRegisterScreen);
                     }
                   },
                 );
@@ -351,15 +341,15 @@ class DoctorAuthViewModel extends ChangeNotifier {
       _doctorAuthRepo.doctorRegisterApi(data).then((value) {
         Utils.show(value['message'], context);
         if (value['status'] == true) {
-          final registerCon = Provider.of<RegisterViewModel>(context,listen: false);
+          final registerCon =
+              Provider.of<RegisterViewModel>(context, listen: false);
           registerCon.changeWidget(false);
           UserViewModel().saveUser(value['data']['doctor']['doctor_id']);
           UserViewModel().saveRole(1);
           // Navigator.push(
           //     context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
         } else {
-          UserViewModel()
-              .saveUser(value['data']['doctor']['doctor_id']);
+          UserViewModel().saveUser(value['data']['doctor']['doctor_id']);
         }
         UserViewModel().saveRole(1);
         // Navigator.push(

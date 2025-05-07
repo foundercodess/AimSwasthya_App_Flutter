@@ -137,33 +137,14 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        final authViewModel = Provider.of<PatientAuthViewModel>(
-                            context,
-                            listen: false);
+                        if(navType==1){
+                          User? user =
+                          await doctorAuthCon.signInWithGoogle(context);
+                        }else{
+                          User? user =
+                          await patientAuthCon.signInWithGoogle(context);
+                        }
 
-                        // final currentUser = FirebaseAuth.instance.currentUser;
-                        // if (currentUser != null) {
-                        //   print("User already signed in. Signing out...");
-                        //   await authViewModel.signOutFromGoogle(context);
-                        // }
-
-                        User? user =
-                            await authViewModel.signInWithGoogle(context);
-                        // if (user != null) {
-                        //   print('User signed in: ${user.displayName}');
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(
-                        //         content:
-                        //             Text('Signed in as ${user.displayName}')),
-                        //   );
-                        // } else {
-                        //   print('Google sign-in failed.');
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(
-                        //         content: Text(
-                        //             'Google sign-in failed or was canceled')),
-                        //   );
-                        // }
                       },
                       child: Image.asset(
                         Assets.iconsGoogle,

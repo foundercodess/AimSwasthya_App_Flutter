@@ -109,28 +109,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
           title: AppLocalizations.of(context)!.continue_con,
           onTap: () async {
             if (registerCon.isPersonalInfoSelected == true) {
+
               doctorCon.doctorRegisterApi(
                   _nameController.text,
                   _genderController.text,
                   _speController.text,
                   _expController.text,
                   context);
-            }
-            else{
+            } else {
               await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text);
-
               final verified =
                   smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
               if (verified) {
-                Navigator.push(
-                    context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
+                Navigator.push(context,
+                    cupertinoTopToBottomRoute(const AllSetDocScreen()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("SMC Number not verified.")),
                 );
               }
             }
-
           },
           color: AppColor.blue,
         ),
@@ -228,78 +226,124 @@ class _RegisterScreenState extends State<RegisterScreen> {
             enabled: false,
           ),
           Sizes.spaceHeight25,
-          CustomTextField(
-            contentPadding:
-                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-            fillColor: AppColor.textfieldGrayColor,
-            hintText: "Specialisation",
-            controller: _speController,
-            cursorColor: AppColor.textGrayColor,
-            // readOnly: true,
-            suffixIcon: PopupMenuButton<String>(
-              icon: const Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.grey,
-                size: 20,
+          // Center(
+          //   child: Container(
+          //     height: 55,
+          //     alignment: Alignment.center,
+          //     decoration: BoxDecoration(
+          //         color: AppColor.textfieldGrayColor,
+          //         borderRadius: BorderRadius.circular(15)),
+          //     padding: EdgeInsets.only(
+          //         left: Sizes.screenWidth * 0.03,
+          //         right: Sizes.screenWidth * 0.03),
+          //     child: DropdownButton<String>(
+          //       icon: const Icon(Icons.keyboard_arrow_down,
+          //         color: Colors.grey,
+          //         size: 20,),
+          //       value:_speController.text,
+          //       hint: TextConst(
+          //         "Specialization",
+          //         size: Sizes.fontSizeFour,
+          //         color: AppColor.textfieldTextColor,
+          //         fontWeight: FontWeight.w400,
+          //       ),
+          //       underline: const SizedBox(),
+          //       isExpanded: true,
+          //       items: specializations!.specializations!
+          //           .map((data) => DropdownMenuItem<String>(
+          //         value: data.specializationId.toString(),
+          //         child: TextConst(
+          //           data.specializationName.toString(),
+          //           fontWeight: FontWeight.w500,
+          //           size: Sizes.fontSizeFive,
+          //           color: AppColor.blue,
+          //         ),
+          //       ))
+          //           .toList(),
+          //       onChanged: (String? newId) {
+          //         setState(() {
+          //           _speController.text=newId!;
+          //         });
+          //       },
+          //     ),
+          //   ),
+          // ),
+          Center(
+            child: Container(
+              height: 55,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColor.textfieldGrayColor,
+                borderRadius: BorderRadius.circular(15),
               ),
-              onSelected: (String value) {
-                setState(() {
-                  _speController.text = value;
-                });
-              },
-              itemBuilder: (BuildContext context) {
-                if (specializations!.specializations!.isEmpty) {
-                  return [const PopupMenuItem(child: Text('Loading...'))];
-                }
-                return specializations.specializations!.map((spec) {
-                  return PopupMenuItem<String>(
-                    value: spec.specializationName,
-                    child: Text(spec.specializationName.toString()),
+              padding: EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
+              child: DropdownButton<String>(
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.grey,
+                  size: 20,
+                ),
+                value: _speController.text.isNotEmpty ? _speController.text : null,
+                hint: TextConst(
+                  "Specialization",
+                  size: Sizes.fontSizeFour,
+                  color: AppColor.textfieldTextColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                underline: const SizedBox(),
+                isExpanded: true,
+                items: specializations!.specializations!.map((data) {
+                  return DropdownMenuItem<String>(
+                    value: data.specializationId.toString(),
+                    child: TextConst(
+                      data.specializationName ?? '',
+                      fontWeight: FontWeight.w500,
+                      size: Sizes.fontSizeFive,
+                      color: AppColor.blue,
+                    ),
                   );
-                }).toList();
-              },
+                }).toList(),
+                onChanged: (String? newId) {
+                  print("$newId");
+                  setState(() {
+                    _speController.text = newId!;
+                  });
+                },
+              ),
             ),
           ),
+
           // CustomTextField(
           //   contentPadding:
           //       const EdgeInsets.only(top: 18, bottom: 20, left: 10),
           //   fillColor: AppColor.textfieldGrayColor,
           //   hintText: "Specialisation",
+          //   controller: _speController,
+          //   cursorColor: AppColor.textGrayColor,
+          //   // readOnly: true,
           //   suffixIcon: PopupMenuButton<String>(
           //     icon: const Icon(
           //       Icons.keyboard_arrow_down,
           //       color: Colors.grey,
           //       size: 20,
           //     ),
-          //     onSelected: _selectSpecialization,
+          //     onSelected: (String value) {
+          //       setState(() {
+          //         _speController.text = value;
+          //       });
+          //     },
           //     itemBuilder: (BuildContext context) {
-          //       return docSpecialization.allSpecializationDocModel == null
-          //           ? [const PopupMenuItem(child: Text('Loading...'))]
-          //           : docSpecialization.allSpecializationDocModel!.specializations!.map((spec) {
+          //       if (specializations!.specializations!.isEmpty) {
+          //         return [const PopupMenuItem(child: Text('Loading...'))];
+          //       }
+          //       return specializations.specializations!.map((spec) {
           //         return PopupMenuItem<String>(
-          //           value: spec.specializationName,
+          //           value: spec.specializationId.toString(),
           //           child: Text(spec.specializationName.toString()),
           //         );
           //       }).toList();
-          //
-          //       // PopupMenuButton(
-          //   //   icon: const Icon(
-          //   //     Icons.keyboard_arrow_down,
-          //   //     color: Colors.grey,
-          //   //     size: 20,
-          //   //   ),
-          //   //   onSelected: _selectGender,
-          //   //   itemBuilder: (BuildContext context) {
-          //   //     return docSpecialization.allSpecializationDocModel.map((String choice) {
-          //   //       return PopupMenuItem(
-          //   //         value: choice,
-          //   //         child: Text(choice),
-          //   //       );
-          //   //     }).toList();
           //     },
           //   ),
-          //   controller: _speController,
-          //   cursorColor: AppColor.textGrayColor,
           // ),
           Sizes.spaceHeight25,
           CustomTextField(

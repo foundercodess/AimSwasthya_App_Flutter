@@ -83,7 +83,7 @@ class NetworkApiServices extends BaseApiServices {
         if (kDebugMode) {
           print('response 404: $responseJson');
         }
-        showInfoOverlay(statusCode: response.statusCode);
+        // showInfoOverlay(statusCode: response.statusCode);
         return responseJson;
       // throw UnauthorisedException(response.body.toString());
       case 500:

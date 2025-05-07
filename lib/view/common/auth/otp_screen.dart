@@ -20,31 +20,6 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final otpController = TextEditingController();
-  int _seconds = 60;
-  Timer? _timer;
-  bool resendOtp = false;
-  void startTimer() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_seconds > 0) {
-        setState(() {
-          _seconds--;
-        });
-      } else {
-        timer.cancel();
-        // Timer ended logic here (optional)
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +33,7 @@ class _OtpScreenState extends State<OtpScreen> {
     final doctorAuthCon = Provider.of<DoctorAuthViewModel>(
       context,
     );
-
+    print(patientAuthCon.seconds);
     final navType = patientAuthCon.navType;
     return Scaffold(
       backgroundColor: AppColor.white,
@@ -134,15 +109,14 @@ class _OtpScreenState extends State<OtpScreen> {
                   child: Pinput(
                     onChanged: (v) {
                       if (v.length == 4) {
-                        if( authCon.userRole == 1){
-                          doctorAuthCon.verifyDocApi(context, otpController.text, authCon.userRole);
-                        }
-                       else {
+                        if (authCon.userRole == 1) {
+                          doctorAuthCon.verifyDocApi(
+                              context, otpController.text, authCon.userRole);
+                        } else {
                           patientAuthCon.verifyApi(
                               context, otpController.text, authCon.userRole);
                         }
-                      }
-                      else {
+                      } else {
                         debugPrint("otp must be 4 digit");
                       }
                     },
@@ -180,50 +154,105 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
                 Sizes.spaceHeight30,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        if (patientAuthCon.resendOtp) {
-                          patientAuthCon.sendOtpApi(context, resendMode: true);
-                        } if(doctorAuthCon.resendOtp){
-                          doctorAuthCon.docSendOtpApi(context,resendMode: true);
-                        }
-                        else {
-                          debugPrint("not allowed at the moment");
-                        }
-                      },
-                      child: RichText(
-                          text: TextSpan(
+                navType == 1
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextSpan(
-                            text: AppLocalizations.of(context)!
-                                .did_not_receive_otp,
-                            style: TextStyle(
-                                fontFamily: 'Poppins-Regular',
-                                fontSize: Sizes.fontSizeThree * 1.1,
-                                fontWeight: FontWeight.w400,
-                                color:patientAuthCon.resendOtp?AppColor.whiteColor:AppColor.grey),
-                          ),
-                          TextSpan(
-                            text: patientAuthCon.resendOtp
-                                ? AppLocalizations.of(context)!.resend
-                                : "Resend in ${patientAuthCon.seconds.toString()}",
-                            style: TextStyle(
-                              fontFamily: 'Poppins-Regular',
-                              decoration:patientAuthCon.resendOtp? TextDecoration.underline:null,
-                              decorationColor: AppColor.blue,
-                              fontSize: Sizes.fontSizeThree * 1.1,
-                              fontWeight: FontWeight.w400,
-                              color: AppColor.blue
-                            ),
+                          InkWell(
+                            onTap: () {
+                              if (doctorAuthCon.resendOtp) {
+                                doctorAuthCon.docSendOtpApi(context,
+                                    resendMode: true);
+                              }
+                              if (doctorAuthCon.resendOtp) {
+                                doctorAuthCon.docSendOtpApi(context,
+                                    resendMode: true);
+                              } else {
+                                debugPrint("not allowed at the moment");
+                              }
+                            },
+                            child: RichText(
+                                text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: AppLocalizations.of(context)!
+                                      .did_not_receive_otp,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Regular',
+                                      fontSize: Sizes.fontSizeThree * 1.1,
+                                      fontWeight: FontWeight.w400,
+                                      color: doctorAuthCon.resendOtp
+                                          ? AppColor.whiteColor
+                                          : AppColor.grey),
+                                ),
+                                TextSpan(
+                                  text: doctorAuthCon.resendOtp
+                                      ? AppLocalizations.of(context)!.resend
+                                      : "Resend in ${doctorAuthCon.seconds.toString()}",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Regular',
+                                      decoration: doctorAuthCon.resendOtp
+                                          ? TextDecoration.underline
+                                          : null,
+                                      decorationColor: AppColor.blue,
+                                      fontSize: Sizes.fontSizeThree * 1.1,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.blue),
+                                ),
+                              ],
+                            )),
                           ),
                         ],
-                      )),
-                    ),
-                  ],
-                ),
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              if (patientAuthCon.resendOtp) {
+                                patientAuthCon.sendOtpApi(context,
+                                    resendMode: true);
+                              }
+                              if (doctorAuthCon.resendOtp) {
+                                doctorAuthCon.docSendOtpApi(context,
+                                    resendMode: true);
+                              } else {
+                                debugPrint("not allowed at the moment");
+                              }
+                            },
+                            child: RichText(
+                                text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: AppLocalizations.of(context)!
+                                      .did_not_receive_otp,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Regular',
+                                      fontSize: Sizes.fontSizeThree * 1.1,
+                                      fontWeight: FontWeight.w400,
+                                      color: patientAuthCon.resendOtp
+                                          ? AppColor.whiteColor
+                                          : AppColor.grey),
+                                ),
+                                TextSpan(
+                                  text: patientAuthCon.resendOtp
+                                      ? AppLocalizations.of(context)!.resend
+                                      : "Resend in ${patientAuthCon.seconds.toString()}",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Regular',
+                                      decoration: patientAuthCon.resendOtp
+                                          ? TextDecoration.underline
+                                          : null,
+                                      decorationColor: AppColor.blue,
+                                      fontSize: Sizes.fontSizeThree * 1.1,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.blue),
+                                ),
+                              ],
+                            )),
+                          ),
+                        ],
+                      ),
                 SizedBox(height: Sizes.screenHeight * 0.02),
                 Container(
                   alignment: AlignmentDirectional.topStart,
@@ -254,7 +283,13 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const TermsOfUserScreen(type: '1',)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '1',
+                                        )));
                           },
                       ),
                       TextSpan(
@@ -278,7 +313,13 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const TermsOfUserScreen(type: '3',)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '3',
+                                        )));
                           },
                       ),
                     ]),

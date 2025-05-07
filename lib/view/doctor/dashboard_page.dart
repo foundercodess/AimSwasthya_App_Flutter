@@ -425,7 +425,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, RoutesName.scheduleScreen);
-        Navigator.pushNamed(context, RoutesName.clinicLocationScreen);
+        Navigator.pushNamed(context, RoutesName.scheduleScreen);
       },
       child: Container(
         padding: EdgeInsets.symmetric(
