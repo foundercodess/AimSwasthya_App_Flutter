@@ -7,6 +7,7 @@ import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart'
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -31,12 +32,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-  // void _selectSpecialization(String name) {
-  //   setState(() {
-  //     _speController.text = name;
-  //   });
-  // }
-
+  List<int> years =
+      List.generate(DateTime.now().year - 1950 + 1, (index) => 1950 + index);
+  int? selectedYear;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -45,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       registerCon.resetValues();
       Provider.of<AllSpecializationViewModel>(context, listen: false)
           .docAllSpecializationApi();
+      // selectedYear = _expController.text aint?s ;
     });
     super.initState();
   }
@@ -109,12 +108,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           title: AppLocalizations.of(context)!.continue_con,
           onTap: () async {
             if (registerCon.isPersonalInfoSelected == true) {
-
               doctorCon.doctorRegisterApi(
                   _nameController.text,
                   _genderController.text,
                   _speController.text,
-                  _expController.text,
+                  selectedYear,
                   context);
             } else {
               await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text);
@@ -125,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     cupertinoTopToBottomRoute(const AllSetDocScreen()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("SMC Number not verified.")),
+                  const SnackBar(content: Text("SMC Number  verified.")),
                 );
               }
             }
@@ -187,31 +185,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: "Name",
             controller: _nameController,
             cursorColor: AppColor.textGrayColor,
+            keyboardType: TextInputType.name,
           ),
           Sizes.spaceHeight25,
-          CustomTextField(
-            contentPadding:
-                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-            fillColor: AppColor.textfieldGrayColor,
-            hintText: "Gender",
-            suffixIcon: PopupMenuButton<String>(
-              icon: const Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.grey,
-                size: 20,
+          Center(
+            child: Container(
+              height: 55,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColor.textfieldGrayColor,
+                borderRadius: BorderRadius.circular(15),
               ),
-              onSelected: _selectGender,
-              itemBuilder: (BuildContext context) {
-                return genderOptions.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
+              padding:
+                  EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
+              child: DropdownButton<String>(
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.grey,
+                  size: 20,
+                ),
+                value: genderOptions.contains(_genderController.text)
+                    ? _genderController.text
+                    : null,
+                hint: TextConst(
+                  "Gender",
+                  size: Sizes.fontSizeFour,
+                  color: AppColor.textfieldTextColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                underline: const SizedBox(),
+                isExpanded: true,
+                items: genderOptions.map((data) {
+                  return DropdownMenuItem<String>(
+                    value: data,
+                    child: TextConst(
+                      data.toString() ?? '',
+                      fontWeight: FontWeight.w500,
+                      size: Sizes.fontSizeFive,
+                      color: AppColor.blue,
+                    ),
                   );
-                }).toList();
-              },
+                }).toList(),
+                onChanged: (String? gender) {
+                  _selectGender(gender!);
+                },
+              ),
             ),
-            controller: _genderController,
-            cursorColor: AppColor.textGrayColor,
           ),
           Sizes.spaceHeight25,
           CustomTextField(
@@ -226,48 +245,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             enabled: false,
           ),
           Sizes.spaceHeight25,
-          // Center(
-          //   child: Container(
-          //     height: 55,
-          //     alignment: Alignment.center,
-          //     decoration: BoxDecoration(
-          //         color: AppColor.textfieldGrayColor,
-          //         borderRadius: BorderRadius.circular(15)),
-          //     padding: EdgeInsets.only(
-          //         left: Sizes.screenWidth * 0.03,
-          //         right: Sizes.screenWidth * 0.03),
-          //     child: DropdownButton<String>(
-          //       icon: const Icon(Icons.keyboard_arrow_down,
-          //         color: Colors.grey,
-          //         size: 20,),
-          //       value:_speController.text,
-          //       hint: TextConst(
-          //         "Specialization",
-          //         size: Sizes.fontSizeFour,
-          //         color: AppColor.textfieldTextColor,
-          //         fontWeight: FontWeight.w400,
-          //       ),
-          //       underline: const SizedBox(),
-          //       isExpanded: true,
-          //       items: specializations!.specializations!
-          //           .map((data) => DropdownMenuItem<String>(
-          //         value: data.specializationId.toString(),
-          //         child: TextConst(
-          //           data.specializationName.toString(),
-          //           fontWeight: FontWeight.w500,
-          //           size: Sizes.fontSizeFive,
-          //           color: AppColor.blue,
-          //         ),
-          //       ))
-          //           .toList(),
-          //       onChanged: (String? newId) {
-          //         setState(() {
-          //           _speController.text=newId!;
-          //         });
-          //       },
-          //     ),
-          //   ),
-          // ),
           Center(
             child: Container(
               height: 55,
@@ -276,14 +253,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 color: AppColor.textfieldGrayColor,
                 borderRadius: BorderRadius.circular(15),
               ),
-              padding: EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
+              padding:
+                  EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
               child: DropdownButton<String>(
                 icon: const Icon(
                   Icons.keyboard_arrow_down,
                   color: Colors.grey,
                   size: 20,
                 ),
-                value: _speController.text.isNotEmpty ? _speController.text : null,
+                value:
+                    _speController.text.isNotEmpty ? _speController.text : null,
                 hint: TextConst(
                   "Specialization",
                   size: Sizes.fontSizeFour,
@@ -312,47 +291,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
-
-          // CustomTextField(
-          //   contentPadding:
-          //       const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-          //   fillColor: AppColor.textfieldGrayColor,
-          //   hintText: "Specialisation",
-          //   controller: _speController,
-          //   cursorColor: AppColor.textGrayColor,
-          //   // readOnly: true,
-          //   suffixIcon: PopupMenuButton<String>(
-          //     icon: const Icon(
-          //       Icons.keyboard_arrow_down,
-          //       color: Colors.grey,
-          //       size: 20,
-          //     ),
-          //     onSelected: (String value) {
-          //       setState(() {
-          //         _speController.text = value;
-          //       });
-          //     },
-          //     itemBuilder: (BuildContext context) {
-          //       if (specializations!.specializations!.isEmpty) {
-          //         return [const PopupMenuItem(child: Text('Loading...'))];
-          //       }
-          //       return specializations.specializations!.map((spec) {
-          //         return PopupMenuItem<String>(
-          //           value: spec.specializationId.toString(),
-          //           child: Text(spec.specializationName.toString()),
-          //         );
-          //       }).toList();
-          //     },
-          //   ),
-          // ),
           Sizes.spaceHeight25,
-          CustomTextField(
-            contentPadding:
-                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-            fillColor: AppColor.textfieldGrayColor,
-            hintText: "Experience",
-            controller: _expController,
-            cursorColor: AppColor.textGrayColor,
+          Center(
+            child: Container(
+              height: 55,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColor.textfieldGrayColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
+              child: DropdownButton<int>(
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.grey,
+                  size: 20,
+                ),
+                value: int.tryParse(_expController.text) ?? null,
+                hint: TextConst(
+                  "Practice start year",
+                  size: Sizes.fontSizeFour,
+                  color: AppColor.textfieldTextColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                underline: const SizedBox(),
+                isExpanded: true,
+                items: years.map((data) {
+                  return DropdownMenuItem<int>(
+                    value: data,
+                    child: TextConst(
+                      data.toString(),
+                      fontWeight: FontWeight.w500,
+                      size: Sizes.fontSizeFive,
+                      color: AppColor.blue,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (int? year) {
+                  setState(() {
+                    selectedYear = year;
+                    _expController.text = year.toString();
+                  });
+                },
+              ),
+            ),
           ),
           Sizes.spaceHeight35,
         ],
