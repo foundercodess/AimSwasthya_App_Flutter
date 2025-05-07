@@ -245,38 +245,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
 
   Widget uploadedRecords() {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    // List uploadDoc = [
-    //   {
-    //     "image": Assets.imagesMedicalReports,
-    //     "name": "Medical Health Report",
-    //     "date": "Tap to view"
-    //   },
-    //   {
-    //     "image": Assets.imagesMedicalReports,
-    //     "name": "KFT Report",
-    //     "date": "12/02/2025"
-    //   },
-    //   {
-    //     "image": Assets.imagesMedicalReports,
-    //     "name": "HbA1C Report",
-    //     "date": "12/02/2025"
-    //   },
-    //   {
-    //     "image": Assets.imagesMedicalReports,
-    //     "name": "CBC Report",
-    //     "date": "12/02/2025"
-    //   },
-    //   {
-    //     "image": Assets.imagesMedicalReports,
-    //     "name": "CBC Report",
-    //     "date": "12/02/2025"
-    //   },
-    //   {
-    //     "image": Assets.imagesMedicalReports,
-    //     "name": "CBC Report",
-    //     "date": "12/02/2025"
-    //   },
-    // ];
     return patientProfileData.patientProfileModel != null &&
             patientProfileData.patientProfileModel!.medicalRecords != null &&
             patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
