@@ -163,7 +163,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                 ),
                 Sizes.spaceHeight10,
                 TextConst(
-                  "Date of birth : ${patientProfileData.patientProfileModel!.patientProfile![0].dateOfBirth}",
+                  "Date of birth : ${DateFormat('dd/MM/yyyy').format(DateTime.parse(patientProfileData.patientProfileModel!.patientProfile![0].dateOfBirth.toString()))}",
                   size: Sizes.fontSizeFour,
                   fontWeight: FontWeight.w400,
                 ),

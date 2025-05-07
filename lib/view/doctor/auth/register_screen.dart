@@ -7,6 +7,7 @@ import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart'
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -30,13 +31,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _genderController.text = gender;
     });
   }
-
-  // void _selectSpecialization(String name) {
-  //   setState(() {
-  //     _speController.text = name;
-  //   });
-  // }
-
+  List<int> years = List.generate(DateTime.now().year - 1950 + 1, (index) => 1950 + index);
+  int? selectedYear;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -45,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       registerCon.resetValues();
       Provider.of<AllSpecializationViewModel>(context, listen: false)
           .docAllSpecializationApi();
+      // selectedYear = _expController.text aint?s ;
     });
     super.initState();
   }
@@ -113,24 +110,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   _nameController.text,
                   _genderController.text,
                   _speController.text,
-                  _expController.text,
+                  selectedYear,
                   context);
-            }
-            else{
+            } else {
               await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text);
 
               final verified =
                   smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
               if (verified) {
-                Navigator.push(
-                    context, cupertinoTopToBottomRoute(const AllSetDocScreen()));
+                Navigator.push(context,
+                    cupertinoTopToBottomRoute(const AllSetDocScreen()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("SMC Number not verified.")),
+                  const SnackBar(content: Text("SMC Number  verified.")),
                 );
               }
             }
-
           },
           color: AppColor.blue,
         ),
@@ -189,6 +184,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: "Name",
             controller: _nameController,
             cursorColor: AppColor.textGrayColor,
+            keyboardType: TextInputType.name,
+
           ),
           Sizes.spaceHeight25,
           CustomTextField(
@@ -214,6 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             controller: _genderController,
             cursorColor: AppColor.textGrayColor,
+            // enabled: false,
           ),
           Sizes.spaceHeight25,
           CustomTextField(
@@ -260,6 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             ),
           ),
+
           // CustomTextField(
           //   contentPadding:
           //       const EdgeInsets.only(top: 18, bottom: 20, left: 10),
@@ -306,7 +305,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.textfieldGrayColor,
-            hintText: "Experience",
+            hintText: "Practice start year",
+            suffixIcon: PopupMenuButton<int>(
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.grey,
+                size: 20,
+              ),
+              onSelected: (int year) {
+                setState(() {
+                  selectedYear = year;
+                  _expController.text = year.toString();
+                });
+              },
+              itemBuilder: (context) {
+                return years.map((year) {
+                  return PopupMenuItem<int>(
+                    value: year,
+                    child: Text(year.toString()),
+                  );
+                }).toList();
+              },
+            ),
+            // DropdownButton<int>(
+            //   value: selectedYear,
+            //   underline: const SizedBox(),
+            //   items: years
+            //       .map((year) => DropdownMenuItem(
+            //       value: year,
+            //       child: SizedBox(width: 40, child: Text('$year'))))
+            //       .toList(),
+            //   onChanged: (value) {
+            //     setState(() {
+            //       selectedYear = value!;
+            //     });
+            //   },
+            // ),
+            // suffixIcon: IconButton(
+            //   icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 20),
+            //   onPressed: _showYearDropdown,
+            // ),
             controller: _expController,
             cursorColor: AppColor.textGrayColor,
           ),
