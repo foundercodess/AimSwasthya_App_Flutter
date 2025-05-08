@@ -17,6 +17,16 @@ class ScheduleHoursScreen extends StatefulWidget {
 
 class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
   @override
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //   final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
+  //   _selectedMonth = revenueDocCon.revenueDoctorModel?.earningMonth?.isNotEmpty == true
+  //       ? revenueDocCon.revenueDoctorModel!.earningMonth!.first.monthYear ?? ""
+  //       : "";
+  // });
+  // }
   Widget build(BuildContext context) {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     return revenueDocCon.revenueDoctorModel == null || revenueDocCon.loading
@@ -25,6 +35,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
             backgroundColor: AppColor.white,
             body: SingleChildScrollView(
               child: Column(
+
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   appBarConstant(
@@ -87,6 +98,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
 
   Widget payoutSection() {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
+
     return SizedBox(
       height: Sizes.screenHeight * 0.195,
       child: Stack(
@@ -115,63 +127,49 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                       color: AppColor.textGrayColor,
                     ),
                     const Spacer(),
-                    DropdownButton<String>(
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                      value: revenueDocCon
-                              .revenueDoctorModel!.earningMonth!.isNotEmpty
-                          ? revenueDocCon
-                              .revenueDoctorModel!.earningMonth![0].totalAmount
-                          : null,
-                      hint: TextConst(
-                        "Specialization",
-                        size: Sizes.fontSizeFour,
-                        color: AppColor.textfieldTextColor,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      items: revenueDocCon
-                          .revenueDoctorModel!.earningMonth![0].monthYear.map((data) {
-                        return DropdownMenuItem<String>(
-                          value: revenueDocCon
-                              .revenueDoctorModel!.earningMonth![0].monthYear
-                              .toString(),
-                          child: TextConst(
-                            revenueDocCon.revenueDoctorModel!.earningMonth![0]
-                                    .monthYear ??
-                                "",
-                            fontWeight: FontWeight.w500,
-                            size: Sizes.fontSizeFive,
-                            color: AppColor.blue,
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newId) {
-                        print("$newId");
-                        setState(() {
-                          // _speController.text = newId!;
-                        });
-                      },
+                    TextConst(
+                      revenueDocCon.selectedMonth,
+                      size: Sizes.fontSizeFour,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.textfieldTextColor,
                     ),
-                    // TextConst(
-                    //   revenueDocCon
-                    //           .revenueDoctorModel!.earningMonth![0].monthYear ??
-                    //       "",
-                    //   // "April",
-                    //   size: Sizes.fontSizeFour,
-                    //   fontWeight: FontWeight.w400,
-                    //   color: AppColor.textfieldTextColor,
-                    // ),
-                    // Sizes.spaceWidth5,
-                    // Image.asset(
-                    //   Assets.iconsArrowDown,
-                    //   width: Sizes.screenWidth * 0.05,
-                    //   color: AppColor.textfieldTextColor,
-                    // )
+                    Sizes.spaceWidth5,
+                    GestureDetector(
+                      onTapDown: (TapDownDetails details) async {
+                        final selected = await showMenu<Map<String, String>>(
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            details.globalPosition.dx,
+                            details.globalPosition.dy,
+                            details.globalPosition.dx,
+                            details.globalPosition.dy,
+                          ),
+                          items: revenueDocCon.revenueDoctorModel!.earningMonth!
+                              .map(
+                                (month) => PopupMenuItem<Map<String, String>>(
+                              value: {
+                                'monthYear': month.monthYear ?? '',
+                                'totalAmount': month.totalAmount?.toString() ?? '0',
+                              },
+                              child: Text(month.monthYear ?? ""),
+                            ),
+                          )
+                              .toList(),
+                        );
+
+                        if (selected != null) {
+                          revenueDocCon.setSelectedMonthAndAmount(
+                            selected['monthYear']!,
+                            selected['totalAmount']!,
+                          );
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.iconsArrowDown,
+                        width: Sizes.screenWidth * 0.05,
+                        color: AppColor.textfieldTextColor,
+                      ),
+                    )
                   ],
                 ),
                 Sizes.spaceHeight10,
@@ -184,10 +182,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                     ),
                     Sizes.spaceWidth10,
                     TextConst(
-                      revenueDocCon
-                          .revenueDoctorModel!.earningMonth![0].totalAmount
-                          .toString(),
-                      // 'Rs. 20,000/-',
+                      revenueDocCon.selectedAmount,
                       size: Sizes.fontSizeFivePFive,
                       fontWeight: FontWeight.w400,
                       color: AppColor.black,
@@ -222,6 +217,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     int itemCount = revenueDocCon.revenueDoctorModel!.revenueAnalytics!.length;
     return Column(
+
       children: [
         SizedBox(
           height: Sizes.screenHeight * 0.23,
@@ -271,7 +267,8 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      Container(
+                        alignment: AlignmentDirectional.topStart,
                         height: Sizes.screenHeight * 0.16,
                         child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
@@ -352,8 +349,9 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
         itemCount: revenueDocCon.revenueDoctorModel!.patientPayment!.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          final paymentData =
-              revenueDocCon.revenueDoctorModel!.patientPayment![index];
+          final paymentData = revenueDocCon.revenueDoctorModel!.patientPayment![index];
+          final isNegative = paymentData.amount != null && paymentData.amount!.startsWith('-');
+
           return Container(
             margin: EdgeInsets.only(
                 bottom: Sizes.screenHeight * 0.02,
@@ -375,45 +373,96 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                   Container(
                     height: 18,
                     width: 18,
-                    color: index == 1
+                    color: isNegative
                         ? const Color(0xffC10000).withOpacity(0.2)
                         : const Color(0xff36D000).withOpacity(0.2),
                   ),
-                  index == 1
-                      ? const Icon(
-                          Icons.remove,
-                          size: 27,
-                        )
-                      : const Icon(
-                          Icons.add,
-                          size: 27,
-                        ),
+                  Icon(
+                    isNegative ? Icons.remove : Icons.add,
+                    size: 27,
+                  ),
                 ],
               ),
               title: TextConst(
                 paymentData.name ?? "",
-                // "Kartik Mahajan",
-                // size: 12,
                 size: Sizes.fontSizeFourPFive,
                 fontWeight: FontWeight.w400,
               ),
-              trailing: index == 1
-                  ? TextConst(
-                      "+${paymentData.amount ?? ""}",
-                      // "-50",
-                      size: Sizes.fontSizeFive,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xffC10000),
-                    )
-                  : TextConst(
-                      "+450",
-                      // size: 12,
-                      size: Sizes.fontSizeFourPFive,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xff36D000),
-                    ),
+              trailing: TextConst(
+                paymentData.amount ?? "",
+                size: Sizes.fontSizeFive,
+                fontWeight: FontWeight.w600,
+                color: isNegative ? const Color(0xffC10000) : const Color(0xff36D000),
+              ),
             ),
           );
-        });
+        }
+        // itemBuilder: (context, index) {
+        //   final paymentData =
+        //       revenueDocCon.revenueDoctorModel!.patientPayment![index];
+        //   return Container(
+        //     margin: EdgeInsets.only(
+        //         bottom: Sizes.screenHeight * 0.02,
+        //         left: Sizes.screenWidth * 0.05,
+        //         right: Sizes.screenWidth * 0.05),
+        //     padding: EdgeInsets.symmetric(
+        //         horizontal: Sizes.screenWidth * 0.04,
+        //         vertical: Sizes.screenHeight * 0.001),
+        //     width: Sizes.screenWidth,
+        //     decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(10),
+        //       color: AppColor.grey,
+        //     ),
+        //     child: ListTile(
+        //       contentPadding: const EdgeInsets.all(0),
+        //       leading: Stack(
+        //         alignment: Alignment.center,
+        //         children: [
+        //           Container(
+        //             height: 18,
+        //             width: 18,
+        //             color: index == 1
+        //                 ? const Color(0xffC10000).withOpacity(0.2)
+        //                 : const Color(0xff36D000).withOpacity(0.2),
+        //           ),
+        //           index == 1
+        //               ? const Icon(
+        //                   Icons.remove,
+        //                   size: 27,
+        //                 )
+        //               : const Icon(
+        //                   Icons.add,
+        //                   size: 27,
+        //                 ),
+        //         ],
+        //       ),
+        //       title: TextConst(
+        //         paymentData.name ?? "",
+        //         // "Kartik Mahajan",
+        //         // size: 12,
+        //         size: Sizes.fontSizeFourPFive,
+        //         fontWeight: FontWeight.w400,
+        //       ),
+        //       trailing: index == 1
+        //           ? TextConst(
+        //               "+${paymentData.amount ?? ""}",
+        //               // "-50",
+        //               size: Sizes.fontSizeFive,
+        //               fontWeight: FontWeight.w600,
+        //               color: const Color(0xffC10000),
+        //             )
+        //           : TextConst(
+        //               "+450",
+        //               // size: 12,
+        //               size: Sizes.fontSizeFourPFive,
+        //               fontWeight: FontWeight.w400,
+        //               color: const Color(0xff36D000),
+        //             ),
+        //     ),
+        //   );
+        // }
+    );
+
   }
+
 }

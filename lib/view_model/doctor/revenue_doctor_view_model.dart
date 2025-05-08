@@ -14,12 +14,45 @@ class RevenueDoctorViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  String _selectedMonth = '';
+  String _selectedAmount = '';
+
+  String get selectedMonth => _selectedMonth;
+  String get selectedAmount => _selectedAmount;
+
+  void setSelectedMonthAndAmount(String month, String amount) {
+    _selectedMonth = month;
+    _selectedAmount = amount;
+    notifyListeners();
+  }
+
+  void setDefaultMonthAndAmount(List<EarningMonth>? list) {
+    if (list != null && list.isNotEmpty) {
+      _selectedMonth = list.first.monthYear ?? '';
+      _selectedAmount = list.first.totalAmount?.toString() ?? '0';
+      notifyListeners();
+    }
+  }
+
   RevenueDoctorModel? _revenueDoctorModel;
   RevenueDoctorModel? get revenueDoctorModel => _revenueDoctorModel;
   setRevenueDoctorData(RevenueDoctorModel value) {
     _revenueDoctorModel = value;
+    setDefaultMonthAndAmount(value.earningMonth);
     notifyListeners();
   }
+
+
+  List<RevenueDoctorModel> _transactions = [];
+
+  List<RevenueDoctorModel> get transactions => _transactions;
+
+  void setTransactions(List<dynamic> jsonList) {
+    _transactions = jsonList.map((json) => RevenueDoctorModel.fromJson(json)).toList();
+    notifyListeners();
+  }
+
   Future<void> revenueDoctorApi( ) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);

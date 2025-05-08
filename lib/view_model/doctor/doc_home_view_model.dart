@@ -4,6 +4,8 @@ import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
+// import '../../model/doctor/revenue_doctor_model.dart' show EarningMonth;
+
 class DoctorHomeViewModel extends ChangeNotifier {
   final _doctorHomeRepo = DoctorHomeRepo();
   bool _loading = false;
@@ -14,12 +16,33 @@ class DoctorHomeViewModel extends ChangeNotifier {
 
   setHomeDate(DoctorHomeModel value) {
     _doctorHomeModel = value;
+    setDefaultMonthAndAmount(value.data!.earnings);
     notifyListeners();
   }
 
   setLoading(bool value) {
     _loading = value;
     notifyListeners();
+  }
+
+  String _selectedMonth = '';
+  String _selectedAmount = '';
+
+  String get selectedMonth => _selectedMonth;
+  String get selectedAmount => _selectedAmount;
+
+  void setSelectedMonthAndAmount(String month, String amount) {
+    _selectedMonth = month;
+    _selectedAmount = amount;
+    notifyListeners();
+  }
+
+  void setDefaultMonthAndAmount(List<Earnings>? list) {
+    if (list != null && list.isNotEmpty) {
+      _selectedMonth = list.first.monthYear ?? '';
+      _selectedAmount = list.first.totalAmount?.toString() ?? '0';
+      notifyListeners();
+    }
   }
 
   Future<void> doctorHomeApi(BuildContext context) async {
