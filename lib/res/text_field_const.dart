@@ -162,7 +162,7 @@ class CustomTextField extends StatelessWidget {
         hintStyle:
         TextStyle(
           fontFamily: "Poppins-Regular",
-            fontSize: hintSize ?? 12,
+            fontSize: hintSize ?? 14,
             fontWeight: hintWeight??FontWeight.normal,
             color: hintColor ?? AppColor.textfieldTextColor),
         contentPadding: contentPadding ??

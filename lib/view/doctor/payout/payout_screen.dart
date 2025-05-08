@@ -28,6 +28,7 @@ class _PayoutScreenState extends State<PayoutScreen> {
             const AppbarConst(
               title: 'Payment',
             ),
+
             TextConst(
               "Payment details",
               padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),

@@ -113,8 +113,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   bottomLeft: Radius.circular(15),
                 ),
                 image: DecorationImage(
-                    image: AssetImage(Assets.logoDoctor),
-                    fit: BoxFit.cover)),
+                    image: AssetImage(Assets.logoDoctor), fit: BoxFit.cover)),
           ),
           Sizes.spaceWidth15,
           SizedBox(
@@ -156,7 +155,9 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                 ),
                 Sizes.spaceHeight30,
                 TextConst(
-                  patientProfileData.patientProfileModel!.patientProfile![0].name??"",
+                  patientProfileData
+                          .patientProfileModel!.patientProfile![0].name ??
+                      "",
                   // size: 16,
                   size: Sizes.fontSizeSix,
                   fontWeight: FontWeight.w500,

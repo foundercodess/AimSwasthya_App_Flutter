@@ -89,7 +89,6 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     return SizedBox(
       height: Sizes.screenHeight * 0.195,
-      // color: Colors.red,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -116,20 +115,63 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                       color: AppColor.textGrayColor,
                     ),
                     const Spacer(),
-                    TextConst(
-                      revenueDocCon.revenueDoctorModel!.earningMonth![0].monthYear ??
-                          "",
-                      // "April",
-                      size: Sizes.fontSizeFour,
-                      fontWeight: FontWeight.w400,
-                      color: AppColor.textfieldTextColor,
+                    DropdownButton<String>(
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                      value: revenueDocCon
+                              .revenueDoctorModel!.earningMonth!.isNotEmpty
+                          ? revenueDocCon
+                              .revenueDoctorModel!.earningMonth![0].totalAmount
+                          : null,
+                      hint: TextConst(
+                        "Specialization",
+                        size: Sizes.fontSizeFour,
+                        color: AppColor.textfieldTextColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      items: revenueDocCon
+                          .revenueDoctorModel!.earningMonth![0].monthYear.map((data) {
+                        return DropdownMenuItem<String>(
+                          value: revenueDocCon
+                              .revenueDoctorModel!.earningMonth![0].monthYear
+                              .toString(),
+                          child: TextConst(
+                            revenueDocCon.revenueDoctorModel!.earningMonth![0]
+                                    .monthYear ??
+                                "",
+                            fontWeight: FontWeight.w500,
+                            size: Sizes.fontSizeFive,
+                            color: AppColor.blue,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newId) {
+                        print("$newId");
+                        setState(() {
+                          // _speController.text = newId!;
+                        });
+                      },
                     ),
-                    Sizes.spaceWidth5,
-                    Image.asset(
-                      Assets.iconsArrowDown,
-                      width: Sizes.screenWidth * 0.05,
-                      color: AppColor.textfieldTextColor,
-                    )
+                    // TextConst(
+                    //   revenueDocCon
+                    //           .revenueDoctorModel!.earningMonth![0].monthYear ??
+                    //       "",
+                    //   // "April",
+                    //   size: Sizes.fontSizeFour,
+                    //   fontWeight: FontWeight.w400,
+                    //   color: AppColor.textfieldTextColor,
+                    // ),
+                    // Sizes.spaceWidth5,
+                    // Image.asset(
+                    //   Assets.iconsArrowDown,
+                    //   width: Sizes.screenWidth * 0.05,
+                    //   color: AppColor.textfieldTextColor,
+                    // )
                   ],
                 ),
                 Sizes.spaceHeight10,
@@ -142,7 +184,8 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                     ),
                     Sizes.spaceWidth10,
                     TextConst(
-                      revenueDocCon.revenueDoctorModel!.earningMonth![0].totalAmount
+                      revenueDocCon
+                          .revenueDoctorModel!.earningMonth![0].totalAmount
                           .toString(),
                       // 'Rs. 20,000/-',
                       size: Sizes.fontSizeFivePFive,
@@ -233,11 +276,12 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                         child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: revenueDocCon.revenueDoctorModel!.revenueAnalytics!.length,
+                            itemCount: revenueDocCon
+                                .revenueDoctorModel!.revenueAnalytics!.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              final weekdays =
-                              revenueDocCon.revenueDoctorModel!.revenueAnalytics![index];
+                              final weekdays = revenueDocCon
+                                  .revenueDoctorModel!.revenueAnalytics![index];
                               return SizedBox(
                                 width: Sizes.screenWidth * 0.11,
                                 child: Column(
@@ -253,7 +297,10 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                                             topRight: Radius.circular(5),
                                             bottomRight: Radius.circular(5),
                                           ),
-                                          value:double.parse(weekdays.totalAmount.toString()) / 1000,
+                                          value: double.parse(weekdays
+                                                  .totalAmount
+                                                  .toString()) /
+                                              1000,
                                           // double.parse(weekdays.totalAmount.toString() / 1000),
                                           backgroundColor: Colors.transparent,
                                           valueColor:
@@ -264,7 +311,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                                     ),
                                     Sizes.spaceHeight5,
                                     TextConst(
-                                      weekdays.dayName!.substring(0,3) ??"",
+                                      weekdays.dayName!.substring(0, 3) ?? "",
                                       size: Sizes.fontSizeFour,
                                       fontWeight: FontWeight.w400,
                                       color: AppColor.lightBlack,
