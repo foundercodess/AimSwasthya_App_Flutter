@@ -89,6 +89,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
   }
 
   Widget activePatientSec() {
+    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
     final patientappCon = Provider.of<DocPatientAppointmentViewModel>(context);
     return patientappCon.docPatientAppointmentModel != null &&
             patientappCon
@@ -194,8 +195,10 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                     width: Sizes.screenWidth * 0.33,
                                     color: AppColor.blue,
                                     onTap: () {
+                                      patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
+                                      patientappCon.setDoctorsAppointmentsData(schedule);
                                       Navigator.pushNamed(context,
-                                          RoutesName.patientProfileScreen);
+                                          RoutesName.patientProfileScreen,);
                                     })
                               ],
                             ),

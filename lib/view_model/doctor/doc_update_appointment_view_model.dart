@@ -9,9 +9,19 @@ class DocPatientAppointmentViewModel extends ChangeNotifier {
   bool get loading => _loading;
 
   DocPatientAppointmentModel? _docUpdateAppointmentModel;
-  DocPatientAppointmentModel? get docPatientAppointmentModel => _docUpdateAppointmentModel;
+  DocPatientAppointmentModel? get docPatientAppointmentModel =>
+      _docUpdateAppointmentModel;
   setUpdateAppDate(DocPatientAppointmentModel value) {
     _docUpdateAppointmentModel = value;
+    notifyListeners();
+  }
+
+  DoctorsAppointmentsDataModel? _doctorsAppointmentsDataModel;
+  DoctorsAppointmentsDataModel? get doctorsAppointmentsDataModel =>
+      _doctorsAppointmentsDataModel;
+  setDoctorsAppointmentsData(DoctorsAppointmentsDataModel value) {
+    _doctorsAppointmentsDataModel = value;
+
     notifyListeners();
   }
 
