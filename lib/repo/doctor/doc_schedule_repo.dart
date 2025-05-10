@@ -1,3 +1,4 @@
+// repo/doctor/doc_schedule_repo.dart
 import 'package:aim_swasthya/helper/network/network_api_services.dart';
 import 'package:aim_swasthya/model/doctor/doc_schedule_model.dart';
 import 'package:aim_swasthya/res/api_urls.dart';
@@ -29,6 +30,18 @@ class DocScheduleRepo {
     } catch (e) {
       if (kDebugMode) {
         print('Error occurred during docInsertScheduleApi: $e');
+      }
+      rethrow;
+    }
+  }
+    Future<dynamic> docScheduleSlotTypeApi(dynamic data) async {
+    try {
+      dynamic response =
+          await _apiServices.getPostApiResponse(DoctorApiUrl.upsertScheduleSlotTypeDoctor, data);
+      return response;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error occurred during docScheduleSlotTypeApi: $e');
       }
       rethrow;
     }

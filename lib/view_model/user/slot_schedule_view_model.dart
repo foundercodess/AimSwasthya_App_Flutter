@@ -1,5 +1,7 @@
+// view_model/user/slot_schedule_view_model.dart
 import 'dart:convert';
 import 'package:aim_swasthya/utils/show_server_error.dart';
+import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,18 +10,35 @@ import '../../model/doctor/doc_schedule_model.dart';
 import '../../repo/doctor/doc_schedule_repo.dart';
 
 class SlotScheduleViewModel extends ChangeNotifier {
+  SlotScheduleViewModel() {
+    DateTime now = DateTime.now();
+    _selectedRange = DateTimeRange(
+      start: now,
+      end: now.add(const Duration(days: 6)),
+    );
+  }
   final _docScheduleRepo = DocScheduleRepo();
   bool _loading = false;
   bool get loading => _loading;
-  List<String> appointmentDurationList = ['15 min', '30 min'];
+  final appointmentDurationList = [
+    {"value": '15_MINUTES', "label": '15 min'},
+    {"value": '30_MINUTES', "label": '30 min'}
+  ];
   String? _selectedClinicId;
   String? get selectedClinicId => _selectedClinicId;
-  String _appointmentDuration = '15 min';
+  String _appointmentDuration = '15_MINUTES';
   String get appointmentDuration => _appointmentDuration;
+  String? _slotType = 'weekly';
+  String? get slotType => _slotType;
 
   DateTimeRange? _selectedRange;
 
   DateTimeRange? get selectedRange => _selectedRange;
+
+  setSlotType(String value) {
+    _slotType = value;
+    notifyListeners();
+  }
 
   void setRange(DateTimeRange? range) {
     if (range == null) {
@@ -38,27 +57,118 @@ class SlotScheduleViewModel extends ChangeNotifier {
     _allSlots = [];
     final doctorId = await UserViewModel().getUser();
     List<Map<String, dynamic>> allSlots = [];
-    for (int i = 0;
-        i <= _selectedRange!.end.difference(_selectedRange!.start).inDays;
-        i++) {
-      final date = _selectedRange!.start.add(Duration(days: i));
-      // for (int i = 0; i < days; i++) {
-      String availabilityDate = DateFormat('yy-MM-dd').format(date);
-      String ddMonthName = DateFormat('dd MMM').format(date);
 
-      _allSlots.add({
-        'availability_date': availabilityDate,
-        'timings': [
-          {
-            'start_time': timeSlots[0]['start_time'],
-            'end_time': timeSlots[0]['end_time'],
-            'available_flag': 'Y'
+    if (_slotType == "indefinitely") {
+      DateTime currentDate = DateTime.now();
+      int daysUntilMonday = (DateTime.monday - currentDate.weekday) % 7;
+      DateTime mondayDate = currentDate.add(Duration(days: daysUntilMonday));
+
+      for (int i = 0; i < 7; i++) {
+        final date = mondayDate.add(Duration(days: i));
+        String availabilityDate = DateFormat('yy-MM-dd').format(date);
+        String dayName = DateFormat('EEE').format(date);
+        String ddMonthName = dayName;
+
+        print("Checking indefinitely - availabilityDate: $availabilityDate");
+        print("Available dates in model: ${scheduleDoctorModel?.schedules?.map((e) => e.availabilityDate).toList()}");
+        
+        final existingIndex = scheduleDoctorModel?.schedules?.indexWhere(
+            (element) {
+              print("Comparing indefinitely - element.availabilityDate: ${element.availabilityDate} with availabilityDate: $availabilityDate");
+              return element.availabilityDate == availabilityDate;
+            });
+        if (existingIndex != null && existingIndex != -1) {
+          List<Timings>? timings =
+              scheduleDoctorModel?.schedules?[existingIndex].timings;
+          if (timings != null && timings.isNotEmpty) {
+            _allSlots.add({
+              'availability_date': scheduleDoctorModel
+                  ?.schedules?[existingIndex].availabilityDate,
+              'dd_month_name':
+                  scheduleDoctorModel?.schedules?[existingIndex].ddMonthName,
+              'available_flag':
+                  scheduleDoctorModel?.schedules?[existingIndex].availableFlag,
+              'timings': timings
+                  .map((t) => {
+                        'start_time': t.startTime,
+                        'end_time': t.endTime,
+                      })
+                  .toList()
+            });
           }
-        ],
-      });
+        } else {
+          _allSlots.add({
+            'availability_date': availabilityDate,
+            'dd_month_name': ddMonthName,
+            'available_flag': 'Y',
+            'timings': [
+              {
+                'start_time': timeSlots[0]['start_time'],
+                'end_time': timeSlots[0]['end_time'],
+              }
+            ],
+          });
+        }
+      }
+    } else {
+      // Original range-based logic
+      if (_selectedRange != null) {
+        for (int i = 0;
+            i <= _selectedRange!.end.difference(_selectedRange!.start).inDays;
+            i++) {
+          final date = _selectedRange!.start.add(Duration(days: i));
+          String availabilityDate = DateFormat('yy-MM-dd').format(date);
+          String availabilityDateM = DateFormat('dd-MM-yyyy').format(date);
+          String dayName = DateFormat('EEE').format(date);
+          String ddMonthName = DateFormat('dd MMM').format(date);
 
-      debugPrint("slots data: $_allSlots");
+          print("Checking range - availabilityDateM: $availabilityDateM");
+          print("Available dates in model: ${scheduleDoctorModel?.schedules?.map((e) => e.availabilityDate).toList()}");
+          
+          final existingIndex = scheduleDoctorModel?.schedules?.indexWhere(
+              (element) {
+                print(element.availabilityDate == availabilityDateM);
+                print("Comparing range - element.availabilityDate: ${element.availabilityDate} with availabilityDateM: $availabilityDateM");
+                return element.availabilityDate == availabilityDateM;
+              });
+          if (existingIndex != null && existingIndex != -1) {
+            List<Timings>? timings =
+                scheduleDoctorModel?.schedules?[existingIndex].timings;
+            print("timings: $timings");
+            if (timings != null && timings.isNotEmpty) {
+              _allSlots.add({
+                'availability_date': scheduleDoctorModel
+                    ?.schedules?[existingIndex].availabilityDate,
+                'dd_month_name':
+                    scheduleDoctorModel?.schedules?[existingIndex].ddMonthName,
+                'available_flag': scheduleDoctorModel
+                    ?.schedules?[existingIndex].availableFlag,
+                'timings': timings
+                    .map((t) => {
+                          'start_time': t.startTime,
+                          'end_time': t.endTime,
+                        })
+                    .toList()
+              });
+            }
+          } else {
+            // _allSlots.add({
+            //   'availability_date': availabilityDateM,
+            //   'dd_month_name': ddMonthName,
+            //   'available_flag': 'Y',
+            //   'timings': [
+            //     {
+            //       'start_time': timeSlots[0]['start_time'],
+            //       'end_time': timeSlots[0]['end_time'],
+            //     }
+            //   ],
+            // });
+          }
+        }
+      }
     }
+
+    debugPrint("slots data: $_allSlots");
     notifyListeners();
   }
 
@@ -73,16 +183,16 @@ class SlotScheduleViewModel extends ChangeNotifier {
   }
 
   addMoreTimeAtDate(int index, int timeIndex) {
-    _allSlots[index]['timing'].add({
+    _allSlots[index]['timings'].add({
       'start_time': timeSlots[timeIndex]['start_time'],
       'end_time': timeSlots[timeIndex]['end_time'],
     });
     notifyListeners();
-    print(_allSlots);
+    debugPrint(_allSlots.toString());
   }
 
   removeTimeAtDate(int index, int timeIndex) {
-    _allSlots[index]['timing'].removeAt(timeIndex);
+    _allSlots[index]['timings'].removeAt(timeIndex);
     notifyListeners();
   }
 
@@ -99,21 +209,25 @@ class SlotScheduleViewModel extends ChangeNotifier {
 
   Future<void> selectTime(
       BuildContext context, int slotIndex, int timeIndex, String key) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (pickedTime != null) {
-      final now = DateTime.now();
-      final formatted = DateFormat('hh:mm a').format(
-        DateTime(
-            now.year, now.month, now.day, pickedTime.hour, pickedTime.minute),
+    if (slotIndex >= 0 && slotIndex < _allSlots.length) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
       );
 
-      _allSlots[slotIndex]['timing'][timeIndex][key] = formatted;
-      // _formattedTime = formatted;
-      notifyListeners();
+      if (pickedTime != null) {
+        final now = DateTime.now();
+        final formatted = DateFormat('hh:mm a').format(
+          DateTime(
+              now.year, now.month, now.day, pickedTime.hour, pickedTime.minute),
+        );
+
+        if (_allSlots[slotIndex]['timings'] != null &&
+            timeIndex < _allSlots[slotIndex]['timings'].length) {
+          _allSlots[slotIndex]['timings'][timeIndex][key] = formatted;
+          notifyListeners();
+        }
+      }
     }
   }
 
@@ -128,13 +242,18 @@ class SlotScheduleViewModel extends ChangeNotifier {
       for (var t in timings) {
         final parsedStart = inputFormat.parse(t['start_time']);
         final parsedEnd = inputFormat.parse(t['end_time']);
+
+        // Convert date from DD-MM-YYYY to YYYY-MM-DD
+        final dateParts = item['availability_date'].split('-');
+        final formattedDate = '${dateParts[2]}-${dateParts[1]}-${dateParts[0]}';
+
         result.add({
-          'availability_date': item['availability_date'],
+          'availability_date': formattedDate,
+          'available_flag': item['available_flag'],
           'timings': [
             {
               'start_time': outputFormat.format(parsedStart),
               'end_time': outputFormat.format(parsedEnd),
-              'available_flag': 'Y'
             }
           ],
         });
@@ -153,6 +272,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
 
   clearSelectedValues() {
     _selectedClinicId = null;
+    _widgetIndex = 1;
     notifyListeners();
   }
 
@@ -168,20 +288,37 @@ class SlotScheduleViewModel extends ChangeNotifier {
   ScheduleDoctorModel? get scheduleDoctorModel => _scheduleDoctorModel;
   setDoctorScheduleData(ScheduleDoctorModel value) {
     _scheduleDoctorModel = value;
+    if (value.schedules != null && value.schedules!.isNotEmpty) {
+      try {
+        final startDateParts =
+            value.schedules!.first.availabilityDate?.split('-') ?? [];
+        final endDateParts =
+            value.schedules!.last.availabilityDate?.split('-') ?? [];
+
+        if (startDateParts.length == 3 && endDateParts.length == 3) {
+          final formattedStartDate =
+              '${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]} 00:00:00';
+          final formattedEndDate =
+              '${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]} 00:00:00';
+
+          _selectedRange = DateTimeRange(
+              start: DateTime.parse(formattedStartDate),
+              end: DateTime.parse(formattedEndDate));
+        }
+      } catch (e) {
+        debugPrint('Error parsing dates: $e');
+      }
+    }
     notifyListeners();
   }
 
   Future<void> docScheduleApi() async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    Map data = {"doctor_id": "6", "clinic_id": _selectedClinicId};
+    Map data = {"doctor_id": userId.toString(), "clinic_id": _selectedClinicId};
     _docScheduleRepo.docScheduleApi(data).then((value) {
       if (value.status == true) {
         setDoctorScheduleData(value);
-        if (value.doctorWorkingHours!.isNotEmpty &&
-            value.doctorWorkingHours != []) {
-          final lastDate = value.doctorWorkingHours!.last.availabilityDate;
-        } else {}
       }
       setLoading(false);
     }).onError((error, stackTrace) {
@@ -220,19 +357,46 @@ class SlotScheduleViewModel extends ChangeNotifier {
   //   return result;
   // }
 
-  Future<void> docScheduleInsertApi() async {
+  Future<void> docScheduleSlotTypeApi(BuildContext context) async {
+    final userId = await UserViewModel().getUser();
+    setLoading(true);
+    final data = {
+      "doctor_id": userId,
+      "clinic_id": _selectedClinicId,
+      "slot_type": _appointmentDuration,
+      "schedule_type": _slotType,
+      "available_flag": "Y"
+    };
+    _docScheduleRepo.docScheduleSlotTypeApi(data).then((value) {
+      if (value["status"] == true) {
+        Utils.show(value['message'], context);
+        generateSlots();
+        setWidgetIndex(3);
+      }
+      setLoading(false);
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print('error: $error');
+      }
+      setLoading(false);
+    });
+  }
+
+  Future<void> docScheduleInsertApi(BuildContext context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     final schedule = flattenTimingsWith24HrFormat();
     final data = {
-      "doctor_id": userId,
-      "clinic_id": _selectedClinicId,
+      "doctor_id": int.parse(userId.toString()),
+      "clinic_id": int.parse(_selectedClinicId ?? "0"),
       "schedules": schedule
     };
-    debugPrint(jsonEncode(data));
+    debugPrint("insert data: ${jsonEncode(data)}");
     _docScheduleRepo.docInsertScheduleApi(data).then((value) {
       if (value["status"] == true) {
-        showInfoOverlay(title: "Success", errorMessage: value['message']);
+        docScheduleApi();
+        // showInfoOverlay(title: "Success", errorMessage: value['message']);
+        setWidgetIndex(2);
       }
       setLoading(false);
     }).onError((error, stackTrace) {

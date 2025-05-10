@@ -1,3 +1,4 @@
+// view/doctor/schedule/schedule_screen.dart
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view/doctor/schedule/range_calander_overlay.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'clinic_location_screen.dart';
 
-
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
 
@@ -19,12 +19,12 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  int selectedIndex = 0;
-  void toggleSelection(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
+  // int selectedIndex = 0;
+  // void toggleSelection(int index) {
+  //   setState(() {
+  //     selectedIndex = index;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -99,41 +99,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 : slotScheduleCon.widgetIndex == 2
                     ? manageSchedule()
                     : const ScheduleHour(),
-
-            if (slotScheduleCon.selectedRange != null)
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                // child: Text(
-                //   // 'Selected: ${} - ${}',
-                // ),
-              ),
-            // SizedBox(
-            //     height: Sizes.screenHeight *
-            //         (registerCon.isPersonalInfoSelected == true ? 0.045 : 0.1)),
-            // Padding(
-            //   padding: EdgeInsets.only(
-            //       left: Sizes.screenWidth * 0.1,
-            //       right: Sizes.screenWidth * 0.1,
-            //       bottom: Sizes.screenHeight * 0.016),
-            //   child: AppBtn(
-            //     height: Sizes.screenHeight * 0.06,
-            //     width: Sizes.screenWidth,
-            //     title: registerCon.isPersonalInfoSelected == true
-            //         ? AppLocalizations.of(context)!.continue_con
-            //         : AppLocalizations.of(context)!.save,
-            //     color: AppColor.blue,
-            //     borderRadius: 18,
-            //     fontWidth: FontWeight.w400,
-            //     onTap: () {
-            //       if (registerCon.isPersonalInfoSelected == false) {
-            //         slotScheduleCon.docScheduleInsertApi();
-            //         // Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);
-            //       } else {
-            //         registerCon.changeWidget(false);
-            //       }
-            //     },
-            //   ),
-            // ),
             SizedBox(height: Sizes.screenHeight * 0.16),
           ],
         ),
@@ -169,16 +134,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               slotScheduleCon.setWidgetIndex(2);
             }
           } else if (slotScheduleCon.widgetIndex == 2) {
-            // slotScheduleCon.setWidgetIndex(2);
-            slotScheduleCon.generateSlots();
-            slotScheduleCon.setWidgetIndex(3);
+            slotScheduleCon.docScheduleSlotTypeApi(context);
+          }else{
+            slotScheduleCon.docScheduleInsertApi(context);
           }
-          // if (registerCon.isPersonalInfoSelected == false) {
-          //   slotScheduleCon.docScheduleInsertApi();
-          //   // Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);
-          // } else {
-          //   registerCon.changeWidget(false);
-          // }
         },
       ),
     );
@@ -322,8 +281,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               slotScheduleCon.appointmentDurationList.length, (index) {
             final time = slotScheduleCon.appointmentDurationList[index];
             return GestureDetector(
-              onTap: () {
-                slotScheduleCon.setAppointmentDuration(time);
+              onTap: () {   
+                print("asdfghjkl;: ${time['value']}");
+                slotScheduleCon.setAppointmentDuration(time['value']!);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -331,14 +291,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     vertical: Sizes.screenHeight * 0.01),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: slotScheduleCon.appointmentDuration == time
+                    color: slotScheduleCon.appointmentDuration == time['value']
                         ? AppColor.lightBlue
                         : AppColor.textfieldGrayColor),
                 child: TextConst(
-                  time,
+                  time['label']!,
                   size: Sizes.fontSizeFive,
                   fontWeight: FontWeight.w400,
-                  color: slotScheduleCon.appointmentDuration == time
+                  color: slotScheduleCon.appointmentDuration == time['value']
                       ? AppColor.whiteColor
                       : Colors.black,
                 ),
@@ -351,192 +311,123 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget dataRange() {
     final slotScheduleCon = Provider.of<SlotScheduleViewModel>(context);
     return Padding(
-      padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+      padding: EdgeInsets.only(left: Sizes.screenWidth * 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => toggleSelection(0),
-                child: Container(
-                  padding: const EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: selectedIndex == 0
-                          ? AppColor.lightBlue
-                          : AppColor.textfieldGrayColor,
-                      width: 2,
-                    ),
-                  ),
-                  child: Container(
-                    height: 20,
-                    width: 20,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: selectedIndex == 0
-                          ? AppColor.lightBlue
-                          : Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-              Sizes.spaceWidth10,
-              TextConst(
-                AppLocalizations.of(context)!.within_a_range,
-                size: Sizes.fontSizeFourPFive,
-                fontWeight: FontWeight.w400,
-                color: AppColor.textfieldTextColor,
-              ),
-              const Spacer(),
-              // Sizes.spaceWidth15,
-              GestureDetector(
-                onTap: (){
-                  showDialog(context: context, builder: (_){
-                    return const RangeCalenderOverlay();
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Sizes.screenWidth * 0.02,
-                      vertical: Sizes.screenHeight * 0.0065),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: AppColor.grey),
-                  child: Row(
-                    children: [
-                      if (slotScheduleCon.selectedRange != null)
-                      TextConst(
-                        "${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.start.toLocal())} - ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.end.toLocal())}",
-                        size: Sizes.fontSizeThree * 1.06,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.lightBlack,
-                      ),
-                      Sizes.spaceWidth20,
-                      Image.asset(
-                        Assets.assetsIconsArrowDown,
-                        width: Sizes.screenWidth * 0.045,
-                        color: AppColor.black,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          _buildRangeOption(
+            slotScheduleCon: slotScheduleCon,
+            type: 'weekly',
+            label: AppLocalizations.of(context)!.within_a_range,
+            showDatePicker: true,
           ),
           Sizes.spaceHeight30,
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => toggleSelection(1),
-                child: Container(
-                  padding: const EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: selectedIndex == 0
-                          ? AppColor.textfieldGrayColor
-                          : AppColor.lightBlue,
-                      width: 2,
-                    ),
-                  ),
-                  child: Container(
-                    height: 20,
-                    width: 20,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: selectedIndex == 1
-                          ? AppColor.lightBlue
-                          : Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-              Sizes.spaceWidth10,
-              TextConst(
-                AppLocalizations.of(context)!.continue_indefinitely,
-                size: Sizes.fontSizeFourPFive,
-                fontWeight: FontWeight.w400,
-                color: AppColor.textfieldTextColor,
-              ),
-            ],
+          _buildRangeOption(
+            slotScheduleCon: slotScheduleCon,
+            type: 'indefinitely',
+            label: AppLocalizations.of(context)!.continue_indefinitely,
+            showDatePicker: false,
           ),
         ],
       ),
     );
-    //   Padding(
-    //   padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-    //   child: Column(
-    //     children: [
-    //       Row(
-    //         children: [
-    //           GestureDetector(
-    //             onTap: () {},
-    //             child: Container(
-    //               height: 23,
-    //               width: 23,
-    //               decoration: const BoxDecoration(
-    //                   shape: BoxShape.circle, color: AppColor.lightBlue),
-    //             ),
-    //           ),
-    //           Sizes.spaceWidth10,
-    //           TextConst(
-    //             "Within a range",
-    //             size: Sizes.fontSizeFive,
-    //             fontWeight: FontWeight.w400,
-    //             color: AppColor.textfieldTextColor,
-    //           ),
-    //           Sizes.spaceWidth15,
-    //           Container(
-    //             padding: EdgeInsets.symmetric(
-    //                 horizontal: Sizes.screenWidth * 0.02,
-    //                 vertical: Sizes.screenHeight * 0.0065),
-    //             decoration: BoxDecoration(
-    //                 borderRadius: BorderRadius.circular(8), color: AppColor.grey),
-    //             child: Row(
-    //               children: [
-    //                 TextConst(
-    //                   "1 Jun - 7 Jun 2024",
-    //                   size: Sizes.fontSizeThree,
-    //                   fontWeight: FontWeight.w300,
-    //                   color: AppColor.lightBlack,
-    //                 ),
-    //                 Sizes.spaceWidth10,
-    //                 Image.asset(
-    //                   Assets.assetsIconsArrowDown,
-    //                   width: Sizes.screenWidth * 0.045,
-    //                   color: AppColor.black,
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //       Sizes.spaceHeight30,
-    //       Row(
-    //         children: [
-    //           GestureDetector(
-    //             onTap: () {},
-    //             child: Container(
-    //               height: 25,
-    //               width: 25,
-    //               decoration: BoxDecoration(
-    //                   shape: BoxShape.circle,
-    //                   border: Border.all(color: AppColor.textfieldGrayColor)),
-    //             ),
-    //           ),
-    //           Sizes.spaceWidth10,
-    //           TextConst(
-    //             "Continue indefinitely",
-    //             size: Sizes.fontSizeFive,
-    //             fontWeight: FontWeight.w400,
-    //             color: AppColor.textfieldTextColor,
-    //           ),
-    //         ],
-    //       )
-    //     ],
-    //   ),
-    // );
+  }
+
+  Widget _buildRangeOption({
+    required SlotScheduleViewModel slotScheduleCon,
+    required String type,
+    required String label,
+    required bool showDatePicker,
+  }) {
+    final isSelected = slotScheduleCon.slotType == type;
+    
+    return Row(
+      children: [
+        _buildRadioButton(
+          isSelected: isSelected,
+          onTap: () => slotScheduleCon.setSlotType(type),
+        ),
+        Sizes.spaceWidth10,
+        Expanded(
+          child: TextConst(
+            label,
+            size: Sizes.fontSizeFourPFive,
+            fontWeight: FontWeight.w400,
+            color: AppColor.textfieldTextColor,
+          ),
+        ),
+        if (showDatePicker) ...[
+          // const Spacer(),
+          _buildDatePickerButton(slotScheduleCon),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildRadioButton({
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected ? AppColor.lightBlue : AppColor.textfieldGrayColor,
+            width: 2,
+          ),
+        ),
+        child: Container(
+          height: 20,
+          width: 20,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isSelected ? AppColor.lightBlue : Colors.transparent,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDatePickerButton(SlotScheduleViewModel slotScheduleCon) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (_) => const RangeCalenderOverlay(),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: Sizes.screenWidth * 0.02,
+          vertical: Sizes.screenHeight * 0.0065,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColor.grey,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (slotScheduleCon.selectedRange != null)
+              TextConst(
+                "${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.start.toLocal())} - ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.end.toLocal())}",
+                size: Sizes.fontSizeThree * 1.06,
+                fontWeight: FontWeight.w400,
+                color: AppColor.lightBlack,
+              ),
+            Sizes.spaceWidth20,
+            Image.asset(
+              Assets.assetsIconsArrowDown,
+              width: Sizes.screenWidth * 0.045,
+              color: AppColor.black,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // bool enable = false;

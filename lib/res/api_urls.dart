@@ -1,3 +1,4 @@
+// res/api_urls.dart
 class PatientApiUrl {
   static const String devUrl = 'http://3.7.71.4:3000/';
   static const String prodUrl = '3.7.71.4:3000/';
@@ -52,6 +53,9 @@ class DoctorApiUrl {
   static const String revenueDoctor = "${baseUrl}getRevenueDoctor";
   static const String scheduleDoctor = "${baseUrl}getScheduleDoctor";
   static const String upsertScheduleDoctor = "${baseUrl}upsertScheduleDoctor";
-  static const String getAllSpecializationsDoctor = "${baseUrl}getAllSpecializationsDoctor";
+  static const String upsertScheduleSlotTypeDoctor =
+      "${baseUrl}upsertScheduleSlotTypeDoctor";
+  static const String getAllSpecializationsDoctor =
+      "${baseUrl}getAllSpecializationsDoctor";
   static const String upsertSmcNumberDoctor = "${baseUrl}upsertSmcNumberDoctor";
 }

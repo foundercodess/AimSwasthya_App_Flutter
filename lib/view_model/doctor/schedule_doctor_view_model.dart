@@ -1,3 +1,4 @@
+// view_model/doctor/schedule_doctor_view_model.dart
 import 'dart:convert';
 import 'package:aim_swasthya/model/doctor/doc_schedule_model.dart';
 import 'package:aim_swasthya/repo/doctor/doc_schedule_repo.dart';
@@ -27,7 +28,7 @@ class ScheduleDoctorViewModel extends ChangeNotifier {
       "doctor_id": userId,
       "clinic_id": clinicId
     };
-    print(jsonEncode(data));
+    print("app sch dt: ${jsonEncode(data)}");
     _docScheduleRepo.docScheduleApi(data).then((value) {
       if (value.status == true) {
         setRevenueDoctorData(value);

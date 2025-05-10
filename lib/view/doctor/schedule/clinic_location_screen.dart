@@ -1,3 +1,4 @@
+// view/doctor/schedule/clinic_location_screen.dart
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_reg_view_model.dart';
@@ -61,6 +62,7 @@ class _ClinicLocationScreenState extends State<ClinicLocationScreen> {
                   children: clinics.map((clinic) {
                     return GestureDetector(
                       onTap: () {
+                        print("clinic.clinicId.toString() ${clinic.clinicId}");
                         slotScheduleCon
                             .setSelectedClinicId(clinic.clinicId.toString());
                       },
