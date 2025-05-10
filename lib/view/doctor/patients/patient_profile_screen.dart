@@ -1,5 +1,4 @@
 import 'dart:core';
-
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -8,11 +7,16 @@ import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
 import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/doctor/patient_profile_model.dart';
+import '../../../res/popUp_const.dart' show ActionOverlay;
+import '../../../utils/show_server_error.dart';
+import '../../../view_model/doctor/doc_update_appointment_view_model.dart';
+import '../../../view_model/user/cancelAppointment_view_model.dart';
 
 class PatientProfileScreen extends StatefulWidget {
   const PatientProfileScreen({super.key});
@@ -93,125 +97,229 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
           );
   }
 
-  Widget patientProfile() {
-    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    return Container(
-      margin: EdgeInsets.only(
-          left: Sizes.screenWidth * 0.04, right: Sizes.screenWidth * 0.05),
-      width: Sizes.screenWidth,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColor.grey.withOpacity(0.5)),
-      child: Row(
-        children: [
-          Container(
-            height: Sizes.screenHeight * 0.275,
-            width: Sizes.screenWidth / 3.5,
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  bottomLeft: Radius.circular(15),
-                ),
-                image: DecorationImage(
-                    image: AssetImage(Assets.logoDoctor),
-                    fit: BoxFit.cover)),
-          ),
-          Sizes.spaceWidth15,
-          SizedBox(
-            width: Sizes.screenWidth / 1.8,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget patientProfile({bool isCancelAllowed = true}) {
+    final patientAppointmentData =
+        Provider.of<DocPatientAppointmentViewModel>(context)
+            .doctorsAppointmentsDataModel;
+    final cancelRescheduleAllowed = isMoreThanOneHourAway(
+        patientAppointmentData!.appointmentDate.toString(),
+        patientAppointmentData.appointmentTime.toString());
+    final isCancelled =
+        patientAppointmentData.status!.toLowerCase() == "cancelled";
+    return patientAppointmentData != null
+        ? Container(
+            margin: EdgeInsets.only(
+                left: Sizes.screenWidth * 0.04,
+                right: Sizes.screenWidth * 0.05),
+            width: Sizes.screenWidth,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColor.grey.withOpacity(0.5)),
+            child: Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: Sizes.screenHeight * 0.01,
-                      right: Sizes.screenWidth * 0.01),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                Container(
+                  height: Sizes.screenHeight * 0.275,
+                  width: Sizes.screenWidth / 3.5,
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                      ),
+                      image: DecorationImage(
+                          image: patientAppointmentData.signedImageUrl == null
+                              ? NetworkImage(
+                                  patientAppointmentData.signedImageUrl!)
+                              : const AssetImage(Assets.logoDoctor),
+                          fit: BoxFit.fitHeight)),
+                ),
+                Sizes.spaceWidth15,
+                SizedBox(
+                  width: Sizes.screenWidth / 1.8,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        Assets.iconsSolarCalendar,
-                        width: Sizes.screenWidth * 0.05,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: Sizes.screenHeight * 0.01,
+                            right: Sizes.screenWidth * 0.01),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Image.asset(
+                              Assets.iconsSolarCalendar,
+                              width: Sizes.screenWidth * 0.05,
+                            ),
+                            Sizes.spaceWidth5,
+                            TextConst(
+                              DateFormat('d MMM').format(DateTime.parse(
+                                  patientAppointmentData!.appointmentDate
+                                      .toString())),
+                              size: Sizes.fontSizeFour,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            Sizes.spaceWidth5,
+                            Image.asset(
+                              Assets.iconsMdiClock,
+                              width: Sizes.screenWidth * 0.055,
+                            ),
+                            Sizes.spaceWidth5,
+                            TextConst(
+                              patientAppointmentData.appointmentTime.toString(),
+                              size: Sizes.fontSizeFour,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        ),
                       ),
-                      Sizes.spaceWidth5,
+                      Sizes.spaceHeight30,
                       TextConst(
-                        "10 june",
+                        patientAppointmentData.patientName ?? "",
+                        size: Sizes.fontSizeSix,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      Sizes.spaceHeight10,
+                      TextConst(
+                        // "Date of birth : ${DateFormat('dd/MM/yyyy').format(DateTime.parse(patientProfileData.patientProfileModel!.patientProfile![0].dateOfBirth.toString()))}",
+                        "Date of birth : ${DateFormat('dd/MM/yyyy').format(DateTime.parse(patientAppointmentData.dateOfBirth.toString()))}",
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,
                       ),
-                      Sizes.spaceWidth5,
-                      Image.asset(
-                        Assets.iconsMdiClock,
-                        width: Sizes.screenWidth * 0.055,
-                      ),
-                      Sizes.spaceWidth5,
+                      Sizes.spaceHeight5,
                       TextConst(
-                        "10.00 pm",
+                        // "Weight : ${patientProfileData.patientProfileModel!.patientProfile![0].weight}",
+                        "Weight : ${patientAppointmentData.weight}",
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,
                       ),
+                      Sizes.spaceHeight5,
+                      TextConst(
+                        "Height : ${patientAppointmentData.height}",
+                        // "Height : ${patientProfileData.patientProfileModel!.patientProfile![0].height}",
+                        size: Sizes.fontSizeFour,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      Sizes.spaceHeight15,
+                      Row(
+                        children: [
+                          ButtonConst(
+                              title: "Reschedule",
+                              size: Sizes.fontSizeFour,
+                              fontWeight: FontWeight.w400,
+                              borderRadius: 8,
+                              height: Sizes.screenHeight * 0.038,
+                              width: Sizes.screenWidth * 0.35,
+                              color: AppColor.blue,
+                              onTap: () {
+                                // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
+                              }),
+                          Sizes.spaceWidth10,
+                          // if (isCancelAllowed && !isCancelled)
+                          //   Center(
+                          //     child: GestureDetector(
+                          //       onTap: () {
+                          //         if (cancelRescheduleAllowed) {
+                          //           showCupertinoDialog(
+                          //             context: context,
+                          //             builder: (_) => ActionOverlay(
+                          //               text: "Cancel Appointment",
+                          //               subtext:
+                          //               "Are you sure you want to cancel\n your appointment?",
+                          //               onTap: () {
+                          //                 Provider.of<CancelAppointmentViewModel>(
+                          //                     context,
+                          //                     listen: false)
+                          //                     .cancelAppointmentApi(
+                          //                     context,
+                          //                     appointmentData.appointmentId
+                          //                         .toString());
+                          //               },
+                          //             ),
+                          //           );
+                          //         } else {
+                          //           showInfoOverlay(
+                          //               title: "Info",
+                          //               errorMessage:
+                          //               "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                          //         }
+                          //       },
+                          //       child: TextConst(
+                          //         "Cancel",
+                          //         color: Colors.red,
+                          //         size: Sizes.fontSizeFive,
+                          //         fontWeight: FontWeight.w500,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // if (isCancelled)
+                          //   Center(
+                          //     child: TextConst(
+                          //       "Cancelled",
+                          //       color: Colors.grey,
+                          //       size: Sizes.fontSizeFive,
+                          //       fontWeight: FontWeight.w500,
+                          //     ),
+                          //   ),
+                          if (isCancelAllowed && !isCancelled)
+                            TextButton(
+                                onPressed: () {
+                                  if (cancelRescheduleAllowed) {
+                                    showCupertinoDialog(
+                                      context: context,
+                                      builder: (_) => ActionOverlay(
+                                        text: "Cancel Appointment",
+                                        subtext:
+                                            "Are you sure you want to cancel\n your appointment?",
+                                        onTap: () {
+                                          Provider.of<CancelAppointmentViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .cancelAppointmentApi(
+                                                  isDoctorCancel: true,
+                                                  context,
+                                                  patientAppointmentData
+                                                      .appointmentId
+                                                      .toString());
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    showInfoOverlay(
+                                        title: "Info",
+                                        errorMessage:
+                                            "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                  }
+                                },
+                                child: TextConst(
+                                  "Cancel",
+                                  size: Sizes.fontSizeFour,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.red,
+                                )),
+                          if (isCancelled)
+                            Center(
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: Sizes.screenHeight * 0.06,
+                                child: TextConst(
+                                  "Cancelled",
+                                  color: Colors.grey,
+                                  size: Sizes.fontSizeFour,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      Sizes.spaceHeight5,
+                      Sizes.spaceHeight3,
                     ],
                   ),
                 ),
-                Sizes.spaceHeight30,
-                TextConst(
-                  patientProfileData.patientProfileModel!.patientProfile![0].name??"",
-                  // size: 16,
-                  size: Sizes.fontSizeSix,
-                  fontWeight: FontWeight.w500,
-                ),
-                Sizes.spaceHeight10,
-                TextConst(
-                  "Date of birth : ${DateFormat('dd/MM/yyyy').format(DateTime.parse(patientProfileData.patientProfileModel!.patientProfile![0].dateOfBirth.toString()))}",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight5,
-                TextConst(
-                  "Weight : ${patientProfileData.patientProfileModel!.patientProfile![0].weight}",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight5,
-                TextConst(
-                  "Height : ${patientProfileData.patientProfileModel!.patientProfile![0].height}",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight15,
-                Row(
-                  children: [
-                    ButtonConst(
-                        title: "Reschedule",
-                        size: Sizes.fontSizeFour,
-                        fontWeight: FontWeight.w400,
-                        borderRadius: 8,
-                        height: Sizes.screenHeight * 0.038,
-                        width: Sizes.screenWidth * 0.35,
-                        color: AppColor.blue,
-                        onTap: () {
-                          // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
-                        }),
-                    Sizes.spaceWidth10,
-                    TextButton(
-                        onPressed: () {},
-                        child: TextConst(
-                          "Cancel",
-                          size: Sizes.fontSizeFour,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.red,
-                        ))
-                  ],
-                ),
-                Sizes.spaceHeight5,
-                Sizes.spaceHeight3,
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : const SizedBox();
   }
 
   Widget symptomsSec() {
@@ -337,5 +445,23 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         ],
       ),
     );
+  }
+
+  bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+    // Combine date and time
+    String dateTimeString = "$bookingDate $hour24Format";
+
+    // Parse using the correct format
+    DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
+    DateTime bookingDateTime = format.parse(dateTimeString);
+
+    // Get current time
+    DateTime now = DateTime.now();
+
+    // Calculate difference
+    Duration difference = bookingDateTime.difference(now);
+
+    // Return true if more than 1 hour away
+    return difference.inMinutes > 60;
   }
 }

@@ -3,8 +3,7 @@ import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
-import 'package:aim_swasthya/view/doctor/common_nav_bar.dart'
-    show DocComBottomNevBar;
+import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +30,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   final TextEditingController _landMarkCon = TextEditingController();
   int currentPage = 0;
   bool isClicked = false;
+  final List<String> genderOptions = ['Male', 'Female', 'Other'];
   @override
   Widget build(BuildContext context) {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
@@ -80,6 +80,50 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       cursorColor: AppColor.textGrayColor,
                     ),
                     Sizes.spaceHeight10,
+                    // Center(
+                    //   child: Container(
+                    //     height: 56,
+                    //     alignment: Alignment.center,
+                    //     decoration: BoxDecoration(
+                    //       color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                    //       borderRadius: BorderRadius.circular(15),
+                    //     ),
+                    //     padding:
+                    //     EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
+                    //     child: DropdownButton<String>(
+                    //       icon: const Icon(
+                    //         Icons.keyboard_arrow_down,
+                    //         // color: Colors.grey,
+                    //         size: 20,
+                    //       ),
+                    //       value: genderOptions.contains(_genderController.text)
+                    //           ? _genderController.text
+                    //           : null,
+                    //       hint: TextConst(
+                    //         "Gender",
+                    //         size: Sizes.fontSizeFour,
+                    //         color: AppColor.textfieldTextColor,
+                    //         fontWeight: FontWeight.w400,
+                    //       ),
+                    //       underline: const SizedBox(),
+                    //       isExpanded: true,
+                    //       items: genderOptions.map((data) {
+                    //         return DropdownMenuItem<String>(
+                    //           value: data,
+                    //           child: TextConst(
+                    //             data.toString() ?? '',
+                    //             fontWeight: FontWeight.w500,
+                    //             size: Sizes.fontSizeFive,
+                    //             color: AppColor.blue,
+                    //           ),
+                    //         );
+                    //       }).toList(),
+                    //       onChanged: (String? gender) {
+                    //         _genderController.text;
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                     CustomTextField(
                       contentPadding:
                           const EdgeInsets.only(top: 18, bottom: 20, left: 10),
@@ -357,7 +401,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     height: Sizes.screenHeight * 0.045,
                     color: AppColor.blue,
                     onTap: () {
-                      Navigator.pushNamed(context, RoutesName.fullScreenMapPage);
+                      Navigator.pushNamed(
+                          context, RoutesName.fullScreenMapPage);
                     })
               ],
             ),

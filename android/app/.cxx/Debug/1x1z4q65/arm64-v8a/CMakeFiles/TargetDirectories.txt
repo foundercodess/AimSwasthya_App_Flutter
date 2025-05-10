@@ -1,0 +1,2 @@
+D:/Anshika/AimSwasthya_App_Flutter/android/app/.cxx/Debug/1x1z4q65/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Anshika/AimSwasthya_App_Flutter/android/app/.cxx/Debug/1x1z4q65/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -255,7 +255,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               padding:
                   EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
-              child: DropdownButton<String>(
+              child: (specializations?.specializations != null &&
+                  specializations!.specializations!.isNotEmpty)
+                  ? DropdownButton<String>(
                 icon: const Icon(
                   Icons.keyboard_arrow_down,
                   color: Colors.grey,
@@ -288,7 +290,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _speController.text = newId!;
                   });
                 },
-              ),
+              ):SizedBox(),
             ),
           ),
           Sizes.spaceHeight25,

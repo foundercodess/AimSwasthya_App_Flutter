@@ -312,11 +312,15 @@ import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_update_appointment_view_model.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' show Provider;
 import 'package:url_launcher/url_launcher.dart';
 import '../../../res/common_material.dart';
+import '../../../res/popUp_const.dart';
+import '../../../utils/show_server_error.dart';
+import '../../../view_model/user/cancelAppointment_view_model.dart';
 
 class MyAppointmentsScreen extends StatefulWidget {
   const MyAppointmentsScreen({super.key});
@@ -346,68 +350,70 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
 
     final bottomCon = Provider.of<BottomNavProvider>(context);
-    return appointmentCon.docPatientAppointmentModel ==null|| appointmentCon.loading
-        ? const Center(child: LoadData()) :Scaffold(
-      extendBody: true,
-      primary: false,
-      body: SingleChildScrollView(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          appBarConstant(
-            context,
-            onTap: () {
-              if (bottomCon.currentIndex == 2) {
-                bottomCon.setIndex(0);
-              } else {
-                Navigator.pop(context);
-              }
-            },
-            child: Center(
-              child: TextConst(
-                "Appointments",
-                size: Sizes.fontSizeSix * 1.1,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            isBottomAllowed: true,
-          ),
-          Sizes.spaceHeight20,
-          TextConst(
-            padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-            "Active appointments",
-            size: Sizes.fontSizeFourPFive,
-            fontWeight: FontWeight.w500,
-            color: AppColor.textfieldTextColor,
-          ),
-          Sizes.spaceHeight20,
-          activeAppointment(),
-          Sizes.spaceHeight30,
-          TextConst(
-            "Past history",
-            padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-            size: Sizes.fontSizeFourPFive,
-            fontWeight: FontWeight.w500,
-            color: AppColor.textfieldTextColor,
-          ),
-          Sizes.spaceHeight20,
-          pastAppointment(),
-          Sizes.spaceHeight30,
-          const SizedBox(
-            height: kBottomNavigationBarHeight,
-          )
-        ],
-      )),
-      // bottomNavigationBar: Container(
-      //   height: 90,
-      //   width: Sizes.screenWidth,
-      //   color: Colors.transparent,
-      //   child: const DocComBottomNevBar(),
-      // ),
-    );
+    return appointmentCon.docPatientAppointmentModel == null ||
+            appointmentCon.loading
+        ? const Center(child: LoadData())
+        : Scaffold(
+            extendBody: true,
+            primary: false,
+            body: SingleChildScrollView(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                appBarConstant(
+                  context,
+                  onTap: () {
+                    if (bottomCon.currentIndex == 2) {
+                      bottomCon.setIndex(0);
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Center(
+                    child: TextConst(
+                      "Appointments",
+                      size: Sizes.fontSizeSix * 1.1,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  isBottomAllowed: true,
+                ),
+                Sizes.spaceHeight20,
+                TextConst(
+                  padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                  "Active appointments",
+                  size: Sizes.fontSizeFourPFive,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.textfieldTextColor,
+                ),
+                Sizes.spaceHeight20,
+                activeAppointment(),
+                Sizes.spaceHeight30,
+                TextConst(
+                  "Past history",
+                  padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                  size: Sizes.fontSizeFourPFive,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.textfieldTextColor,
+                ),
+                Sizes.spaceHeight20,
+                pastAppointment(),
+                Sizes.spaceHeight30,
+                const SizedBox(
+                  height: kBottomNavigationBarHeight,
+                )
+              ],
+            )),
+            // bottomNavigationBar: Container(
+            //   height: 90,
+            //   width: Sizes.screenWidth,
+            //   color: Colors.transparent,
+            //   child: const DocComBottomNevBar(),
+            // ),
+          );
   }
 
-  Widget activeAppointment() {
+  Widget activeAppointment({bool isCancelAllowed = true}) {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
     return appointmentCon.docPatientAppointmentModel != null &&
             appointmentCon
@@ -423,6 +429,13 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                 itemBuilder: (context, index) {
                   final appointmentData = appointmentCon
                       .docPatientAppointmentModel!.activeAppointments![index];
+                  final cancelRescheduleAllowed = isMoreThanOneHourAway(
+                      appointmentData.appointmentDate.toString(),
+                      appointmentData.appointmentTime.toString());
+                  final isCancelled =
+                      appointmentData.status!.toLowerCase() == "cancelled";
+                  final isScheduled =
+                      appointmentData.status!.toLowerCase() == "scheduled";
                   return Container(
                     margin: EdgeInsets.only(
                         left: index == 0
@@ -460,7 +473,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                   image: appointmentData.signedImageUrl != null
                                       ? NetworkImage(
                                           appointmentData.signedImageUrl!)
-                                      : const AssetImage(Assets.imagesPatientImage),
+                                      : const AssetImage(Assets.logoDoctor),
                                   // image: AssetImage(Assets.imagesPatientImage),
                                   fit: BoxFit.cover)),
                         ),
@@ -514,9 +527,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                               Sizes.spaceHeight5,
                               TextConst(
                                 "Date of birth : ${DateFormat('dd/MM/yyyy').format(DateTime.parse(appointmentData.dateOfBirth.toString()))}",
-                                // "Date of birth : ${appointmentData.dateOfBirth.toString()}",
-                                // "Date of birth : 01/01/1992",
-                                // size: 8,
                                 size: Sizes.fontSizeThree,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -532,9 +542,10 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                 size: Sizes.fontSizeThree,
                                 fontWeight: FontWeight.w400,
                               ),
-                              // Sizes.spaceHeight3,
+                              // Sizes.spaceHeight5,
                               Row(
                                 children: [
+                                  // if (isCancelAllowed )
                                   ButtonConst(
                                       title: "Reschedule",
                                       size: Sizes.fontSizeTwo,
@@ -544,17 +555,84 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                       width: Sizes.screenWidth * 0.23,
                                       color: AppColor.blue,
                                       onTap: () {
+                                        if (cancelRescheduleAllowed) {
+                                          showCupertinoDialog(
+                                            context: context,
+                                            builder: (_) => ActionOverlay(
+                                              text: "Reschedule Appointment",
+                                              subtext:
+                                              "Are you sure you want to reschedule\n your appointment?",
+                                              onTap: () {
+
+                                              },
+                                            ),
+                                          );
+                                        } else {
+                                          showInfoOverlay(
+                                              title: "Info",
+                                              errorMessage:
+                                              "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                        }
                                         // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
                                       }),
+
                                   Sizes.spaceWidth5,
-                                  TextButton(
-                                      onPressed: () {},
-                                      child: TextConst(
-                                        "Cancel",
-                                        size: Sizes.fontSizeFour,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.red,
-                                      ))
+                                  if (isCancelAllowed && !isCancelled)
+                                    Center(
+                                      child: GestureDetector(
+                                          child: SizedBox(
+                                        height: Sizes.screenHeight * 0.06,
+                                        child: TextButton(
+                                            onPressed: () {
+                                              if (cancelRescheduleAllowed) {
+                                                showCupertinoDialog(
+                                                  context: context,
+                                                  builder: (_) => ActionOverlay(
+                                                    text: "Cancel Appointment",
+                                                    subtext:
+                                                        "Are you sure you want to cancel\n your appointment?",
+                                                    onTap: () {
+                                                      Provider.of<CancelAppointmentViewModel>(
+                                                              context,
+                                                              listen: false)
+                                                          .cancelAppointmentApi(
+                                                              isDoctorCancel:
+                                                                  true,
+                                                              context,
+                                                              appointmentData
+                                                                  .appointmentId
+                                                                  .toString());
+                                                    },
+                                                  ),
+                                                );
+                                              } else {
+                                                showInfoOverlay(
+                                                    title: "Info",
+                                                    errorMessage:
+                                                        "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                              }
+                                            },
+                                            child: TextConst(
+                                              "Cancel",
+                                              size: Sizes.fontSizeFour,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.red,
+                                            )),
+                                      )),
+                                    ),
+                                  if (isCancelled)
+                                    Center(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: Sizes.screenHeight * 0.06,
+                                        child: TextConst(
+                                          "Cancelled",
+                                          color: Colors.grey,
+                                          size: Sizes.fontSizeFour,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                             ],
@@ -566,13 +644,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                 }),
           )
         : const Center(child: NoDataMessages());
-
   }
-
-  // String formatDate(String inputDate) {
-  //   DateTime parsedDate = DateTime.parse(inputDate);
-  //   return DateFormat('d MMMM').format(parsedDate);
-  // }
 
   Widget pastAppointment() {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
@@ -740,5 +812,22 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
       throw 'Could not launch $phoneUri';
     }
   }
-}
 
+  bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+    // Combine date and time
+    String dateTimeString = "$bookingDate $hour24Format";
+
+    // Parse using the correct format
+    DateFormat format = DateFormat("yyyy-MM-dd hh:mm a");
+    DateTime bookingDateTime = format.parse(dateTimeString);
+
+    // Get current time
+    DateTime now = DateTime.now();
+
+    // Calculate difference
+    Duration difference = bookingDateTime.difference(now);
+
+    // Return true if more than 1 hour away
+    return difference.inMinutes > 60;
+  }
+}

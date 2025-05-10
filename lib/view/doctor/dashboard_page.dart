@@ -222,7 +222,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextConst(
-                            docHomeCon.data!.doctors![0].experience ?? "5 years Experience",
+                            docHomeCon.data!.doctors![0].experience ??
+                                "5 years Experience",
                             size: Sizes.fontSizeFour,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,
@@ -237,7 +238,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             color: AppColor.white,
                           ),
                           TextConst(
-                            docHomeCon.data!.doctors![0].qualification ?? "MBBS, MD (Cardiology)",
+                            docHomeCon.data!.doctors![0].qualification ??
+                                "MBBS, MD (Cardiology)",
                             size: Sizes.fontSizeFivePFive,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,
@@ -344,11 +346,12 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             Container(
                               height: Sizes.screenHeight * 0.073,
                               width: Sizes.screenHeight * 0.073,
-                              decoration:   BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image:schedule.signInImageUrl != null?
-                                  NetworkImage(schedule.signInImageUrl):const AssetImage(Assets.logoDoctor),
+                                  image: schedule.signInImageUrl != null
+                                      ? NetworkImage(schedule.signInImageUrl)
+                                      : const AssetImage(Assets.logoDoctor),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -551,183 +554,189 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
         children: [
           todayAppointments.isEmpty
               ? Center(
-            child: TextConst(
-              "No Today Appointment",
-              size: Sizes.fontSizeFour,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          )
-              :
-          ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.only(top: 15, left: 4, right: 5),
-            itemCount: todayAppointments.length,
-            itemBuilder: (context, index) {
-              final item = todayAppointments[index];
-              return Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: index == 0
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.center,
-                    children: [
-                      Sizes.spaceWidth5,
-                      Container(
-                        height: Sizes.screenHeight * 0.054,
-                        width: Sizes.screenWidth / 3.35,
-                        padding: const EdgeInsets.only(
-                          left: 3,
-                          top: 2,
-                          bottom: 2,
-                          right: 3,
-                        ),
-                        decoration: BoxDecoration(
-                            color: AppColor.lightSkyBlue.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Column(
+                  child: TextConst(
+                    "No Today Appointment",
+                    size: Sizes.fontSizeFour,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  ),
+                )
+              : ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(top: 15, left: 4, right: 5),
+                  itemCount: todayAppointments.length,
+                  itemBuilder: (context, index) {
+                    final item = todayAppointments[index];
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: index == 0
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.center,
                           children: [
-                            Sizes.spaceHeight3,
-                            TextConst(
-                              item.patientName??"",
-                              size: Sizes.fontSizeFour,
-                              // size: Sizes.fontSizeThree,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            Sizes.spaceHeight5,
-                            // Sizes.spaceHeight3,
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      Assets.iconsSolarCalendar,
-                                      width: Sizes.screenWidth / 30,
-                                    ),
-                                    Sizes.spaceWidth3,
-                                    TextConst(
-                                        DateFormat('d MMM').format(DateTime.parse(
-                                            item.appointmentDate.toString())),
-                                      size: Sizes.fontSizeThree,
-                                      // size: Sizes.fontSizeThree,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xff535353),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      Assets.iconsMdiClock,
-                                      width: Sizes.screenWidth / 30,
-                                    ),
-                                    Sizes.spaceWidth3,
-                                    TextConst(
-                                      item.appointmentTime.toString(),
-                                      size: Sizes.fontSizeThree,
-                                      // size: Sizes.fontSizeThree,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xff535353),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      if (index == 0) ...[
-                        Sizes.spaceWidth3,
-                        Container(
-                          height: Sizes.screenHeight * 0.054,
-                          width: Sizes.screenWidth * 0.079,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: AppColor.lightSkyBlue.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: TextConst(
-                            "+1",
-                          ),
-                        )
-                      ]
-                    ],
-                  ),
-                  Positioned(
-                    top: 1,
-                    left: -1,
-                    child: SizedBox(
-                      width: Sizes.screenWidth / 7.6,
-                      child: Column(
-                        children: [
-                          TextConst(
-                            item.appointmentTime.toString(),
-                            size: Sizes.fontSizeFour,
-                          ),
-                          if (item.status != null && item.status!= 0)
-                            item.status == 1
-                                ? appContainer(Colors.green, "Completed")
-                                : appContainer(
-                                    const Color(0xff0A2A5B), "In progress")
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (item.status == 2)
-                    Positioned(
-                      bottom: 6,
-                      child: SizedBox(
-                        width: Sizes.screenWidth / 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(28, (index) {
-                            if (index == 0) {
-                              return Row(
-                                // mainAxisSize: MainAxisSize.min,
+                            Sizes.spaceWidth5,
+                            Container(
+                              height: Sizes.screenHeight * 0.054,
+                              width: Sizes.screenWidth / 3.35,
+                              padding: const EdgeInsets.only(
+                                left: 3,
+                                top: 2,
+                                bottom: 2,
+                                right: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: AppColor.lightSkyBlue.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Column(
                                 children: [
-                                  Image.asset(
-                                    Assets.iconsPlaySound,
-                                    height: 8,
-                                    color: const Color(0xff0A2A5B)
-                                        .withOpacity(0.8),
+                                  Sizes.spaceHeight3,
+                                  TextConst(
+                                    item.patientName ?? "",
+                                    size: Sizes.fontSizeFour,
+                                    // size: Sizes.fontSizeThree,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  // Icon(Icons.play_arrow,size: 10,
-                                  //     color:Color(0xff0A2A5B)),
-                                  Container(
-                                    width: 4,
-                                    height: 1,
-                                    color: const Color(0xff0A2A5B)
-                                        .withOpacity(0.8),
+                                  Sizes.spaceHeight5,
+                                  // Sizes.spaceHeight3,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            Assets.iconsSolarCalendar,
+                                            width: Sizes.screenWidth / 30,
+                                          ),
+                                          Sizes.spaceWidth3,
+                                          TextConst(
+                                            DateFormat('d MMM').format(
+                                                DateTime.parse(item
+                                                    .appointmentDate
+                                                    .toString())),
+                                            size: Sizes.fontSizeThree,
+                                            // size: Sizes.fontSizeThree,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color(0xff535353),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            Assets.iconsMdiClock,
+                                            width: Sizes.screenWidth / 30,
+                                          ),
+                                          Sizes.spaceWidth3,
+                                          TextConst(
+                                            item.appointmentTime.toString(),
+                                            size: Sizes.fontSizeThree,
+                                            // size: Sizes.fontSizeThree,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color(0xff535353),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   )
                                 ],
-                              );
-                            } else {
-                              return Container(
-                                width: 4,
-                                height: 1,
-                                color: const Color(0xff0A2A5B).withOpacity(0.8),
-                              );
-                            }
-                          }),
+                              ),
+                            ),
+                            if (index == 0) ...[
+                              Sizes.spaceWidth3,
+                              Container(
+                                height: Sizes.screenHeight * 0.054,
+                                width: Sizes.screenWidth * 0.079,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color:
+                                        AppColor.lightSkyBlue.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: TextConst(
+                                  "+1",
+                                ),
+                              )
+                            ]
+                          ],
                         ),
-                      ),
-                    )
-                ],
-              );
-              //   ListTile(
-              //   title: Text(item["name"]),
-              //   subtitle: Text("${item["date"]} • ${item["time"]}"),
-              //   trailing: Icon(
-              //     item["status"] == 1 ? Icons.check_circle : Icons.cancel,
-              //     color: item["status"] == 1 ? Colors.green : Colors.red,
-              //   ),
-              // );
-            },
-            separatorBuilder: (context, index) => const Divider(),
-          ),
+                        Positioned(
+                          top: 1,
+                          left: -1,
+                          child: SizedBox(
+                            width: Sizes.screenWidth / 7.6,
+                            child: Column(
+                              children: [
+                                TextConst(
+                                  item.appointmentTime.toString(),
+                                  size: Sizes.fontSizeFour,
+                                ),
+                                if (item.status != null && item.status != 0)
+                                  item.status == 1
+                                      ? appContainer(Colors.green, "Completed")
+                                      : appContainer(const Color(0xff0A2A5B),
+                                          "In progress")
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (item.status == 2)
+                          Positioned(
+                            bottom: 6,
+                            child: SizedBox(
+                              width: Sizes.screenWidth / 2,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: List.generate(28, (index) {
+                                  if (index == 0) {
+                                    return Row(
+                                      // mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          Assets.iconsPlaySound,
+                                          height: 8,
+                                          color: const Color(0xff0A2A5B)
+                                              .withOpacity(0.8),
+                                        ),
+                                        // Icon(Icons.play_arrow,size: 10,
+                                        //     color:Color(0xff0A2A5B)),
+                                        Container(
+                                          width: 4,
+                                          height: 1,
+                                          color: const Color(0xff0A2A5B)
+                                              .withOpacity(0.8),
+                                        )
+                                      ],
+                                    );
+                                  } else {
+                                    return Container(
+                                      width: 4,
+                                      height: 1,
+                                      color: const Color(0xff0A2A5B)
+                                          .withOpacity(0.8),
+                                    );
+                                  }
+                                }),
+                              ),
+                            ),
+                          )
+                      ],
+                    );
+                    //   ListTile(
+                    //   title: Text(item["name"]),
+                    //   subtitle: Text("${item["date"]} • ${item["time"]}"),
+                    //   trailing: Icon(
+                    //     item["status"] == 1 ? Icons.check_circle : Icons.cancel,
+                    //     color: item["status"] == 1 ? Colors.green : Colors.red,
+                    //   ),
+                    // );
+                  },
+                  separatorBuilder: (context, index) => const Divider(),
+                ),
           Positioned(
               top: -9.5,
               child: Container(
@@ -746,434 +755,10 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
         ],
       ),
     );
-    //   Stack(
-    //   clipBehavior: Clip.none,
-    //   alignment: Alignment.topCenter,
-    //   children: [
-    //     Container(
-    //       width: Sizes.screenWidth * 0.48,
-    //       decoration: BoxDecoration(
-    //         borderRadius: BorderRadius.circular(8),
-    //         color: AppColor.textfieldGrayColor.withOpacity(0.3),
-    //       ),
-    //       child: Column(
-    //         children: [
-    //           Container(
-    //             padding: EdgeInsets.only(
-    //                 left: Sizes.screenWidth * 0.014,
-    //                 right: Sizes.screenWidth * .01,
-    //                 top: Sizes.screenHeight * 0.012,
-    //                 // bottom: Sizes.screenHeight * 0.003
-    //             ),
-    //             // height: Sizes.screenHeight * 0.067,
-    //             width: Sizes.screenWidth,
-    //             decoration: const BoxDecoration(
-    //               border: Border(
-    //                 bottom: BorderSide(color: Color(0xffD0D0D0), width: 1),
-    //               ),
-    //             ),
-    //             child: Column(
-    //               children: [
-    //                 Sizes.spaceHeight3,
-    //                 Row(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     TextConst(
-    //                       "11.00",
-    //                       size: Sizes.fontSizeFour,
-    //                       fontWeight: FontWeight.w400,
-    //                     ),
-    //                     SizedBox(
-    //                       width: Sizes.screenWidth * 0.02,
-    //                     ),
-    //                     Stack(
-    //                       clipBehavior: Clip.none,
-    //                       children: [
-    //                         Container(
-    //                           padding: const EdgeInsets.only(
-    //                             left: 9,
-    //                             top: 2,
-    //                             bottom: 4,
-    //                             right: 8,
-    //                           ),
-    //                           decoration: BoxDecoration(
-    //                               color: AppColor.lightSkyBlue,
-    //                               borderRadius: BorderRadius.circular(5)),
-    //                           child: Column(
-    //                             children: [
-    //                               Sizes.spaceHeight3,
-    //                               TextConst(
-    //                                 "Kartik Mahajan",
-    //                                 size: 8,
-    //                                 // size: Sizes.fontSizeThree,
-    //                                 fontWeight: FontWeight.w500,
-    //                               ),
-    //                               Sizes.spaceHeight5,
-    //                               // Sizes.spaceHeight3,
-    //                               Row(
-    //                                 children: [
-    //                                   Image.asset(
-    //                                     Assets.iconsSolarCalendar,
-    //                                     width: 13,
-    //                                   ),
-    //                                   SizedBox(
-    //                                     width: Sizes.screenWidth * 0.005,
-    //                                   ),
-    //                                   TextConst(
-    //                                     "7 June",
-    //                                     size: 8,
-    //                                     // size: Sizes.fontSizeThree,
-    //                                     fontWeight: FontWeight.w400,
-    //                                     color: const Color(0xff535353),
-    //                                   ),
-    //                                   SizedBox(
-    //                                     width: Sizes.screenWidth * 0.008,
-    //                                   ),
-    //                                   Image.asset(
-    //                                     Assets.iconsMdiClock,
-    //                                     width: 13,
-    //                                   ),
-    //                                   SizedBox(
-    //                                     width: Sizes.screenWidth * 0.003,
-    //                                   ),
-    //                                   TextConst(
-    //                                     "11.00 PM",
-    //                                     size: 8,
-    //                                     // size: Sizes.fontSizeThree,
-    //                                     fontWeight: FontWeight.w400,
-    //                                     color: const Color(0xff535353),
-    //                                   )
-    //                                 ],
-    //                               )
-    //                             ],
-    //                           ),
-    //                         ),
-    //                         Positioned(
-    //                           top: 13,
-    //                             left: -38,
-    //                             child: appContainer(AppColor.lightGreen, 'Completed'))
-    //                       ],
-    //                     ),
-    //                     SizedBox(
-    //                       width: Sizes.screenWidth * 0.008,
-    //                     ),
-    //                     Container(
-    //                       height: 37,
-    //                       width: 30,
-    //                       decoration: BoxDecoration(
-    //                           color: AppColor.lightSkyBlue,
-    //                           borderRadius: BorderRadius.circular(5)),
-    //                       child: Center(
-    //                           child: TextConst(
-    //                         "+1",
-    //                         size: Sizes.fontSizeFour,
-    //                         fontWeight: FontWeight.w400,
-    //                       )),
-    //                     )
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //           Container(
-    //             padding: EdgeInsets.only(
-    //               left: Sizes.screenWidth * 0.02,
-    //               right: Sizes.screenWidth * 0.02,
-    //               top: Sizes.screenHeight * 0.01,
-    //             ),
-    //             height: Sizes.screenHeight * 0.065,
-    //             width: Sizes.screenWidth,
-    //             decoration: const BoxDecoration(
-    //               border: Border(
-    //                 bottom: BorderSide(
-    //                     color: Color(0xffD0D0D0), width: 1),
-    //               ),
-    //             ),
-    //             child: Column(
-    //               children: [
-    //                 Row(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     TextConst(
-    //                       "12.00",
-    //                       size: Sizes.fontSizeFour,
-    //                       fontWeight: FontWeight.w400,
-    //                     ),
-    //                     SizedBox(
-    //                       width: Sizes.screenWidth * 0.016,
-    //                     ),
-    //                     Stack(
-    //                       clipBehavior: Clip.none,
-    //                       children: [
-    //                         Container(
-    //                           padding: const EdgeInsets.only(
-    //                             left: 9,
-    //                             top: 2,
-    //                             bottom: 4,
-    //                             right: 8,
-    //                           ),
-    //                           decoration: BoxDecoration(
-    //                               color: AppColor.lightSkyBlue,
-    //                               borderRadius: BorderRadius.circular(5)),
-    //                           child: Column(
-    //                             children: [
-    //                               Sizes.spaceHeight3,
-    //                               TextConst(
-    //                                 "Sheena Jain",
-    //                                 size: 8,
-    //                                 // size: Sizes.fontSizeThree,
-    //                                 fontWeight: FontWeight.w500,
-    //                               ),
-    //                               Sizes.spaceHeight5,
-    //                               // Sizes.spaceHeight3,
-    //                               Row(
-    //                                 children: [
-    //                                   Image.asset(
-    //                                     Assets.iconsSolarCalendar,
-    //                                     width: 13,
-    //                                   ),
-    //                                   SizedBox(
-    //                                     width: Sizes.screenWidth * 0.005,
-    //                                   ),
-    //                                   TextConst(
-    //                                     "7 June",
-    //                                     size: 8,
-    //                                     // size: Sizes.fontSizeThree,
-    //                                     fontWeight: FontWeight.w400,
-    //                                     color: const Color(0xff535353),
-    //                                   ),
-    //                                   SizedBox(
-    //                                     width: Sizes.screenWidth * 0.008,
-    //                                   ),
-    //                                   Image.asset(
-    //                                     Assets.iconsMdiClock,
-    //                                     width: 13,
-    //                                   ),
-    //                                   SizedBox(
-    //                                     width: Sizes.screenWidth * 0.003,
-    //                                   ),
-    //                                   TextConst(
-    //                                     "11.00 PM",
-    //                                     size: 8,
-    //                                     // size: Sizes.fontSizeThree,
-    //                                     fontWeight: FontWeight.w400,
-    //                                     color: const Color(0xff535353),
-    //                                   )
-    //                                 ],
-    //                               )
-    //                             ],
-    //                           ),
-    //                         ),
-    //                         Positioned(
-    //                             top: 13,
-    //                             left: -38,
-    //                             child: appContainer(AppColor.naviBlue, 'In progress'))
-    //                       ],
-    //                     ),
-    //
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //           Container(
-    //             padding: EdgeInsets.only(
-    //               left: Sizes.screenWidth * 0.02,
-    //               right: Sizes.screenWidth * 0.02,
-    //               top: Sizes.screenHeight * 0.01,
-    //             ),
-    //             height: Sizes.screenHeight * 0.065,
-    //             width: Sizes.screenWidth,
-    //             decoration: const BoxDecoration(
-    //               border: Border(
-    //                 bottom: BorderSide(color: Color(0xffD0D0D0), width: 1),
-    //               ),
-    //             ),
-    //             child: Column(
-    //               children: [
-    //                 Row(
-    //                   children: [
-    //                     TextConst(
-    //                       "05.00",
-    //                       size: Sizes.fontSizeFour,
-    //                       fontWeight: FontWeight.w400,
-    //                     )
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //           Container(
-    //             padding: EdgeInsets.only(
-    //               left: Sizes.screenWidth * 0.02,
-    //               right: Sizes.screenWidth * 0.02,
-    //               top: Sizes.screenHeight * 0.01,
-    //             ),
-    //             height: Sizes.screenHeight * 0.065,
-    //             width: Sizes.screenWidth,
-    //             decoration: const BoxDecoration(
-    //               border: Border(
-    //                 bottom: BorderSide(color: Color(0xffD0D0D0), width: 1),
-    //               ),
-    //             ),
-    //             child: Column(
-    //               children: [
-    //                 Row(
-    //                   children: [
-    //                     TextConst(
-    //                       "06.00",
-    //                       size: Sizes.fontSizeFour,
-    //                       fontWeight: FontWeight.w400,
-    //                     )
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //           Container(
-    //             padding: EdgeInsets.only(
-    //               left: Sizes.screenWidth * 0.02,
-    //               right: Sizes.screenWidth * 0.02,
-    //               top: Sizes.screenHeight * 0.01,
-    //             ),
-    //             height: Sizes.screenHeight * 0.065,
-    //             width: Sizes.screenWidth,
-    //             decoration: const BoxDecoration(
-    //               border: Border(
-    //                 bottom: BorderSide(
-    //                     color: Color(0xffD0D0D0), width: 1), // Only top border
-    //               ),
-    //             ),
-    //             child: Column(
-    //               children: [
-    //                 Row(
-    //                   children: [
-    //                     TextConst(
-    //                       "07.00",
-    //                       size: Sizes.fontSizeFour,
-    //                       fontWeight: FontWeight.w400,
-    //                     ),
-    //                     SizedBox(
-    //                       width: Sizes.screenWidth * 0.013,
-    //                     ),
-    //                     Container(
-    //                       padding: const EdgeInsets.only(
-    //                         left: 9,
-    //                         top: 2,
-    //                         bottom: 4,
-    //                         right: 8,
-    //                       ),
-    //                       decoration: BoxDecoration(
-    //                           color: AppColor.lightSkyBlue,
-    //                           borderRadius: BorderRadius.circular(5)),
-    //                       child: Column(
-    //                         children: [
-    //                           Sizes.spaceHeight3,
-    //                           TextConst(
-    //                             "Abhinav Singh",
-    //                             size: 8,
-    //                             // size: Sizes.fontSizeThree,
-    //                             fontWeight: FontWeight.w500,
-    //                           ),
-    //                           Sizes.spaceHeight5,
-    //                           // Sizes.spaceHeight3,
-    //                           Row(
-    //                             children: [
-    //                               Image.asset(
-    //                                 Assets.iconsSolarCalendar,
-    //                                 width: 13,
-    //                               ),
-    //                               SizedBox(
-    //                                 width: Sizes.screenWidth * 0.005,
-    //                               ),
-    //                               TextConst(
-    //                                 "7 June",
-    //                                 size: 8,
-    //                                 // size: Sizes.fontSizeThree,
-    //                                 fontWeight: FontWeight.w400,
-    //                                 color: const Color(0xff535353),
-    //                               ),
-    //                               SizedBox(
-    //                                 width: Sizes.screenWidth * 0.008,
-    //                               ),
-    //                               Image.asset(
-    //                                 Assets.iconsMdiClock,
-    //                                 width: 13,
-    //                               ),
-    //                               SizedBox(
-    //                                 width: Sizes.screenWidth * 0.003,
-    //                               ),
-    //                               TextConst(
-    //                                 "11.00 PM",
-    //                                 size: 8,
-    //                                 // size: Sizes.fontSizeThree,
-    //                                 fontWeight: FontWeight.w400,
-    //                                 color: const Color(0xff535353),
-    //                               )
-    //                             ],
-    //                           )
-    //                         ],
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //           Container(
-    //             padding: EdgeInsets.only(
-    //               left: Sizes.screenWidth * 0.02,
-    //               right: Sizes.screenWidth * 0.02,
-    //               top: Sizes.screenHeight * 0.01,
-    //             ),
-    //             height: Sizes.screenHeight * 0.06,
-    //             width: Sizes.screenWidth,
-    //             decoration: const BoxDecoration(
-    //               // border: Border(
-    //               //   bottom: BorderSide(color: Color(0xffD0D0D0), width: 1),
-    //               // ),
-    //             ),
-    //             child: Column(
-    //               children: [
-    //                 Row(
-    //                   children: [
-    //                     TextConst(
-    //                       "08.00",
-    //                       size: Sizes.fontSizeFour,
-    //                       fontWeight: FontWeight.w400,
-    //                     )
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //     Positioned(
-    //         left: 30,
-    //         top: -10,
-    //         child: Container(
-    //           padding: const EdgeInsets.only(left: 2,right: 2,top: 1.5,bottom: 1.5),
-    //           decoration: BoxDecoration(
-    //               color: AppColor.white,
-    //               borderRadius: BorderRadius.circular(6)),
-    //           child: TextConst(
-    //             "Today’s appointments",
-    //             size: Sizes.fontSizeThree,
-    //             fontWeight: FontWeight.w500,
-    //             color: const Color(0xff2F2F2F),
-    //           ),
-    //         ))
-    //   ],
-    // );
   }
 
-  String? selectedMonth;
   Widget earningDetails() {
     final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
-    final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     return SizedBox(
       height: Sizes.screenHeight * 0.193,
       child: Stack(
@@ -1216,30 +801,49 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                         fontWeight: FontWeight.w400,
                       ),
                       const Spacer(),
-                      CustomDropdown<String>(
-                        items: docHomeCon.doctorHomeModel!.data!.earnings!
-                            .map((e) => e.monthYear.toString())
-                            .toList(),
-                        selectedItem: selectedMonth,
-                        hintText: 'Select Month',
-                        onChanged: (value) {
-                          setState(() {
-                            selectedMonth = value;
-                          });
-                        },
-                        isRequired: true, // Validation on
+                      TextConst(
+                        docHomeCon.selectedMonth,
+                        size: Sizes.fontSizeFour,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.textfieldTextColor,
                       ),
-                      // TextConst(
-                      //   docHomeCon.doctorHomeModel!.data!.earnings![0].monthYear??"",
-                      //   // "April",
-                      //   size: Sizes.fontSizeFour,
-                      //   fontWeight: FontWeight.w400,
-                      // ),
-                      // Sizes.spaceWidth5,
-                      // Image.asset(
-                      //   Assets.iconsArrowDown,
-                      //   width: Sizes.screenWidth * 0.04,
-                      // )
+                      Sizes.spaceWidth5,
+                      GestureDetector(
+                        onTapDown: (TapDownDetails details) async {
+                          final selected = await showMenu<Map<String, String>>(
+                            context: context,
+                            position: RelativeRect.fromLTRB(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            ),
+                            items: docHomeCon.doctorHomeModel!.data!.earnings!
+                                .map(
+                                  (month) => PopupMenuItem<Map<String, String>>(
+                                    value: {
+                                      'monthYear': month.monthYear ?? '',
+                                      'totalAmount':
+                                          month.totalAmount?.toString() ?? '0',
+                                    },
+                                    child: Text(month.monthYear ?? ""),
+                                  ),
+                                )
+                                .toList(),
+                          );
+                          if (selected != null) {
+                            docHomeCon.setSelectedMonthAndAmount(
+                              selected['monthYear']!,
+                              selected['totalAmount']!,
+                            );
+                          }
+                        },
+                        child: Image.asset(
+                          Assets.iconsArrowDown,
+                          width: Sizes.screenWidth * 0.05,
+                          color: AppColor.textfieldTextColor,
+                        ),
+                      )
                     ],
                   ),
                   // Sizes.spaceHeight20,
@@ -1252,13 +856,10 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                       Sizes.spaceWidth15,
                       TextConst(
-                        docHomeCon
-                            .doctorHomeModel!.data!.earnings![0].totalAmount
-                            .toString(),
-                        // 'Rs. 20,000/-',
+                        docHomeCon.selectedAmount,
                         size: Sizes.fontSizeFivePFive,
-                        fontWeight: FontWeight.w500,
-                        color: AppColor.blue,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.black,
                       ),
                     ],
                   ),
@@ -1279,7 +880,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                   height: Sizes.screenHeight * 0.046,
                   color: AppColor.lightBlue,
                   onTap: () {
-                    revenueDocCon.revenueDoctorApi();
+                    docHomeCon.doctorHomeApi(context);
                     Navigator.pushNamed(
                         context, RoutesName.scheduleHoursScreen);
                   }))
