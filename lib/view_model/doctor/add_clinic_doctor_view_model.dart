@@ -30,12 +30,14 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   double? selectedLatitude;
   double? selectedLongitude;
   String? selectedAddress;
+  String? selectedCity;
   GoogleMapController? mapController;
 
   clearSelectedLocation(){
-    selectedAddress=null;
-    selectedLatitude=null;
-    selectedLongitude=null;
+    selectedAddress = null;
+    selectedLatitude = null;
+    selectedLongitude = null;
+    selectedCity = null;
     notifyListeners();
   }
 
@@ -79,6 +81,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks[0];
         selectedAddress = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+        selectedCity = place.locality ?? place.subAdministrativeArea ?? place.administrativeArea ?? '';
         notifyListeners();
       }
     } catch (e) {
@@ -117,7 +120,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       "address": address,
       "fee": "500",
       "phone_number": phone,
-      "city": "Ghaziabad",
+      "city": selectedCity,
       "latitude": selectedLatitude!.toStringAsFixed(5),
       "longitude": selectedLongitude!.toStringAsFixed(5),
       "landmark": landMark

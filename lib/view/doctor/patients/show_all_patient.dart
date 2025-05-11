@@ -1,3 +1,4 @@
+// view/doctor/patients/show_all_patient.dart
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -195,10 +196,13 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                     width: Sizes.screenWidth * 0.33,
                                     color: AppColor.blue,
                                     onTap: () {
-                                      patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
                                       patientappCon.setDoctorsAppointmentsData(schedule);
-                                      Navigator.pushNamed(context,
-                                          RoutesName.patientProfileScreen,);
+                                        patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
+                                        Navigator.pushNamed(context,
+                                            RoutesName.patientProfileScreen);
+                                      // patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
+                                      // Navigator.pushNamed(context,
+                                      //     RoutesName.patientProfileScreen,);
                                     })
                               ],
                             ),
@@ -326,6 +330,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                       width: Sizes.screenWidth * 0.37,
                                       color: AppColor.blue,
                                       onTap: () {
+                                        patientappCon.setDoctorsAppointmentsData(patientData);
                                         patientProfileData.patientProfileApi(patientData.patientId.toString(),context);
                                         Navigator.pushNamed(context,
                                             RoutesName.patientProfileScreen);

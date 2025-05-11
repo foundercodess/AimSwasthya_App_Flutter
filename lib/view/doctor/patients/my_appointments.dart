@@ -1,3 +1,4 @@
+// view/doctor/patients/my_appointments.dart
 // import 'package:aim_swasthya/res/appbar_const.dart';
 // import 'package:aim_swasthya/res/common_material.dart';
 // import 'package:aim_swasthya/res/user_button_const.dart';
@@ -310,7 +311,9 @@ import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
+import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_update_appointment_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -546,35 +549,36 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                               Row(
                                 children: [
                                   // if (isCancelAllowed )
-                                  ButtonConst(
-                                      title: "Reschedule",
-                                      size: Sizes.fontSizeTwo,
-                                      fontWeight: FontWeight.w400,
-                                      borderRadius: 8,
-                                      height: Sizes.screenHeight * 0.031,
-                                      width: Sizes.screenWidth * 0.23,
-                                      color: AppColor.blue,
-                                      onTap: () {
-                                        if (cancelRescheduleAllowed) {
-                                          showCupertinoDialog(
-                                            context: context,
-                                            builder: (_) => ActionOverlay(
-                                              text: "Reschedule Appointment",
-                                              subtext:
-                                              "Are you sure you want to reschedule\n your appointment?",
-                                              onTap: () {
+                                  if (!isCancelled)
+                                    ButtonConst(
+                                        title: "Reschedule",
+                                        size: Sizes.fontSizeTwo,
+                                        fontWeight: FontWeight.w400,
+                                        borderRadius: 8,
+                                        height: Sizes.screenHeight * 0.031,
+                                        width: Sizes.screenWidth * 0.23,
+                                        color: AppColor.blue,
+                                        onTap: () {
+                                          if (cancelRescheduleAllowed) {
+                                            showCupertinoDialog(
+                                              context: context,
+                                              builder: (_) => ActionOverlay(
+                                                text: "Reschedule Appointment",
+                                                subtext:
+                                                "Are you sure you want to reschedule\n your appointment?",
+                                                onTap: () {
 
-                                              },
-                                            ),
-                                          );
-                                        } else {
-                                          showInfoOverlay(
-                                              title: "Info",
-                                              errorMessage:
-                                              "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
-                                        }
-                                        // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
-                                      }),
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            showInfoOverlay(
+                                                title: "Info",
+                                                errorMessage:
+                                                "Oops! You can't cancellation appointments less than 1 hour before the scheduled time.");
+                                          }
+                                          // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
+                                        }),
 
                                   Sizes.spaceWidth5,
                                   if (isCancelAllowed && !isCancelled)
@@ -609,7 +613,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                                 showInfoOverlay(
                                                     title: "Info",
                                                     errorMessage:
-                                                        "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                                        "Oops! You can't cancellation appointments less than 1 hour before the scheduled time.");
                                               }
                                             },
                                             child: TextConst(
@@ -648,6 +652,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
 
   Widget pastAppointment() {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
+       final patientProfileData = Provider.of<PatientProfileViewModel>(context);
     return appointmentCon.docPatientAppointmentModel != null &&
             appointmentCon.docPatientAppointmentModel!.pastAppointments !=
                 null &&
@@ -759,7 +764,12 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                             height: Sizes.screenHeight * 0.029,
                                             width: Sizes.screenWidth * 0.37,
                                             color: AppColor.blue,
-                                            onTap: () {})
+                                            onTap: () {
+                                               appointmentCon.setDoctorsAppointmentsData(scheduleData);
+                                        patientProfileData.patientProfileApi(scheduleData.patientId.toString(),context);
+                                        Navigator.pushNamed(context,
+                                            RoutesName.patientProfileScreen);
+                                            })
                                       ],
                                     ),
                                   ),

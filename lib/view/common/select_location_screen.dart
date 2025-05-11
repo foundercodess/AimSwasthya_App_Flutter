@@ -43,89 +43,79 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: viewModel.loading ||
-              (viewModel.selectedLatitude == null &&
-                  viewModel.selectedLongitude == null)
-          ? SizedBox(
-              height: Sizes.screenHeight,
-              width: Sizes.screenWidth,
-              child: const LoadData())
-          : Stack(
-              children: [
-                GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(viewModel.selectedLatitude ?? 0.0,
-                        viewModel.selectedLongitude ?? 0.0),
-                    zoom: 15,
-                  ),
-                  onMapCreated: (GoogleMapController controller) {
-                    viewModel.setMapController(controller);
-                  },
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId('selected_location'),
-                      position: LatLng(viewModel.selectedLatitude!,
-                          viewModel.selectedLongitude!),
-                      draggable: true,
-                      onDragEnd: (LatLng newPosition) {
-                        viewModel.updateSelectedLocation(newPosition);
-                      },
-                    ),
-                  },
-                  onTap: (LatLng position) {
-                    viewModel.updateSelectedLocation(position);
-                  },
-                  onCameraMove: (CameraPosition position) {
-                    // Update marker position when camera moves
-                    viewModel.updateSelectedLocation(position.target);
-                  },
+      body: SizedBox(
+        height: Sizes.screenHeight,
+        width: Sizes.screenWidth,
+        child: viewModel.loading ||
+                (viewModel.selectedLatitude == null &&
+                    viewModel.selectedLongitude == null)
+            ? const LoadData()
+            : GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(viewModel.selectedLatitude ?? 0.0,
+                      viewModel.selectedLongitude ?? 0.0),
+                  zoom: 15,
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, -5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (viewModel.selectedAddress != null)
-                          TextConst(
-                            viewModel.selectedAddress!,
-                            size: Sizes.fontSizeFour,
-                          ),
-                        Sizes.spaceHeight10,
-                        ButtonConst(
-                          title: "Confirm Location",
-                          width: Sizes.screenWidth,
-                          onTap: () {
-                            final viewModel =
-                                Provider.of<AddClinicDoctorViewModel>(context,
-                                    listen: false);
-                            viewModel.notifyListeners();
-                            Navigator.pop(context);
-                          },
-                          color: AppColor.blue,
-                        ),
-                      ],
-                    ),
+                onMapCreated: (GoogleMapController controller) {
+                  viewModel.setMapController(controller);
+                },
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('selected_location'),
+                    position: LatLng(viewModel.selectedLatitude!,
+                        viewModel.selectedLongitude!),
+                    draggable: true,
+                    onDragEnd: (LatLng newPosition) {
+                      viewModel.updateSelectedLocation(newPosition);
+                    },
                   ),
-                ),
-              ],
+                },
+                onTap: (LatLng position) {
+                  viewModel.updateSelectedLocation(position);
+                },
+                onCameraMove: (CameraPosition position) {
+                  viewModel.updateSelectedLocation(position.target);
+                },
+              ),
+      ),
+      bottomSheet: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
             ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (viewModel.selectedAddress != null)
+              TextConst(
+                viewModel.selectedAddress!,
+                size: Sizes.fontSizeFour,
+              ),
+            Sizes.spaceHeight10,
+            ButtonConst(
+              title: "Confirm Location",
+              width: Sizes.screenWidth,
+              onTap: () {
+                final viewModel = Provider.of<AddClinicDoctorViewModel>(context,
+                    listen: false);
+                viewModel.notifyListeners();
+                Navigator.pop(context);
+              },
+              color: AppColor.blue,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

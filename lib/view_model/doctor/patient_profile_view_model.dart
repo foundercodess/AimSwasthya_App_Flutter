@@ -1,3 +1,4 @@
+// view_model/doctor/patient_profile_view_model.dart
 import 'package:aim_swasthya/model/doctor/patient_profile_model.dart';
 import 'package:aim_swasthya/repo/doctor/patient_profile_repo.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
@@ -33,8 +34,6 @@ class PatientProfileViewModel extends ChangeNotifier {
     debugPrint("body: $data");
     _patientProfileRepo.patientProfileApi(data).then((value) {
       if (value.status == true) {
-        Navigator.pushNamed(context,
-            RoutesName.patientProfileScreen,);
         setHomeDate(value);
       }
       setLoading(false);

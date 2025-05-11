@@ -1,3 +1,4 @@
+// view/doctor/patients/patient_profile_screen.dart
 import 'dart:core';
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
@@ -97,7 +98,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
           );
   }
 
-  Widget patientProfile({bool isCancelAllowed = true}) {
+  Widget patientProfile() {
     final patientAppointmentData =
         Provider.of<DocPatientAppointmentViewModel>(context)
             .doctorsAppointmentsDataModel;
@@ -106,6 +107,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         patientAppointmentData.appointmentTime.toString());
     final isCancelled =
         patientAppointmentData.status!.toLowerCase() == "cancelled";
+    print("status ${patientAppointmentData.status}");
     return patientAppointmentData != null
         ? Container(
             margin: EdgeInsets.only(
@@ -200,117 +202,113 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                         fontWeight: FontWeight.w400,
                       ),
                       Sizes.spaceHeight15,
-                      Row(
-                        children: [
-                          ButtonConst(
-                              title: "Reschedule",
-                              size: Sizes.fontSizeFour,
-                              fontWeight: FontWeight.w400,
-                              borderRadius: 8,
-                              height: Sizes.screenHeight * 0.038,
-                              width: Sizes.screenWidth * 0.35,
-                              color: AppColor.blue,
-                              onTap: () {
-                                // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
-                              }),
-                          Sizes.spaceWidth10,
-                          // if (isCancelAllowed && !isCancelled)
-                          //   Center(
-                          //     child: GestureDetector(
-                          //       onTap: () {
-                          //         if (cancelRescheduleAllowed) {
-                          //           showCupertinoDialog(
-                          //             context: context,
-                          //             builder: (_) => ActionOverlay(
-                          //               text: "Cancel Appointment",
-                          //               subtext:
-                          //               "Are you sure you want to cancel\n your appointment?",
-                          //               onTap: () {
-                          //                 Provider.of<CancelAppointmentViewModel>(
-                          //                     context,
-                          //                     listen: false)
-                          //                     .cancelAppointmentApi(
-                          //                     context,
-                          //                     appointmentData.appointmentId
-                          //                         .toString());
-                          //               },
-                          //             ),
-                          //           );
-                          //         } else {
-                          //           showInfoOverlay(
-                          //               title: "Info",
-                          //               errorMessage:
-                          //               "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
-                          //         }
-                          //       },
-                          //       child: TextConst(
-                          //         "Cancel",
-                          //         color: Colors.red,
-                          //         size: Sizes.fontSizeFive,
-                          //         fontWeight: FontWeight.w500,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // if (isCancelled)
-                          //   Center(
-                          //     child: TextConst(
-                          //       "Cancelled",
-                          //       color: Colors.grey,
-                          //       size: Sizes.fontSizeFive,
-                          //       fontWeight: FontWeight.w500,
-                          //     ),
-                          //   ),
-                          if (isCancelAllowed && !isCancelled)
-                            TextButton(
-                                onPressed: () {
-                                  if (cancelRescheduleAllowed) {
-                                    showCupertinoDialog(
-                                      context: context,
-                                      builder: (_) => ActionOverlay(
-                                        text: "Cancel Appointment",
-                                        subtext:
-                                            "Are you sure you want to cancel\n your appointment?",
-                                        onTap: () {
-                                          Provider.of<CancelAppointmentViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              .cancelAppointmentApi(
-                                                  isDoctorCancel: true,
-                                                  context,
-                                                  patientAppointmentData
-                                                      .appointmentId
-                                                      .toString());
-                                        },
-                                      ),
-                                    );
-                                  } else {
-                                    showInfoOverlay(
-                                        title: "Info",
-                                        errorMessage:
-                                            "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
-                                  }
-                                },
-                                child: TextConst(
-                                  "Cancel",
-                                  size: Sizes.fontSizeFour,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.red,
-                                )),
-                          if (isCancelled)
-                            Center(
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: Sizes.screenHeight * 0.06,
-                                child: TextConst(
-                                  "Cancelled",
-                                  color: Colors.grey,
-                                  size: Sizes.fontSizeFour,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                      isCancelled
+                          ? SizedBox(
+                              height: Sizes.screenHeight * 0.06,
+                              child: TextConst(
+                                "Cancelled",
+                                color: Colors.grey,
+                                size: Sizes.fontSizeFour,
+                                fontWeight: FontWeight.w500,
                               ),
+                            )
+                          : Row(
+                              children: [
+                                ButtonConst(
+                                    title: "Reschedule",
+                                    size: Sizes.fontSizeFour,
+                                    fontWeight: FontWeight.w400,
+                                    borderRadius: 8,
+                                    height: Sizes.screenHeight * 0.038,
+                                    width: Sizes.screenWidth * 0.35,
+                                    color: AppColor.blue,
+                                    onTap: () {
+                                      // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
+                                    }),
+                                Sizes.spaceWidth10,
+                                // if (isCancelAllowed && !isCancelled)
+                                //   Center(
+                                //     child: GestureDetector(
+                                //       onTap: () {
+                                //         if (cancelRescheduleAllowed) {
+                                //           showCupertinoDialog(
+                                //             context: context,
+                                //             builder: (_) => ActionOverlay(
+                                //               text: "Cancel Appointment",
+                                //               subtext:
+                                //               "Are you sure you want to cancel\n your appointment?",
+                                //               onTap: () {
+                                //                 Provider.of<CancelAppointmentViewModel>(
+                                //                     context,
+                                //                     listen: false)
+                                //                     .cancelAppointmentApi(
+                                //                     context,
+                                //                     appointmentData.appointmentId
+                                //                         .toString());
+                                //               },
+                                //             ),
+                                //           );
+                                //         } else {
+                                //           showInfoOverlay(
+                                //               title: "Info",
+                                //               errorMessage:
+                                //               "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                //         }
+                                //       },
+                                //       child: TextConst(
+                                //         "Cancel",
+                                //         color: Colors.red,
+                                //         size: Sizes.fontSizeFive,
+                                //         fontWeight: FontWeight.w500,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // if (isCancelled)
+                                //   Center(
+                                //     child: TextConst(
+                                //       "Cancelled",
+                                //       color: Colors.grey,
+                                //       size: Sizes.fontSizeFive,
+                                //       fontWeight: FontWeight.w500,
+                                //     ),
+                                //   ),
+                                TextButton(
+                                    onPressed: () {
+                                      if (cancelRescheduleAllowed) {
+                                        showCupertinoDialog(
+                                          context: context,
+                                          builder: (_) => ActionOverlay(
+                                            text: "Cancel Appointment",
+                                            subtext:
+                                                "Are you sure you want to cancel\n your appointment?",
+                                            onTap: () {
+                                              Provider.of<CancelAppointmentViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  .cancelAppointmentApi(
+                                                      isDoctorCancel: true,
+                                                      context,
+                                                      patientAppointmentData
+                                                          .appointmentId
+                                                          .toString());
+                                            },
+                                          ),
+                                        );
+                                      } else {
+                                        showInfoOverlay(
+                                            title: "Info",
+                                            errorMessage:
+                                                "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                      }
+                                    },
+                                    child: TextConst(
+                                      "Cancel",
+                                      size: Sizes.fontSizeFour,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.red,
+                                    )),
+                              ],
                             ),
-                        ],
-                      ),
                       Sizes.spaceHeight5,
                       Sizes.spaceHeight3,
                     ],
