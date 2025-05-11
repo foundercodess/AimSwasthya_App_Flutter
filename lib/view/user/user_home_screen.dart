@@ -1,3 +1,4 @@
+// view/user/user_home_screen.dart
 import 'dart:io';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
@@ -184,10 +185,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ],
         ),
         child: Container(
+           padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top/1.3,
+          bottom: 10,
+          left: Sizes.screenWidth * 0.03,
+          right: Sizes.screenWidth * 0.03,
+        ),
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.symmetric(
-              horizontal: Sizes.screenWidth * 0.03,
-              vertical: Sizes.screenHeight * 0.011),
+          // padding: EdgeInsets.symmetric(
+          //     horizontal: Sizes.screenWidth * 0.03,
+          //     vertical: Sizes.screenHeight * 0.011),
           width: Sizes.screenWidth,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(

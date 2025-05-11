@@ -1,3 +1,4 @@
+// view/user/bottom_nev_bar.dart
 import 'dart:ui';
 import 'package:aim_swasthya/generated/assets.dart';
 import 'package:aim_swasthya/res/color_const.dart';
@@ -119,10 +120,13 @@ class _BottomNevBarState extends State<BottomNevBar> {
           child: BottomAppBar(
             elevation: 20,
             shadowColor: AppColor.black,
-            height: 60,
-            padding: const EdgeInsets.only(left: 40, right: 40),
+            height: 60 + MediaQuery.of(context).padding.bottom,
+            padding: EdgeInsets.only(
+              left: 40, 
+              right: 40,
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
             shape: const CircularNotchedRectangle(),
-            // notchMargin: 10,
             color: const Color(0xffF0F0F0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
