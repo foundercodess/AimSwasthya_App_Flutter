@@ -1,15 +1,18 @@
+// view/doctor/profile/doctor_profile_screen.dart
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
+import 'package:aim_swasthya/utils/google_map/view_static_location.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
+import 'package:aim_swasthya/view/common/add_clinic_overlay.dart';
+import 'package:aim_swasthya/view/common/select_location_screen.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
+import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../common/test.dart';
 
 class UserDocProfilePage extends StatefulWidget {
   const UserDocProfilePage({super.key});
@@ -80,6 +83,52 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       cursorColor: AppColor.textGrayColor,
                     ),
                     Sizes.spaceHeight10,
+                    Center(
+                      child: Container(
+                        height: 55,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Sizes.screenWidth * 0.03),
+                        child: DropdownButton<String>(
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.grey,
+                            size: 20,
+                          ),
+                          value: genderOptions.contains(_genderController.text)
+                              ? _genderController.text
+                              : null,
+                          hint: TextConst(
+                            docProfileCon.doctorProfileModel!.data!.doctors![0]
+                                    .gender ??
+                                "Gender",
+                            size: Sizes.fontSizeFive,
+                            color: AppColor.textfieldTextColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          underline: const SizedBox(),
+                          isExpanded: true,
+                          items: genderOptions.map((data) {
+                            return DropdownMenuItem<String>(
+                              value: data,
+                              child: TextConst(
+                                data.toString() ?? '',
+                                fontWeight: FontWeight.w500,
+                                size: Sizes.fontSizeFive,
+                                color: AppColor.blue,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? gender) {
+                            // _selectGender(gender!);
+                          },
+                        ),
+                      ),
+                    ),
                     // Center(
                     //   child: Container(
                     //     height: 56,
@@ -124,23 +173,23 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     //     ),
                     //   ),
                     // ),
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      suffixIcon: IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          Assets.assetsIconsArrowDown,
-                          color: AppColor.lightBlack,
-                        ),
-                      ),
-                      hintText: docProfileCon
-                              .doctorProfileModel!.data!.doctors![0].gender ??
-                          "Gender",
-                      controller: _genderController,
-                      cursorColor: AppColor.textGrayColor,
-                    ),
+                    // CustomTextField(
+                    //   contentPadding:
+                    //       const EdgeInsets.only(top: 18, bottom: 20, left: 10),
+                    //   fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
+                    //   suffixIcon: IconButton(
+                    //     onPressed: () {},
+                    //     icon: Image.asset(
+                    //       Assets.assetsIconsArrowDown,
+                    //       color: AppColor.lightBlack,
+                    //     ),
+                    //   ),
+                    //   hintText: docProfileCon
+                    //           .doctorProfileModel!.data!.doctors![0].gender ??
+                    //       "Gender",
+                    //   controller: _genderController,
+                    //   cursorColor: AppColor.textGrayColor,
+                    // ),
                     Sizes.spaceHeight10,
                     CustomTextField(
                       contentPadding:
@@ -310,6 +359,21 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
           );
   }
 
+  Future<void> _selectLocation() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SelectLocationScreen(),
+      ),
+    );
+
+    final viewModel =
+        Provider.of<AddClinicDoctorViewModel>(context, listen: false);
+    if (viewModel.selectedAddress != null) {
+      // addressController.text = viewModel.selectedAddress!;
+    }
+  }
+
   Widget docProfileSec() {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
     return Container(
@@ -371,13 +435,13 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
 
   Widget clinicDetails() {
     final mapVM = Provider.of<MapViewModel>(context);
+    final addClinicData = Provider.of<AddClinicDoctorViewModel>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
-          onTap: () {
-// mapVM.selectedLocation;
-          },
+          onTap: () {},
           child: Container(
             padding: EdgeInsets.only(
                 left: Sizes.screenWidth * 0.03,
@@ -393,7 +457,13 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
             child: Column(
               children: [
                 Sizes.spaceHeight3,
-                const Image(image: AssetImage(Assets.imagesMapImg)),
+                addClinicData.selectedLatitude != null &&
+                        addClinicData.selectedLongitude != null
+                    ? GetLocationOnMap(
+                        latitude: addClinicData.selectedLatitude!,
+                        longitude: addClinicData.selectedLongitude!,
+                      )
+                    : const Image(image: AssetImage(Assets.imagesMapImg)),
                 Sizes.spaceHeight25,
                 ButtonConst(
                     title: "Set location",
@@ -401,8 +471,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     height: Sizes.screenHeight * 0.045,
                     color: AppColor.blue,
                     onTap: () {
-                      Navigator.pushNamed(
-                          context, RoutesName.fullScreenMapPage);
+                      _selectLocation();
+                      // Navigator.pushNamed(
+                      //     context, RoutesName.fullScreenMapPage);
                     })
               ],
             ),

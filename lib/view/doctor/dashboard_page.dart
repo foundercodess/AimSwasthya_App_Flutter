@@ -1,6 +1,6 @@
+// view/doctor/dashboard_page.dart
 import 'package:aim_swasthya/res/border_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
-import 'package:aim_swasthya/res/const_drop_down.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
@@ -534,13 +534,13 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
           apptDate.month == now.month &&
           apptDate.day == now.day;
     }).toList();
-    List<Map<String, dynamic>> todayAppointmentList = [
-      {"date": "7 June", "time": "10:30", "name": "Alice", "status": 1},
-      {"date": "7 June", "time": "12:00", "name": "Bob", "status": 2},
-      {"date": "7 June", "time": "15:45", "name": "Charlie", "status": null},
-      {"date": "7 June", "time": "18:20", "name": "David", "status": 0},
-      {"date": "7 June", "time": "21:10", "name": "Eve", "status": 0},
-    ];
+    // List<Map<String, dynamic>> todayAppointmentList = [
+    //   {"date": "7 June", "time": "10:30", "name": "Alice", "status": 1},
+    //   {"date": "7 June", "time": "12:00", "name": "Bob", "status": 2},
+    //   {"date": "7 June", "time": "15:45", "name": "Charlie", "status": null},
+    //   {"date": "7 June", "time": "18:20", "name": "David", "status": 0},
+    //   {"date": "7 June", "time": "21:10", "name": "Eve", "status": 0},
+    // ];
     return Container(
       clipBehavior: Clip.none,
       width: Sizes.screenWidth / 1.95,
@@ -880,7 +880,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                   height: Sizes.screenHeight * 0.046,
                   color: AppColor.lightBlue,
                   onTap: () {
-                    docHomeCon.doctorHomeApi(context);
+                    Provider.of<RevenueDoctorViewModel>(context, listen: false).revenueDoctorApi();
                     Navigator.pushNamed(
                         context, RoutesName.scheduleHoursScreen);
                   }))

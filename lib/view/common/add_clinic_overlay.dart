@@ -1,3 +1,5 @@
+// view/common/add_clinic_overlay.dart
+import 'package:aim_swasthya/utils/google_map/view_static_location.dart';
 import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +9,7 @@ import '../../res/color_const.dart';
 import '../../res/size_const.dart';
 import '../../res/text_const.dart';
 import '../../res/user_button_const.dart';
+import 'package:aim_swasthya/view/common/select_location_screen.dart';
 
 class AddClinicOverlay extends StatefulWidget {
   const AddClinicOverlay({super.key});
@@ -24,12 +27,30 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
   @override
   void initState() {
     super.initState();
-    addMoreClinic == false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AddClinicDoctorViewModel>(context, listen: false)
+          .clearSelectedLocation();
+    });
   }
+
+  Future<void> _selectLocation() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SelectLocationScreen(),
+      ),
+    );
+
+    final viewModel =
+        Provider.of<AddClinicDoctorViewModel>(context, listen: false);
+    if (viewModel.selectedAddress != null) {
+      addressController.text = viewModel.selectedAddress!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final addClinicData = Provider.of<AddClinicDoctorViewModel>(context);
-
 
     if (addClinicData.isClicked == true) {
       return confirmClinic();
@@ -37,9 +58,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
     return addMoreClinic();
   }
 
-
   Widget addMoreClinic() {
-
     final addClinicData = Provider.of<AddClinicDoctorViewModel>(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -80,15 +99,26 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                 fontWeight: FontWeight.w400,
               ),
               Sizes.spaceHeight25,
-              Container(
-                height: Sizes.screenHeight * 0.165,
-                width: Sizes.screenWidth,
-                decoration: BoxDecoration(
+              GestureDetector(
+                onTap: _selectLocation,
+                child: Container(
+                  height: Sizes.screenHeight * 0.165,
+                  width: Sizes.screenWidth,
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: const DecorationImage(
                       image: AssetImage(Assets.imagesSetLocationPage),
                       fit: BoxFit.cover,
-                    )),
+                    ),
+                  ),
+                  child: addClinicData.selectedLatitude != null &&
+                          addClinicData.selectedLongitude != null
+                      ? GetLocationOnMap(
+                          latitude: addClinicData.selectedLatitude!,
+                          longitude: addClinicData.selectedLongitude!,
+                        )
+                      : null,
+                ),
               ),
               Sizes.spaceHeight20,
               SizedBox(
@@ -125,7 +155,9 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                             left: 10,
                           ),
                         ),
-                        style: const TextStyle(color: AppColor.blue,),
+                        style: const TextStyle(
+                          color: AppColor.blue,
+                        ),
                         cursorColor: AppColor.textGrayColor,
                       ),
                       Sizes.spaceHeight10,
@@ -159,7 +191,9 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                             left: 10,
                           ),
                         ),
-                        style: const TextStyle(color: AppColor.blue,),
+                        style: const TextStyle(
+                          color: AppColor.blue,
+                        ),
                         cursorColor: AppColor.textGrayColor,
                       ),
                       Sizes.spaceHeight10,
@@ -196,7 +230,9 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                           ),
                         ),
                         maxLength: 10,
-                        style: const TextStyle(color: AppColor.blue,),
+                        style: const TextStyle(
+                          color: AppColor.blue,
+                        ),
                         cursorColor: AppColor.textGrayColor,
                       ),
                       Sizes.spaceHeight10,
@@ -230,8 +266,11 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                             left: 10,
                           ),
                         ),
-                        style: const TextStyle(color: AppColor.blue,),
-                        cursorColor: AppColor.textGrayColor,                      ),
+                        style: const TextStyle(
+                          color: AppColor.blue,
+                        ),
+                        cursorColor: AppColor.textGrayColor,
+                      ),
                       Sizes.spaceHeight10,
                       ButtonConst(
                         height: Sizes.screenHeight * 0.06,
@@ -245,7 +284,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                               landmarkController.text,
                               context);
                           setState(() {
-                            addClinicData.isClicked==true;
+                            addClinicData.isClicked == true;
                           });
                         },
                         color: AppColor.blue,

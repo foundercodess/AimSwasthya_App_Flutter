@@ -1,7 +1,8 @@
+// utils/google_map/view_static_location.dart
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class GetLocationOnMap extends StatelessWidget {
+class GetLocationOnMap extends StatefulWidget {
   final double latitude;
   final double longitude;
 
@@ -12,18 +13,50 @@ class GetLocationOnMap extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final LatLng position = LatLng(latitude, longitude);
+  State<GetLocationOnMap> createState() => _GetLocationOnMapState();
+}
 
+class _GetLocationOnMapState extends State<GetLocationOnMap> {
+  GoogleMapController? _mapController;
+  late LatLng _position;
+
+  @override
+  void initState() {
+    super.initState();
+    _position = LatLng(widget.latitude, widget.longitude);
+  }
+
+  @override
+  void didUpdateWidget(GetLocationOnMap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.latitude != widget.latitude || oldWidget.longitude != widget.longitude) {
+      _position = LatLng(widget.latitude, widget.longitude);
+      _updateCameraPosition();
+    }
+  }
+
+  void _updateCameraPosition() {
+    if (_mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLng(_position),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: position,
+        target: _position,
         zoom: 14,
       ),
+      onMapCreated: (GoogleMapController controller) {
+        _mapController = controller;
+      },
       markers: {
         Marker(
           markerId: const MarkerId("Clinic location"),
-          position: position,
+          position: _position,
         ),
       },
       liteModeEnabled: true,
@@ -32,5 +65,11 @@ class GetLocationOnMap extends StatelessWidget {
       compassEnabled: false,
       mapToolbarEnabled: false,
     );
+  }
+
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
   }
 }

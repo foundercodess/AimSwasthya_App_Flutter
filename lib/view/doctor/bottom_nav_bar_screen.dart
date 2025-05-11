@@ -1,3 +1,4 @@
+// view/doctor/bottom_nav_bar_screen.dart
 import 'dart:ui';
 
 import 'package:aim_swasthya/generated/assets.dart';
@@ -29,8 +30,6 @@ class _DoctorBottomNevBarState extends State<DoctorBottomNevBar> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void dispose() {
-    scaffoldKey.currentWidget;
-    // scaffoldKey.currentState?.dispose();
     super.dispose();
   }
 

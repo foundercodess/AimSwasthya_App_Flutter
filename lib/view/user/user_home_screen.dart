@@ -38,7 +38,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     final homeCon = Provider.of<PatientHomeViewModel>(context);
     return Scaffold(
       backgroundColor: AppColor.white,
-      body: homeCon.patientHomeModel== null|| homeCon.patientHomeModel!.data== null|| homeCon.loading
+      body: homeCon.patientHomeModel == null ||
+              homeCon.patientHomeModel!.data == null ||
+              homeCon.loading
           ? const Center(child: LoadData())
           : RefreshIndicator(
               color: AppColor.blue,
@@ -185,12 +187,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ],
         ),
         child: Container(
-           padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top/1.3,
-          bottom: 10,
-          left: Sizes.screenWidth * 0.03,
-          right: Sizes.screenWidth * 0.03,
-        ),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top / 1.3,
+            bottom: 10,
+            left: Sizes.screenWidth * 0.03,
+            right: Sizes.screenWidth * 0.03,
+          ),
           alignment: Alignment.topCenter,
           // padding: EdgeInsets.symmetric(
           //     horizontal: Sizes.screenWidth * 0.03,
@@ -533,11 +535,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     final homeCon = Provider.of<PatientHomeViewModel>(context);
     return TextField(
       readOnly: true,
-    onTap: () {
-     // if (!homeCon.noServicesArea) {
-       Navigator.pushNamed(context, RoutesName.searchDoctorScreen,
+      onTap: () {
+        // if (!homeCon.noServicesArea) {
+        Navigator.pushNamed(context, RoutesName.searchDoctorScreen,
             arguments: AppLocalizations.of(context)!.search);
-     // }
+        // }
       },
       decoration: InputDecoration(
         constraints: const BoxConstraints(maxHeight: 40),
