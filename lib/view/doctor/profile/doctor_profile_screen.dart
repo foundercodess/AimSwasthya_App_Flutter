@@ -37,7 +37,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   @override
   Widget build(BuildContext context) {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
-    return docProfileCon.doctorProfileModel == null || docProfileCon.loading
+    return docProfileCon.doctorProfileModel == null ||  docProfileCon.loading
         ? const Center(child: LoadData())
         : Scaffold(
             backgroundColor: AppColor.white,
