@@ -459,9 +459,13 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                 Sizes.spaceHeight3,
                 addClinicData.selectedLatitude != null &&
                         addClinicData.selectedLongitude != null
-                    ? GetLocationOnMap(
-                        latitude: addClinicData.selectedLatitude!,
-                        longitude: addClinicData.selectedLongitude!,
+                    ? Container(
+                        height: Sizes.screenHeight * 0.2,
+                        width: Sizes.screenWidth,
+                        child: GetLocationOnMap(
+                          latitude: addClinicData.selectedLatitude!,
+                          longitude: addClinicData.selectedLongitude!,
+                        ),
                       )
                     : const Image(image: AssetImage(Assets.imagesMapImg)),
                 Sizes.spaceHeight25,

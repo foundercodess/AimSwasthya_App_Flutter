@@ -152,17 +152,17 @@ class SlotScheduleViewModel extends ChangeNotifier {
               });
             }
           } else {
-            // _allSlots.add({
-            //   'availability_date': availabilityDateM,
-            //   'dd_month_name': ddMonthName,
-            //   'available_flag': 'Y',
-            //   'timings': [
-            //     {
-            //       'start_time': timeSlots[0]['start_time'],
-            //       'end_time': timeSlots[0]['end_time'],
-            //     }
-            //   ],
-            // });
+            _allSlots.add({
+              'availability_date': availabilityDateM,
+              'dd_month_name': ddMonthName,
+              'available_flag': 'Y',
+              'timings': [
+                {
+                  'start_time': timeSlots[0]['start_time'],
+                  'end_time': timeSlots[0]['end_time'],
+                }
+              ],
+            });
           }
         }
       }
