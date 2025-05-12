@@ -98,7 +98,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
           );
   }
 
-  Widget patientProfile() {
+  Widget patientProfile({bool isCancelAllowed = true}) {
     final patientAppointmentData =
         Provider.of<DocPatientAppointmentViewModel>(context)
             .doctorsAppointmentsDataModel;
@@ -128,11 +128,12 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                         bottomLeft: Radius.circular(15),
                       ),
                       image: DecorationImage(
-                          image: patientAppointmentData.signedImageUrl == null
+                          image: patientAppointmentData.signedImageUrl != null
                               ? NetworkImage(
                                   patientAppointmentData.signedImageUrl!)
                               : const AssetImage(Assets.logoDoctor),
                           fit: BoxFit.fitHeight)),
+
                 ),
                 Sizes.spaceWidth15,
                 SizedBox(
@@ -155,7 +156,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                             Sizes.spaceWidth5,
                             TextConst(
                               DateFormat('d MMM').format(DateTime.parse(
-                                  patientAppointmentData!.appointmentDate
+                                  patientAppointmentData.appointmentDate
                                       .toString())),
                               size: Sizes.fontSizeFour,
                               fontWeight: FontWeight.w400,
@@ -272,7 +273,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                 //       fontWeight: FontWeight.w500,
                                 //     ),
                                 //   ),
-                                TextButton(
+                                if (isCancelAllowed && !isCancelled)
+                                  TextButton(
                                     onPressed: () {
                                       if (cancelRescheduleAllowed) {
                                         showCupertinoDialog(
@@ -307,18 +309,37 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                       fontWeight: FontWeight.w400,
                                       color: Colors.red,
                                     )),
+                                if (isCancelled)
+                                  Center(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: Sizes.screenHeight * 0.06,
+                                      child: TextConst(
+                                        "Cancelled",
+                                        color: Colors.grey,
+                                        size: Sizes.fontSizeFour,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
+
                       Sizes.spaceHeight5,
                       Sizes.spaceHeight3,
                     ],
                   ),
+
                 ),
+
               ],
             ),
           )
         : const SizedBox();
+
   }
+
+
 
   Widget symptomsSec() {
     return Container(
@@ -445,21 +466,61 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     );
   }
 
+  // bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+  //   print(bookingDate);
+  //   print(hour24Format);
+  //   // Combine date and time
+  //   String dateTimeString = "$bookingDate $hour24Format";
+  //
+  //   // Parse using the correct format
+  //   // DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
+  //   DateFormat format = DateFormat("yyyy-MM-dd hh:mm a");
+  //   DateTime bookingDateTime = format.parse(dateTimeString);
+  //
+  //   // Get current time
+  //   DateTime now = DateTime.now();
+  //
+  //   // Calculate difference
+  //   Duration difference = bookingDateTime.difference(now);
+  //
+  //   // Return true if more than 1 hour away
+  //   return difference.inMinutes > 60;
+  // }
   bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
-    // Combine date and time
-    String dateTimeString = "$bookingDate $hour24Format";
+    try {
+      // Try parsing bookingDate in multiple known formats
+      DateTime parsedDate;
+      try {
+        parsedDate = DateFormat("yyyy-MM-dd").parse(bookingDate);
+      } catch (_) {
+        try {
+          parsedDate = DateFormat("dd-MM-yyyy").parse(bookingDate);
+        } catch (_) {
+          try {
+            parsedDate = DateFormat("MM/dd/yyyy").parse(bookingDate);
+          } catch (e) {
+            print("Date parsing failed: $e");
+            return false;
+          }
+        }
+      }
 
-    // Parse using the correct format
-    DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
-    DateTime bookingDateTime = format.parse(dateTimeString);
+      // Convert to standard format: dd-MM-yyyy
+      String formattedDate = DateFormat("dd-MM-yyyy").format(parsedDate);
 
-    // Get current time
-    DateTime now = DateTime.now();
+      // Combine with time
+      String dateTimeString = "$formattedDate $hour24Format";
 
-    // Calculate difference
-    Duration difference = bookingDateTime.difference(now);
+      // Parse combined string using standard format
+      DateTime bookingDateTime = DateFormat("dd-MM-yyyy hh:mm a").parse(dateTimeString);
 
-    // Return true if more than 1 hour away
-    return difference.inMinutes > 60;
+      // Compare with current time
+      Duration difference = bookingDateTime.difference(DateTime.now());
+      return difference.inMinutes > 60;
+
+    } catch (e) {
+      print("Error in date comparison: $e");
+      return false;
+    }
   }
 }

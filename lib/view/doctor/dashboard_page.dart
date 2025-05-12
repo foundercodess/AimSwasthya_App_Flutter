@@ -407,8 +407,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                     width: Sizes.screenWidth * 0.33,
                                     color: AppColor.blue,
                                     onTap: () {
-                                      Navigator.pushNamed(context,
-                                          RoutesName.patientProfileScreen);
+                                      // Navigator.pushNamed(context,
+                                      //     RoutesName.patientProfileScreen);
                                     })
                               ],
                             ),
@@ -824,7 +824,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                     value: {
                                       'monthYear': month.monthYear ?? '',
                                       'totalAmount':
-                                          month.totalAmount?.toString() ?? '0',
+                                          month.totalamountformatted?.toString() ?? '0',
                                     },
                                     child: Text(month.monthYear ?? ""),
                                   ),
