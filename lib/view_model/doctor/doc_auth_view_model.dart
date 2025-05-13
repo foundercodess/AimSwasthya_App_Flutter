@@ -12,9 +12,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../view/common/intro/all_set_doc_screen.dart';
 import '../../view/doctor/auth/register_screen.dart';
+import '../user/get_image_url_view_model.dart';
 import 'doc_reg_view_model.dart';
 
 class DoctorAuthViewModel extends ChangeNotifier {
@@ -44,6 +46,21 @@ class DoctorAuthViewModel extends ChangeNotifier {
     // 1-> login || 2-> signup
     _navType = type;
     notifyListeners();
+  }
+
+  XFile? _profileImage;
+  XFile? get profileImage => _profileImage;
+  setProfileImage(XFile? image) async {
+    _profileImage = image;
+    notifyListeners();
+    // final entityType=
+    // await addImageApi('doctor', image!.name,);
+  }
+
+  XFile? _identityImage;
+  XFile? get identityImage => _identityImage;
+  set identityImage(XFile? image) {
+    _identityImage = image;
   }
 
   setLoading(bool value) {
@@ -372,5 +389,45 @@ class DoctorAuthViewModel extends ChangeNotifier {
         print('Error getting location: $error');
       }
     }
+  }
+
+  String? getImageType(String fileName) {
+    if (fileName.endsWith('.png')) {
+      return 'png';
+    } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+      return 'jpg';
+    } else {
+      return 'png';
+    }
+  }
+
+  Future<void> addImageApi(
+      dynamic entityType, dynamic imageName, BuildContext context) async {
+    setLoading(true);
+    final userId = await UserViewModel().getUser();
+    final fileType = getImageType(imageName);
+    Map data = {
+      "entity_id": userId,
+      "entity_type": entityType,
+      "image_name": "profile.$fileType"
+    };
+    print("xfghjk" + jsonEncode(data));
+    _doctorAuthRepo.addImageUrlApi(data).then((value) {
+      print(value);
+      // Utils.show(value['message'],);
+      if (value['status'] == true) {
+        Provider.of<GetImageUrlViewModel>(context, listen: false).uploadFile(
+            context,
+            fileName: "profile.$fileType",
+            filePath: value['image_url']);
+      }
+    }).onError((error, stackTrace) {
+      LoaderOverlay().hide();
+      setLoading(false);
+      notifyListeners();
+      if (kDebugMode) {
+        print('error: $error');
+      }
+    });
   }
 }

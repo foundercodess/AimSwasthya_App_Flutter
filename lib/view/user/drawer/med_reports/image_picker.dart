@@ -69,13 +69,15 @@ import 'package:aim_swasthya/view/user/drawer/med_reports/medical_overlay_screen
 
 class ImagePickerHelper {
   final ImagePicker _picker = ImagePicker();
-
-  Future<void> pickImageFromCamera(BuildContext context) async {
+String pickedImage='';
+  Future<XFile?> pickImageFromCamera(BuildContext context, {bool isProfileSelection= false}) async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       String base64Image = await _convertToBase64(pickedFile);
-
+      if(isProfileSelection){
+        return pickedFile;
+      }
       showModalBottomSheet(
         elevation: 10,
         isScrollControlled: true,
@@ -93,12 +95,14 @@ class ImagePickerHelper {
     }
   }
 
-  Future<void> pickImageFromGallery(BuildContext context, {bool allowMultiple = false}) async {
+  Future<XFile?> pickImageFromGallery(BuildContext context, {bool allowMultiple = false,bool isProfileSelection= false}) async {
     final List<XFile> pickedFileList = await _picker.pickMultiImage();
 
     if ( pickedFileList.isNotEmpty) {
       List<String> base64Images = [];
-
+      if(isProfileSelection){
+        return pickedFileList.first;
+      }
       for (var file in pickedFileList) {
         String base64 = await _convertToBase64(file);
         base64Images.add(base64);
@@ -120,6 +124,31 @@ class ImagePickerHelper {
     }
   }
 
+  Future<void> pickSingleImageFromGallery(BuildContext context) async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      String base64Image = await _convertToBase64(pickedFile);
+
+      showModalBottomSheet(
+        elevation: 10,
+        isScrollControlled: true,
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+        ),
+        backgroundColor: AppColor.white,
+        builder: (BuildContext context) {
+          return MedicalOverlayScreen(
+            pickedFile: [pickedFile.path], // still pass as list for compatibility
+          );
+        },
+      );
+    }
+  }
+
+
+
   Future<String> _convertToBase64(XFile imageFile) async {
     try {
       final bytes = await imageFile.readAsBytes();
@@ -129,6 +158,7 @@ class ImagePickerHelper {
       return "";
     }
   }
+
   Future<void> pickDocument(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,

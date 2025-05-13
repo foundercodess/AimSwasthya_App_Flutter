@@ -21,11 +21,11 @@ class CancelAppointmentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> cancelAppointmentApi(context,dynamic appId,{bool isDoctorCancel  = false}) async {
+  Future<void> cancelAppointmentApi(context,dynamic appId,{bool isDoctorCancel  = false, String? status}) async {
     setLoading(true);
     Map data = {
       "appointment_id" : appId,
-      "status" : "cancelled"
+      "status" : status??"cancelled"
     };
     _cancelAppointmentRepo.cancelAppointmentApi(data).then((value) {
       Utils.show(value['message'], context);

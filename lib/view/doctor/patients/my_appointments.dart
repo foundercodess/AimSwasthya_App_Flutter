@@ -324,6 +324,7 @@ import '../../../res/common_material.dart';
 import '../../../res/popUp_const.dart';
 import '../../../utils/show_server_error.dart';
 import '../../../view_model/user/cancelAppointment_view_model.dart';
+import '../../../view_model/user/update_appointment_view_model.dart';
 
 class MyAppointmentsScreen extends StatefulWidget {
   const MyAppointmentsScreen({super.key});
@@ -416,7 +417,9 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
           );
   }
 
-  Widget activeAppointment({bool isCancelAllowed = true}) {
+  Widget activeAppointment({
+    bool isCancelAllowed = true,
+  }) {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
     return appointmentCon.docPatientAppointmentModel != null &&
             appointmentCon
@@ -432,13 +435,14 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                 itemBuilder: (context, index) {
                   final appointmentData = appointmentCon
                       .docPatientAppointmentModel!.activeAppointments![index];
+                  print("udysue${appointmentData.status}");
                   final cancelRescheduleAllowed = isMoreThanOneHourAway(
                       appointmentData.appointmentDate.toString(),
                       appointmentData.appointmentTime.toString());
                   final isCancelled =
                       appointmentData.status!.toLowerCase() == "cancelled";
-                  final isScheduled =
-                      appointmentData.status!.toLowerCase() == "scheduled";
+                  final isRescheduled =
+                      appointmentData.status!.toLowerCase() == "reschduled";
                   return Container(
                     margin: EdgeInsets.only(
                         left: index == 0
@@ -548,8 +552,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                               // Sizes.spaceHeight5,
                               Row(
                                 children: [
-                                  // if (isCancelAllowed )
-                                  if (!isCancelled)
+                                  if (!isRescheduled && !isCancelled)
                                     ButtonConst(
                                         title: "Reschedule",
                                         size: Sizes.fontSizeTwo,
@@ -565,9 +568,18 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                               builder: (_) => ActionOverlay(
                                                 text: "Reschedule Appointment",
                                                 subtext:
-                                                "Are you sure you want to reschedule\n your appointment?",
+                                                    "Are you sure you want to reschedule\n your appointment?",
                                                 onTap: () {
-
+                                                  Provider.of<CancelAppointmentViewModel>(
+                                                          context,
+                                                          listen: false)
+                                                      .cancelAppointmentApi(
+                                                          status: 'reschduled',
+                                                          isDoctorCancel: true,
+                                                          context,
+                                                          appointmentData
+                                                              .appointmentId
+                                                              .toString());
                                                 },
                                               ),
                                             );
@@ -575,10 +587,36 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                             showInfoOverlay(
                                                 title: "Info",
                                                 errorMessage:
-                                                "Oops! You can't cancellation appointments less than 1 hour before the scheduled time.");
+                                                    "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
                                           }
-                                          // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
+                                          // Navigator.pop(context);
                                         }),
+                                  // if ( isScheduled)
+                                  //   Center(
+                                  //     child: TextConst(
+                                  //       "scheduled",
+                                  //       color: Colors.grey,
+                                  //       size: Sizes.fontSizeFive,
+                                  //       fontWeight: FontWeight.w500,
+                                  //     ),
+                                  //   ),
+                                  if (isCancelled || isRescheduled) ...[
+                                    Sizes.spaceWidth5,
+                                    Center(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: Sizes.screenHeight * 0.06,
+                                        child: TextConst(
+                                          isCancelled
+                                              ? "Cancelled"
+                                              : "Rescheduled",
+                                          color: Colors.grey,
+                                          size: Sizes.fontSizeFour,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
 
                                   Sizes.spaceWidth5,
                                   if (isCancelAllowed && !isCancelled)
@@ -624,19 +662,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                             )),
                                       )),
                                     ),
-                                  if (isCancelled)
-                                    Center(
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: Sizes.screenHeight * 0.06,
-                                        child: TextConst(
-                                          "Cancelled",
-                                          color: Colors.grey,
-                                          size: Sizes.fontSizeFour,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
                                 ],
                               ),
                             ],
@@ -652,7 +677,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
 
   Widget pastAppointment() {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
-       final patientProfileData = Provider.of<PatientProfileViewModel>(context);
+    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
     return appointmentCon.docPatientAppointmentModel != null &&
             appointmentCon.docPatientAppointmentModel!.pastAppointments !=
                 null &&
@@ -765,10 +790,18 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                             width: Sizes.screenWidth * 0.37,
                                             color: AppColor.blue,
                                             onTap: () {
-                                               appointmentCon.setDoctorsAppointmentsData(scheduleData);
-                                        patientProfileData.patientProfileApi(scheduleData.patientId.toString(),context);
-                                        Navigator.pushNamed(context,
-                                            RoutesName.patientProfileScreen);
+                                              appointmentCon
+                                                  .setDoctorsAppointmentsData(
+                                                      scheduleData);
+                                              patientProfileData
+                                                  .patientProfileApi(
+                                                      scheduleData.patientId
+                                                          .toString(),
+                                                      context);
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RoutesName
+                                                      .patientProfileScreen);
                                             })
                                       ],
                                     ),

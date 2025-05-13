@@ -386,7 +386,6 @@ class _ViewAppointmentsScreenState extends State<ViewAppointmentsScreen> {
                       },
                     ),
                     Sizes.spaceHeight10,
-
                     // --- Cancel Option if not already cancelled
                     if (isCancelAllowed && !isCancelled)
                       Center(

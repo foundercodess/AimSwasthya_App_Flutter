@@ -62,6 +62,18 @@ class DoctorAuthRepo{
     }
   }
 
-
+  Future<dynamic> addImageUrlApi(dynamic data) async {
+    try {
+      dynamic response =
+      await _apiServices.getPostApiResponse(CommonApiUrl.addImage,data);
+      print(response);
+      return response;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error occurred during addImageUrlApi: $e');
+      }
+      rethrow;
+    }
+  }
 
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/view/common/intro/all_set_doc_screen.dart';
 import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
@@ -7,9 +9,9 @@ import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart'
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../user/drawer/med_reports/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -123,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     cupertinoTopToBottomRoute(const AllSetDocScreen()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("SMC Number  verified.")),
+                  const SnackBar(content: Text("SMC Number verified.")),
                 );
               }
             }
@@ -185,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: "Name",
             controller: _nameController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.text,
           ),
           Sizes.spaceHeight25,
           Center(
@@ -256,41 +258,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding:
                   EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
               child: (specializations?.specializations != null &&
-                  specializations!.specializations!.isNotEmpty)
+                      specializations!.specializations!.isNotEmpty)
                   ? DropdownButton<String>(
-                icon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.grey,
-                  size: 20,
-                ),
-                value:
-                    _speController.text.isNotEmpty ? _speController.text : null,
-                hint: TextConst(
-                  "Specialization",
-                  size: Sizes.fontSizeFour,
-                  color: AppColor.textfieldTextColor,
-                  fontWeight: FontWeight.w400,
-                ),
-                underline: const SizedBox(),
-                isExpanded: true,
-                items: specializations!.specializations!.map((data) {
-                  return DropdownMenuItem<String>(
-                    value: data.specializationId.toString(),
-                    child: TextConst(
-                      data.specializationName ?? '',
-                      fontWeight: FontWeight.w500,
-                      size: Sizes.fontSizeFive,
-                      color: AppColor.blue,
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newId) {
-                  print("$newId");
-                  setState(() {
-                    _speController.text = newId!;
-                  });
-                },
-              ):SizedBox(),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                      value: _speController.text.isNotEmpty
+                          ? _speController.text
+                          : null,
+                      hint: TextConst(
+                        "Specialization",
+                        size: Sizes.fontSizeFour,
+                        color: AppColor.textfieldTextColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      items: specializations!.specializations!.map((data) {
+                        return DropdownMenuItem<String>(
+                          value: data.specializationId.toString(),
+                          child: TextConst(
+                            data.specializationName ?? '',
+                            fontWeight: FontWeight.w500,
+                            size: Sizes.fontSizeFive,
+                            color: AppColor.blue,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newId) {
+                        print("$newId");
+                        setState(() {
+                          _speController.text = newId!;
+                        });
+                      },
+                    )
+                  : SizedBox(),
             ),
           ),
           Sizes.spaceHeight25,
@@ -403,7 +407,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: Sizes.screenHeight * 0.044,
                     width: Sizes.screenWidth * 0.38,
                     color: AppColor.blue,
-                    onTap: () {})
+                    onTap: () {
+                      showModalBottomSheet(
+                        elevation: 10,
+                        isScrollControlled: true,
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16.0)),
+                        ),
+                        backgroundColor: AppColor.white,
+                        builder: (BuildContext context) {
+                          return showImageBottomSheet();
+                        },
+                      );
+                    })
               ],
             ),
             Sizes.spaceHeight20,
@@ -412,48 +430,147 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(
           height: Sizes.screenHeight * 0.03,
         ),
-        DottedBorder(
-          color: AppColor.lightBlue,
-          strokeWidth: 4,
-          borderType: BorderType.RRect,
-          radius: const Radius.circular(15),
-          dashPattern: const [5, 4],
-          padding: EdgeInsets.zero,
-          child: constContainer(
-            child: Column(
-              children: [
-                TextConst(
-                  AppLocalizations.of(context)!.profile_photo,
-                  size: 16,
-                  // size: Sizes.fontSizeFivePFive,
-                  fontWeight: FontWeight.w400,
+        Consumer<DoctorAuthViewModel>(
+          builder: (context, viewModel, child) {
+            return DottedBorder(
+              color: AppColor.lightBlue,
+              strokeWidth: 4,
+              borderType: BorderType.RRect,
+              radius: const Radius.circular(15),
+              dashPattern: const [5, 4],
+              padding: EdgeInsets.zero,
+              child: constContainer(
+                child: Column(
+                  children: [
+                    TextConst(
+                      AppLocalizations.of(context)!.profile_photo,
+                      size: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    SizedBox(height: Sizes.screenHeight * 0.003),
+                    TextConst(
+                      AppLocalizations.of(context)!.add_a_profile_photo_for,
+                      size: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.lightBlack,
+                    ),
+                    SizedBox(height: Sizes.screenHeight * 0.05),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          elevation: 10,
+                          isScrollControlled: true,
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16.0)),
+                          ),
+                          backgroundColor: AppColor.white,
+                          builder: (BuildContext context) {
+                            return showImageBottomSheet();
+                          },
+                        );
+                      },
+                      child: viewModel.profileImage != null
+                          ? Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  // borderRadius: BorderRadius.circular(15),
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: FileImage(
+                                        File(viewModel.profileImage!.path),
+                                      ),
+                                      fit: BoxFit.cover)),
+                              // child: Image.file(
+                              //   File(viewModel.profileImage!.path),
+                              //   fit: BoxFit.cover,
+                              //   width: double.infinity,
+                              //   height: 200,
+                              // ),
+                            )
+                          : Container(
+                              height: 50,
+                              width: 50,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColor.lightSkyBlue,
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                color: AppColor.blue,
+                                size: 45,
+                              ),
+                            ),
+                    ),
+                    SizedBox(height: Sizes.screenHeight * 0.06),
+                  ],
                 ),
-                SizedBox(height: Sizes.screenHeight * 0.003),
-                TextConst(
-                  AppLocalizations.of(context)!.add_a_profile_photo_for,
-                  size: 12,
-                  // size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                  color: AppColor.lightBlack,
-                ),
-                SizedBox(height: Sizes.screenHeight * 0.05),
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: AppColor.lightSkyBlue),
-                  child: const Icon(
-                    Icons.add,
-                    color: AppColor.blue,
-                    size: 45,
-                  ),
-                ),
-                // Sizes.spaceHeight35,
-                SizedBox(height: Sizes.screenHeight * 0.06),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
+
+        // DottedBorder(
+        //   color: AppColor.lightBlue,
+        //   strokeWidth: 4,
+        //   borderType: BorderType.RRect,
+        //   radius: const Radius.circular(15),
+        //   dashPattern: const [5, 4],
+        //   padding: EdgeInsets.zero,
+        //   child: constContainer(
+        //     child: Column(
+        //       children: [
+        //         TextConst(
+        //           AppLocalizations.of(context)!.profile_photo,
+        //           size: 16,
+        //           // size: Sizes.fontSizeFivePFive,
+        //           fontWeight: FontWeight.w400,
+        //         ),
+        //         SizedBox(height: Sizes.screenHeight * 0.003),
+        //         TextConst(
+        //           AppLocalizations.of(context)!.add_a_profile_photo_for,
+        //           size: 12,
+        //           // size: Sizes.fontSizeFour,
+        //           fontWeight: FontWeight.w400,
+        //           color: AppColor.lightBlack,
+        //         ),
+        //         SizedBox(height: Sizes.screenHeight * 0.05),
+        //         GestureDetector(
+        //           onTap: (){
+        //             showModalBottomSheet(
+        //               elevation: 10,
+        //               isScrollControlled: true,
+        //               context: context,
+        //               shape: const RoundedRectangleBorder(
+        //                 borderRadius:
+        //                 BorderRadius.vertical(top: Radius.circular(16.0)),
+        //               ),
+        //               backgroundColor: AppColor.white,
+        //               builder: (BuildContext context) {
+        //                 return showImageBottomSheet();
+        //               },
+        //             );
+        //           },
+        //           child: Container(
+        //             height: 50,
+        //             width: 50,
+        //             decoration: const BoxDecoration(
+        //                 shape: BoxShape.circle, color: AppColor.lightSkyBlue),
+        //             child: const Icon(
+        //               Icons.add,
+        //               color: AppColor.blue,
+        //               size: 45,
+        //             ),
+        //           ),
+        //         ),
+        //         // Sizes.spaceHeight35,
+        //         SizedBox(height: Sizes.screenHeight * 0.06),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         Sizes.spaceHeight10,
       ]),
     );
@@ -472,6 +589,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
         color: AppColor.textfieldGrayColor,
       ),
       child: child,
+    );
+  }
+
+  final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
+  Widget showImageBottomSheet() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Camera'),
+            onTap: () async {
+              Navigator.pop(context);
+              final img = await _imagePickerHelper.pickImageFromCamera(context,
+                  isProfileSelection: true);
+              if (img != null) {
+                Provider.of<DoctorAuthViewModel>(context, listen: false)
+                    .setProfileImage(img);
+              }
+            },
+            // onTap: () async {
+            //   Navigator.pop(context);
+            //  final img= await _imagePickerHelper.pickImageFromCamera(context, isProfileSelection: true);
+            //  print("xfile: ${img!.path}");
+            //  Provider.of<DoctorAuthViewModel>(context).profileImage;
+            // },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: const Text('Gallery'),
+            onTap: () async {
+              final img = await _imagePickerHelper.pickImageFromGallery(context,
+                  isProfileSelection: true);
+              if (img != null) {
+                Provider.of<DoctorAuthViewModel>(context, listen: false)
+                    .setProfileImage(img);
+                print("cghjvjhvhhj: ${img.name}");
+                Provider.of<DoctorAuthViewModel>(context, listen: false)
+                    .addImageApi('doctor', img.name.toString(),context);
+              }
+            },
+          ),
+          // ListTile(
+          //   leading: const Icon(Icons.photo_library)
+          //   title: const Text('File'),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     _imagePickerHelper.pickDocument(context);
+          //   },
+          // ),
+        ],
+      ),
     );
   }
 }

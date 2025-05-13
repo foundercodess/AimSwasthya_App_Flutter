@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../../../model/doctor/patient_profile_model.dart';
 import '../../../res/popUp_const.dart' show ActionOverlay;
 import '../../../utils/show_server_error.dart';
@@ -107,6 +106,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         patientAppointmentData.appointmentTime.toString());
     final isCancelled =
         patientAppointmentData.status!.toLowerCase() == "cancelled";
+    final isRescheduled =
+        patientAppointmentData.status!.toLowerCase() == "reschduled";
     print("status ${patientAppointmentData.status}");
     return patientAppointmentData != null
         ? Container(
@@ -215,17 +216,92 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                             )
                           : Row(
                               children: [
-                                ButtonConst(
-                                    title: "Reschedule",
-                                    size: Sizes.fontSizeFour,
-                                    fontWeight: FontWeight.w400,
-                                    borderRadius: 8,
-                                    height: Sizes.screenHeight * 0.038,
-                                    width: Sizes.screenWidth * 0.35,
-                                    color: AppColor.blue,
-                                    onTap: () {
-                                      // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
-                                    }),
+                                if (!isRescheduled && !isCancelled)
+                                  ButtonConst(
+                                      title: "Reschedule",
+                                      size: Sizes.fontSizeTwo,
+                                      fontWeight: FontWeight.w400,
+                                      borderRadius: 8,
+                                      height: Sizes.screenHeight * 0.031,
+                                      width: Sizes.screenWidth * 0.23,
+                                      color: AppColor.blue,
+                                      onTap: () {
+                                        if (cancelRescheduleAllowed) {
+                                          showCupertinoDialog(
+                                            context: context,
+                                            builder: (_) => ActionOverlay(
+                                              text: "Reschedule Appointment",
+                                              subtext:
+                                              "Are you sure you want to reschedule\n your appointment?",
+                                              onTap: () {
+                                                Provider.of<CancelAppointmentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                    .cancelAppointmentApi(
+                                                    status: 'reschduled',
+                                                    isDoctorCancel: true,
+                                                    context,
+                                                    patientAppointmentData
+                                                        .appointmentId
+                                                        .toString());
+                                              },
+                                            ),
+                                          );
+                                        } else {
+                                          showInfoOverlay(
+                                              title: "Info",
+                                              errorMessage:
+                                              "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
+                                        }
+                                        // Navigator.pop(context);
+                                      }),
+                                if (isCancelled || isRescheduled) ...[
+                                  Sizes.spaceWidth5,
+                                  Center(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: Sizes.screenHeight * 0.06,
+                                      child: TextConst(
+                                        isCancelled
+                                            ? "Cancelled"
+                                            : "Rescheduled",
+                                        color: Colors.grey,
+                                        size: Sizes.fontSizeFour,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                // ButtonConst(
+                                //     title: "Reschedule",
+                                //     size: Sizes.fontSizeFour,
+                                //     fontWeight: FontWeight.w400,
+                                //     borderRadius: 8,
+                                //     height: Sizes.screenHeight * 0.038,
+                                //     width: Sizes.screenWidth * 0.35,
+                                //     color: AppColor.blue,
+                                //     onTap: () {
+                                //       if (cancelRescheduleAllowed) {
+                                //         showCupertinoDialog(
+                                //           context: context,
+                                //           builder: (_) => ActionOverlay(
+                                //             text: "Reschedule Appointment",
+                                //             subtext:
+                                //             "Are you sure you want to reschedule\n your appointment?",
+                                //             onTap: () {
+                                //
+                                //             },
+                                //           ),
+                                //         );
+                                //       }
+                                //       else {
+                                //         showInfoOverlay(
+                                //             title: "Info",
+                                //             errorMessage:
+                                //             "Oops! You can't cancellation appointments less than 1 hour before the scheduled time.");
+                                //       }
+                                //       // Navigator.pushNamed(context, RoutesName.patientProfileScreen);
+                                //     }),
                                 Sizes.spaceWidth10,
                                 // if (isCancelAllowed && !isCancelled)
                                 //   Center(
@@ -338,8 +414,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         : const SizedBox();
 
   }
-
-
 
   Widget symptomsSec() {
     return Container(
@@ -466,26 +540,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     );
   }
 
-  // bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
-  //   print(bookingDate);
-  //   print(hour24Format);
-  //   // Combine date and time
-  //   String dateTimeString = "$bookingDate $hour24Format";
-  //
-  //   // Parse using the correct format
-  //   // DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
-  //   DateFormat format = DateFormat("yyyy-MM-dd hh:mm a");
-  //   DateTime bookingDateTime = format.parse(dateTimeString);
-  //
-  //   // Get current time
-  //   DateTime now = DateTime.now();
-  //
-  //   // Calculate difference
-  //   Duration difference = bookingDateTime.difference(now);
-  //
-  //   // Return true if more than 1 hour away
-  //   return difference.inMinutes > 60;
-  // }
   bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
     try {
       // Try parsing bookingDate in multiple known formats
