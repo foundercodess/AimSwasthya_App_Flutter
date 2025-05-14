@@ -526,7 +526,6 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   Widget appointmentSection() {
     final docHomeCon =
         Provider.of<DoctorHomeViewModel>(context).doctorHomeModel;
-
     final todayAppointments = docHomeCon!.data!.appointments!.where((item) {
       final apptDate = DateTime.parse(item.appointmentDate.toString());
       final now = DateTime.now();

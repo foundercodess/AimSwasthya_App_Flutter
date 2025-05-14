@@ -124,6 +124,9 @@ class GetImageUrlViewModel extends ChangeNotifier {
       {required String filePath,
       required String preSignedUrl,
       String? fileName}) async {
+    print(filePath);
+    print(preSignedUrl);
+    print(fileName);
     try {
       final file = File(filePath);
       final fileBytes = await file.readAsBytes();

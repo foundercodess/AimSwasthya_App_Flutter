@@ -139,7 +139,6 @@ class CustomTextField extends StatelessWidget {
         fontFamily: 'Poppins-Bold',
         fontWeight: FontWeight.w500,
         fontSize: Sizes.fontSizeFive,
-
         color: AppColor.blue,
       ),
       decoration: InputDecoration(

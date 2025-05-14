@@ -40,7 +40,7 @@ class DoctorHomeViewModel extends ChangeNotifier {
   void setDefaultMonthAndAmount(List<Earnings>? list) {
     if (list != null && list.isNotEmpty) {
       _selectedMonth = list.first.monthYear ?? '';
-      _selectedAmount = list.first.totalAmount?.toString() ?? '0';
+      _selectedAmount = list.first.totalamountformatted?.toString() ?? '0';
       notifyListeners();
     }
   }

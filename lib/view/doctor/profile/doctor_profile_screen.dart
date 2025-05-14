@@ -4,7 +4,6 @@ import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/google_map/view_static_location.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
-import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view/common/add_clinic_overlay.dart';
 import 'package:aim_swasthya/view/common/select_location_screen.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
@@ -27,10 +26,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _speController = TextEditingController();
   final TextEditingController _expController = TextEditingController();
-  final TextEditingController _clinicNameCon = TextEditingController();
-  final TextEditingController _addressCon = TextEditingController();
-  final TextEditingController _contactNumCon = TextEditingController();
-  final TextEditingController _landMarkCon = TextEditingController();
   int currentPage = 0;
   bool isClicked = false;
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
@@ -81,6 +76,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                           "Name",
                       controller: _nameController,
                       cursorColor: AppColor.textGrayColor,
+                      enabled: false,
                     ),
                     Sizes.spaceHeight10,
                     Center(
@@ -202,6 +198,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       keyboardType: TextInputType.number,
                       cursorColor: AppColor.textGrayColor,
                       maxLength: 10,
+                      enabled: false,
                     ),
                     Sizes.spaceHeight10,
                     CustomTextField(
@@ -213,6 +210,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                           "Specialization",
                       controller: _speController,
                       cursorColor: AppColor.textGrayColor,
+                      enabled: false,
                     ),
                     Sizes.spaceHeight10,
                     CustomTextField(
@@ -224,6 +222,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                           "Experience",
                       controller: _expController,
                       cursorColor: AppColor.textGrayColor,
+                      enabled: false,
                     ),
                     Sizes.spaceHeight30,
                     TextConst(
@@ -231,87 +230,70 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       size: Sizes.fontSizeFive * 1.1,
                       fontWeight: FontWeight.w500,
                     ),
-                    Sizes.spaceHeight20,
-                    clinicDetails(),
-                    Sizes.spaceHeight35,
-                    // Sizes.spaceHeight5,
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText:
-                          docProfileCon.doctorProfileModel?.data?.clinics !=
-                                      null &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                      .clinics!.isNotEmpty &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                          .clinics![0].name !=
-                                      null
-                              ? docProfileCon
-                                  .doctorProfileModel!.data!.clinics![0].name!
-                              : "Clinic name",
-                      controller: _clinicNameCon,
-                      cursorColor: AppColor.textGrayColor,
+                    // Sizes.spaceHeight10,
+
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: docProfileCon.doctorProfileModel?.data?.clinics?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final clinic = docProfileCon.doctorProfileModel!.data!.clinics![index];
+
+                        Widget clinicInfoTile(String label) {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColor.textfieldGrayColor.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: TextConst(
+                              label,
+                              size: Sizes.fontSizeFourPFive,
+                              fontWeight: FontWeight.normal,
+                              color: AppColor.textGrayColor,
+
+                            ),
+                          );
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextConst("Clinic ${index + 1}", size:  Sizes.fontSizeFourPFive,fontWeight: FontWeight.w500,),
+                            Sizes.spaceHeight10,
+                            Container(
+                              padding: EdgeInsets.only(
+                                  left: Sizes.screenWidth * 0.03,
+                                  right: Sizes.screenWidth * 0.03,
+                                  top: Sizes.screenHeight * 0.017,
+                                  bottom: Sizes.screenHeight * 0.02),
+                              // height: Sizes.screenHeight * 0.3,
+                              width: Sizes.screenWidth,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: const Color(0xffececec),
+                              ),
+                              height: Sizes.screenHeight * 0.2,
+                              // width: Sizes.screenWidth,
+                              child: GetLocationOnMap(
+                                latitude: double.parse(clinic.latitude!),
+                                longitude: double.parse(clinic.longitude!),
+                              ),
+                            ),
+                            Sizes.spaceHeight35,
+                            clinicInfoTile(clinic.name ?? "Clinic name"),
+                            clinicInfoTile(clinic.address ?? "Address"),
+                            clinicInfoTile(clinic.phoneNumber ?? "Contact no"),
+                            clinicInfoTile(clinic.landmark ?? "Landmark (optional)"),
+
+                            Sizes.spaceHeight35,
+                          ],
+                        );
+                      },
                     ),
+
                     Sizes.spaceHeight10,
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText:
-                          docProfileCon.doctorProfileModel!.data!.clinics !=
-                                      null &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                      .clinics!.isNotEmpty &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                          .clinics![0].address !=
-                                      null
-                              ? docProfileCon.doctorProfileModel!.data!
-                                  .clinics![0].address!
-                              : "Address",
-                      controller: _addressCon,
-                      cursorColor: AppColor.textGrayColor,
-                    ),
-                    Sizes.spaceHeight10,
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText:
-                          docProfileCon.doctorProfileModel!.data!.clinics !=
-                                      null &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                      .clinics!.isNotEmpty &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                          .clinics![0].phoneNumber !=
-                                      null
-                              ? docProfileCon.doctorProfileModel!.data!
-                                  .clinics![0].phoneNumber!
-                              : "Contact no",
-                      keyboardType: TextInputType.number,
-                      controller: _contactNumCon,
-                      cursorColor: AppColor.textGrayColor,
-                    ),
-                    Sizes.spaceHeight10,
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText:
-                          docProfileCon.doctorProfileModel!.data!.clinics !=
-                                      null &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                      .clinics!.isNotEmpty &&
-                                  docProfileCon.doctorProfileModel!.data!
-                                          .clinics![0].landmark !=
-                                      null
-                              ? docProfileCon.doctorProfileModel!.data!
-                                  .clinics![0].landmark!
-                              : "Landmark (optional)",
-                      controller: _landMarkCon,
-                      cursorColor: AppColor.textGrayColor,
-                    ),
-                    Sizes.spaceHeight20,
                     Center(
                       child: TextButton(
                           onPressed: () {
@@ -457,28 +439,20 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
             child: Column(
               children: [
                 Sizes.spaceHeight3,
-                addClinicData.selectedLatitude != null &&
-                        addClinicData.selectedLongitude != null
-                    ? Container(
-                        height: Sizes.screenHeight * 0.2,
-                        width: Sizes.screenWidth,
-                        child: GetLocationOnMap(
-                          latitude: addClinicData.selectedLatitude!,
-                          longitude: addClinicData.selectedLongitude!,
-                        ),
-                      )
-                    : const Image(image: AssetImage(Assets.imagesMapImg)),
-                Sizes.spaceHeight25,
-                ButtonConst(
-                    title: "Set location",
-                    width: Sizes.screenWidth * 0.3,
-                    height: Sizes.screenHeight * 0.045,
-                    color: AppColor.blue,
-                    onTap: () {
-                      _selectLocation();
-                      // Navigator.pushNamed(
-                      //     context, RoutesName.fullScreenMapPage);
-                    })
+
+
+
+                // Sizes.spaceHeight25,
+                // ButtonConst(
+                //     title: "Set location",
+                //     width: Sizes.screenWidth * 0.3,
+                //     height: Sizes.screenHeight * 0.045,
+                //     color: AppColor.blue,
+                //     onTap: () {
+                //       _selectLocation();
+                //       // Navigator.pushNamed(
+                //       //     context, RoutesName.fullScreenMapPage);
+                //     })
               ],
             ),
           ),

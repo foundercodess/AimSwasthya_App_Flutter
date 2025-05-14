@@ -14,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../../view/common/intro/all_set_doc_screen.dart';
-import '../../view/doctor/auth/register_screen.dart';
 import '../user/get_image_url_view_model.dart';
 import 'doc_reg_view_model.dart';
 
@@ -59,8 +57,9 @@ class DoctorAuthViewModel extends ChangeNotifier {
 
   XFile? _identityImage;
   XFile? get identityImage => _identityImage;
-  set identityImage(XFile? image) {
+  setIdentityImage(XFile? image) {
     _identityImage = image;
+    notifyListeners();
   }
 
   setLoading(bool value) {
@@ -402,7 +401,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
   }
 
   Future<void> addImageApi(
-      dynamic entityType, dynamic imageName, BuildContext context) async {
+      dynamic entityType, dynamic imageName,dynamic imagePath, BuildContext context) async {
     setLoading(true);
     final userId = await UserViewModel().getUser();
     final fileType = getImageType(imageName);
@@ -418,8 +417,9 @@ class DoctorAuthViewModel extends ChangeNotifier {
       if (value['status'] == true) {
         Provider.of<GetImageUrlViewModel>(context, listen: false).uploadFile(
             context,
-            fileName: "profile.$fileType",
-            filePath: value['image_url']);
+            filePath: imagePath,
+            // filePath: value['image_url']);
+            fileName: value['image_url']);
       }
     }).onError((error, stackTrace) {
       LoaderOverlay().hide();

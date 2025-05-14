@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:aim_swasthya/res/common_material.dart';
+import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/view/common/intro/all_set_doc_screen.dart';
 import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
@@ -9,6 +9,7 @@ import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart'
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../user/drawer/med_reports/image_picker.dart';
@@ -187,7 +188,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: "Name",
             controller: _nameController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.name,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+            ],
           ),
           Sizes.spaceHeight25,
           Center(
@@ -379,12 +383,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
               //     smcViewModel.docUpsertSmcNumberApi(value);
               //   }
               // },
-              suffixIcon: Icon(
-                Icons.check_circle,
-                size: Sizes.screenWidth * 0.1,
-                // color: Color(0xff4ECB71),
-                color: isVerified ? const Color(0xff4ECB71) : Colors.grey,
+              suffixIcon: Container(
+                decoration: BoxDecoration(
+                    color: AppColor.textfieldGrayColor,
+                  borderRadius: BorderRadius.circular(12)
+                ),
+                margin: EdgeInsets.all(10),
+                height: Sizes.screenHeight * 0.02,
+                    width: Sizes.screenWidth * 0.22,
+                 child: Center(child: TextConst("verify",size: Sizes.fontSizeFour,fontWeight: FontWeight.w400,)),
               ),
+              // ButtonConst(
+              //   // padding: EdgeInsets.all(10),
+              //   //   fontSize: 12,
+              //     borderRadius: 12,
+              //     height: Sizes.screenHeight * 0.02,
+              //     width: Sizes.screenWidth * 0.22,
+              //     color: AppColor.textfieldGrayColor,
+              //     title: "verify", onTap: () {}),
+              // Icon(
+              //   Icons.check_circle,
+              //   size: Sizes.screenWidth * 0.1,
+              //   // color: Color(0xff4ECB71),
+              //   color: isVerified ? const Color(0xff4ECB71) : Colors.grey,
+              // ),
               controller: _smcNumController,
               cursorColor: AppColor.textGrayColor,
             ),
@@ -418,7 +440,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         backgroundColor: AppColor.white,
                         builder: (BuildContext context) {
-                          return showImageBottomSheet();
+                          return showImageBottomSheet(false);
                         },
                       );
                     })
@@ -467,7 +489,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           backgroundColor: AppColor.white,
                           builder: (BuildContext context) {
-                            return showImageBottomSheet();
+                            return showImageBottomSheet(true);
                           },
                         );
                       },
@@ -593,7 +615,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
-  Widget showImageBottomSheet() {
+  Widget showImageBottomSheet(bool isProfile) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -607,8 +629,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               final img = await _imagePickerHelper.pickImageFromCamera(context,
                   isProfileSelection: true);
               if (img != null) {
-                Provider.of<DoctorAuthViewModel>(context, listen: false)
-                    .setProfileImage(img);
+                if (isProfile) {
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .setProfileImage(img);
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .addImageApi('doctor', img.name.toString(),
+                          img.path.toString(), context);
+                } else {
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .setIdentityImage(img);
+                }
               }
             },
             // onTap: () async {
@@ -625,11 +655,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               final img = await _imagePickerHelper.pickImageFromGallery(context,
                   isProfileSelection: true);
               if (img != null) {
-                Provider.of<DoctorAuthViewModel>(context, listen: false)
-                    .setProfileImage(img);
+                if (isProfile) {
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .setProfileImage(img);
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .addImageApi('doctor', img.name.toString(),
+                          img.path.toString(), context);
+                } else {
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .setIdentityImage(img);
+                }
+
                 print("cghjvjhvhhj: ${img.name}");
-                Provider.of<DoctorAuthViewModel>(context, listen: false)
-                    .addImageApi('doctor', img.name.toString(),context);
               }
             },
           ),

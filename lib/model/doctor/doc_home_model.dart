@@ -199,26 +199,26 @@ class Appointments {
 
 class Earnings {
   String? monthYear;
-  String? totalAmount;
+  // String? totalAmount;
   String? totalamountformatted;
 
   
 
   Earnings({this.monthYear,
-    this.totalAmount,
+    // this.totalAmount,
     this.totalamountformatted
   });
 
   Earnings.fromJson(Map<String, dynamic> json) {
     monthYear = json['month_year'];
-    totalAmount = json['total_amount'];
+    // totalAmount = json['total_amount'];
     totalamountformatted = json['totalamountformatted'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['month_year'] = monthYear;
-    data['total_amount'] = totalAmount;
+    // data['total_amount'] = totalAmount;
     data['totalamountformatted'] = totalamountformatted;
     return data;
   }

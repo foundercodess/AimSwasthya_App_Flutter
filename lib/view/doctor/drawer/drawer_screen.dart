@@ -118,7 +118,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                 color: AppColor.white,
               ),
               onTap: () {
-                Navigator.pushNamed(context, RoutesName.clinicLocationScreen);
+                Navigator.pushNamed(context, RoutesName.scheduleScreen);
 
                 // Navigator.pushNamed(context, RoutesName.scheduleScreen);
                 // Navigator.pop(context);
