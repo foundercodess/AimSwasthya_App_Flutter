@@ -174,12 +174,21 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                       Sizes.spaceWidth10,
                       TextConst(
-                        "Welcome ${docHomeCon.data!.doctors![0].doctorName ?? ""}",
-                        // AppLocalizations.of(context)!.welcome_Vikram,
+                        "Welcome ${docHomeCon.data!.doctors![0].doctorName ?? ""}!",
                         size: Sizes.fontSizeFive,
                         fontWeight: FontWeight.w500,
                         color: AppColor.white,
-                      )
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, RoutesName.notificationScreen);
+                          },
+                          child: Image(
+                            image: const AssetImage(Assets.iconsWellIcon),
+                            height: Sizes.screenHeight * 0.025,
+                          ))
                     ],
                   ),
                 ),
@@ -822,8 +831,9 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                   (month) => PopupMenuItem<Map<String, String>>(
                                     value: {
                                       'monthYear': month.monthYear ?? '',
-                                      'totalAmount':
-                                          month.totalamountformatted?.toString() ?? '0',
+                                      'totalAmount': month.totalamountformatted
+                                              ?.toString() ??
+                                          '0',
                                     },
                                     child: Text(month.monthYear ?? ""),
                                   ),
@@ -879,7 +889,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                   height: Sizes.screenHeight * 0.046,
                   color: AppColor.lightBlue,
                   onTap: () {
-                    Provider.of<RevenueDoctorViewModel>(context, listen: false).revenueDoctorApi();
+                    Provider.of<RevenueDoctorViewModel>(context, listen: false)
+                        .revenueDoctorApi();
                     Navigator.pushNamed(
                         context, RoutesName.scheduleHoursScreen);
                   }))

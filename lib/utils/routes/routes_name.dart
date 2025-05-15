@@ -39,6 +39,8 @@ class RoutesName {
   static const aboutUsScreen = "/aboutUsScreen";
   static const clinicLocationScreen = "/clinicLocationScreen";
   static const fullScreenMapPage = "/fullScreenMapPage";
+  static const docMedicalReportsScreen = "/docMedicalReportsScreen";
+  static const notificationScreen = "/notificationScreen";
 
 }
 

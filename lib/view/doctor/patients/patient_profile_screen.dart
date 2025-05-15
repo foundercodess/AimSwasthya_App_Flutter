@@ -5,7 +5,9 @@ import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
+import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
+import 'package:aim_swasthya/view_model/doctor/doc_health_report_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -191,7 +193,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                       ),
                       Sizes.spaceHeight5,
                       TextConst(
-                        // "Weight : ${patientProfileData.patientProfileModel!.patientProfile![0].weight}",
                         "Weight : ${patientAppointmentData.weight}",
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,
@@ -199,7 +200,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                       Sizes.spaceHeight5,
                       TextConst(
                         "Height : ${patientAppointmentData.height}",
-                        // "Height : ${patientProfileData.patientProfileModel!.patientProfile![0].height}",
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,
                       ),
@@ -488,8 +488,10 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
           )
         : const Center(child: NoDataMessages());
   }
+  // final patientProfileData = Provider.of<PatientProfileViewModel>(context);
 
   Widget reportData(MedicalRecords docData, bool isDate) {
+    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: Sizes.screenWidth * 0.02,
@@ -520,12 +522,18 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                         color: AppColor.blue,
                         fontWeight: FontWeight.w400,
                       )
-                    : TextConst(
-                        "Tap to view",
-                        size: Sizes.fontSizeFour,
-                        color: AppColor.textGrayColor,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    : GestureDetector(
+                  onTap: (){
+                    Provider.of<DocHealthReportViewModel>(context,listen: false).medicalHealthReportApi(patientProfileData.patientProfileModel!.patientProfile![0].patientId.toString());
+                    Navigator.pushNamed(context, RoutesName.docMedicalReportsScreen);
+                  },
+                      child: TextConst(
+                          "Tap to view",
+                          size: Sizes.fontSizeFour,
+                          color: AppColor.textGrayColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                    ),
                 // TextConst(
                 //   DateFormat('dd/MM/yyyy').format(DateTime.parse(docData.uploadedAt.toString())),
                 //   size: isDate ? Sizes.fontSizeTwo : Sizes.fontSizeFour,

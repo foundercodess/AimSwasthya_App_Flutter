@@ -58,10 +58,7 @@ class DoctorApiUrl {
   static const String getAllSpecializationsDoctor =
       "${baseUrl}getAllSpecializationsDoctor";
   static const String upsertSmcNumberDoctor = "${baseUrl}upsertSmcNumberDoctor";
-
-
 }
-
 class CommonApiUrl{
   static const String devUrl = 'http://3.7.71.4:3000/';
   static const String prodUrl = '3.7.71.4:3000/';

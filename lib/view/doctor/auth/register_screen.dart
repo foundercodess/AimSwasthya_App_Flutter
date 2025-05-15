@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:aim_swasthya/res/common_material.dart';
-import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/view/common/intro/all_set_doc_screen.dart';
 import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
@@ -280,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       underline: const SizedBox(),
                       isExpanded: true,
-                      items: specializations!.specializations!.map((data) {
+                      items: specializations.specializations!.map((data) {
                         return DropdownMenuItem<String>(
                           value: data.specializationId.toString(),
                           child: TextConst(
