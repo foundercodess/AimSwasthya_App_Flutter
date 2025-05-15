@@ -1,3 +1,4 @@
+// repo/doctor/addClinicDoctorRopo.dart
 import 'package:aim_swasthya/helper/network/network_api_services.dart';
 import 'package:aim_swasthya/res/api_urls.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +9,7 @@ class AddClinicDoctorRepo {
   Future<dynamic> addClinicDocApi(dynamic data) async {
     try {
       dynamic response =
-      await _apiServices.getPostApiResponse(DoctorApiUrl.addClinicDoctor, data);
+      await _apiServices.getPostApiResponse(DoctorApiUrl.upsertClinicDoctor, data);
       return response;
 
     } catch (e) {

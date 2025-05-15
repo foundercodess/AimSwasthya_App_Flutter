@@ -248,15 +248,14 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             color: AppColor.white,
                           ),
                           TextConst(
-                            docHomeCon.data!.doctors![0].qualification ??
-                                "MBBS, MD (Cardiology)",
+                            '${docHomeCon.data!.doctors![0].qualification ?? ''} '
+                            '(${docHomeCon.data!.doctors![0].specializationName ?? "MBBS, MD (Cardiology)"})',
                             size: Sizes.fontSizeFivePFive,
                             fontWeight: FontWeight.w400,
                             color: AppColor.white,
                           ),
                           Sizes.spaceHeight10,
                           Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Image(
                                 image: const AssetImage(
@@ -267,12 +266,16 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                               ),
                               Sizes.spaceWidth5,
                               Sizes.spaceWidth3,
-                              docHomeCon.data!.doctors![0].topRated == "Y"
+                              docHomeCon.data!.doctors![0].topRated
+                                          .toUpperCase() ==
+                                      "Y"
                                   ? proContainer(
                                       AppColor.lightGreen, 'Top choice')
                                   : const SizedBox(),
                               Sizes.spaceWidth10,
-                              docHomeCon.data!.doctors![0].mostBooked == "Y"
+                              docHomeCon.data!.doctors![0].mostBooked
+                                          .toUpperCase() ==
+                                      "Y"
                                   ? proContainer(
                                       AppColor.conLightBlue, 'Most booked')
                                   : const SizedBox(),

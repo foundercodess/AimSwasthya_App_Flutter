@@ -1,3 +1,4 @@
+// main.dart
 import 'package:aim_swasthya/res/size_const.dart';
 import 'package:aim_swasthya/view/animation_con.dart';
 import 'package:aim_swasthya/view/user/symptoms/dowenloade_image.dart';
@@ -13,6 +14,7 @@ import 'package:aim_swasthya/view_model/doctor/doc_update_appointment_view_model
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart'
     show DoctorProfileViewModel;
 import 'package:aim_swasthya/view_model/doctor/language_change_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/notification_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/schedule_doctor_view_model.dart';
@@ -116,6 +118,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => MapViewModel()),
         ChangeNotifierProvider(create: (ctx) => AllSpecializationViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpsertSmcNumberViewModel()),
+        ChangeNotifierProvider(create: (ctx) => NotificationViewModel()),
       ],
       child: Consumer<ChangeLanguageViewModel>(
           builder: (context, provider, child) {

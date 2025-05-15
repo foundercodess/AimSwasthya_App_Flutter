@@ -1,6 +1,7 @@
 // view_model/doctor/add_clinic_doctor_view_model.dart
 import 'dart:convert';
 import 'package:aim_swasthya/repo/doctor/addClinicDoctorRopo.dart';
+import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/user/services/map_con.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:provider/provider.dart';
 
 class AddClinicDoctorViewModel extends ChangeNotifier {
   final _mapCon = MapController();
@@ -47,6 +49,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   String? _editClinicCity;
   double? _editClinicLatitude;
   double? _editClinicLongitude;
+  String? _editClinicId;
 
   // Getters for edit data
   String? get editClinicName => _editClinicName;
@@ -54,6 +57,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   String? get editClinicPhone => _editClinicPhone;
   String? get editClinicLandmark => _editClinicLandmark;
   String? get editClinicCity => _editClinicCity;
+  String? get editClinicId => _editClinicId;
   double? get editClinicLatitude => _editClinicLatitude;
   double? get editClinicLongitude => _editClinicLongitude;
 
@@ -66,6 +70,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     String? city,
     double? latitude,
     double? longitude,
+    String? clinicId
   }) {
     _editClinicName = name;
     _editClinicAddress = address;
@@ -74,6 +79,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     _editClinicCity = city;
     _editClinicLatitude = latitude;
     _editClinicLongitude = longitude;
+    _editClinicId= clinicId;
     notifyListeners();
   }
 
@@ -227,12 +233,13 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addClinicDoctorApi(dynamic clinicName, dynamic address,dynamic city,
+  Future<void> addClinicDoctorApi(dynamic clinicId,dynamic clinicName, dynamic address,dynamic city,
       dynamic phone, dynamic landMark, context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
       "doctor_id": userId.toString(),
+      "clinic_id":clinicId,
       "name": clinicName,
       "address": address,
       "fee": "500",
@@ -247,6 +254,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       if (value ["status"] == true) {
         print("mdmkd${value}");
         setClinicData(true);
+        Provider.of<DoctorProfileViewModel>(context, listen:false).doctorProfileApi(context, isLoad: false);
       }
       setClinicData(true);
       setLoading(false);

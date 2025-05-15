@@ -339,6 +339,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                             width: Sizes.screenWidth,
                             onTap: () {
                               addClinicData.addClinicDoctorApi(
+                                addClinicData.editClinicId??"",
                                   nameController.text,
                                   addressController.text,
                                   cityController.text,

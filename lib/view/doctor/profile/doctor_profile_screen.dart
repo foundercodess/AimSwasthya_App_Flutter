@@ -7,7 +7,9 @@ import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/view/common/add_clinic_overlay.dart';
 import 'package:aim_swasthya/view/common/select_location_screen.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
+import 'package:aim_swasthya/view/user/drawer/med_reports/image_picker.dart';
 import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
@@ -35,6 +37,10 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AllSpecializationViewModel>(context, listen: false)
+          .docAllSpecializationApi();
+    });
   }
 
   void _toggleEditMode() {
@@ -44,16 +50,20 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   }
 
   void _saveProfile() async {
-    final docProfileCon = Provider.of<DoctorProfileViewModel>(context, listen: false);
+    final docProfileCon =
+        Provider.of<DoctorProfileViewModel>(context, listen: false);
     final success = await docProfileCon.updateDoctorProfileApi(
       context,
       name: _nameController.text,
       gender: _genderController.text,
       phoneNumber: _numberController.text,
-      specializationId: docProfileCon.doctorProfileModel?.data?.doctors?[0].specializationId?.toString() ?? '',
+      specializationId: docProfileCon
+              .doctorProfileModel?.data?.doctors?[0].specializationId
+              ?.toString() ??
+          '',
       practiceStartYear: _expController.text,
     );
-    
+
     if (success) {
       setState(() {
         isEditMode = false;
@@ -218,7 +228,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                               ?.doctors?[0]
                                               .specializationName ??
                                           "Specialization",
-                                      size: Sizes.fontSizeFour,
+                                      size: Sizes.fontSizeFive,
                                       color: AppColor.textfieldTextColor,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -260,7 +270,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                           "Experience",
                       controller: _expController,
                       cursorColor: AppColor.textGrayColor,
-                      enabled: false,
+                      enabled: isEditMode,
+                      keyboardType: TextInputType.number,
+                      maxLength: 4,
                     ),
                     Sizes.spaceHeight30,
                     TextConst(
@@ -311,43 +323,44 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                   size: Sizes.fontSizeFourPFive,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                if(isEditMode)
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: AppColor.blue),
-                                  onPressed: () {
-                                    final addClinicVM =
-                                        Provider.of<AddClinicDoctorViewModel>(
-                                            context,
-                                            listen: false);
-                                    addClinicVM.setEditMode(true,
-                                        clinicIndex: index);
-                                    addClinicVM.setEditClinicData(
-                                      name: clinic.name,
-                                      address: clinic.address,
-                                      phone: clinic.phoneNumber,
-                                      landmark: clinic.landmark,
-                                      city: clinic.city,
-                                      latitude: double.tryParse(
-                                          clinic.latitude ?? '0'),
-                                      longitude: double.tryParse(
-                                          clinic.longitude ?? '0'),
-                                    );
-                                    showModalBottomSheet(
-                                      elevation: 10,
-                                      isScrollControlled: true,
-                                      context: context,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(16.0)),
-                                      ),
-                                      backgroundColor: AppColor.white,
-                                      builder: (BuildContext context) {
-                                        return const AddClinicOverlay();
-                                      },
-                                    );
-                                  },
-                                ),
+                                if (isEditMode)
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color: AppColor.blue),
+                                    onPressed: () {
+                                      final addClinicVM =
+                                          Provider.of<AddClinicDoctorViewModel>(
+                                              context,
+                                              listen: false);
+                                      addClinicVM.setEditMode(true,
+                                          clinicIndex: index);
+                                      addClinicVM.setEditClinicData(
+                                        name: clinic.name,
+                                        address: clinic.address,
+                                        phone: clinic.phoneNumber,
+                                        landmark: clinic.landmark,
+                                        city: clinic.city,
+                                        clinicId: clinic.clinicId.toString(),
+                                        latitude: double.tryParse(
+                                            clinic.latitude ?? '0'),
+                                        longitude: double.tryParse(
+                                            clinic.longitude ?? '0'),
+                                      );
+                                      showModalBottomSheet(
+                                        elevation: 10,
+                                        isScrollControlled: true,
+                                        context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(16.0)),
+                                        ),
+                                        backgroundColor: AppColor.white,
+                                        builder: (BuildContext context) {
+                                          return const AddClinicOverlay();
+                                        },
+                                      );
+                                    },
+                                  ),
                               ],
                             ),
                             Sizes.spaceHeight10,
@@ -440,6 +453,70 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
             ),
           );
   }
+
+  
+  final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
+
+Widget showImageBottomSheet(bool isProfile) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Camera'),
+            onTap: () async {
+              Navigator.pop(context);
+              final img = await _imagePickerHelper.pickImageFromCamera(context,
+                  isProfileSelection: true);
+              if (img != null) {
+                if (isProfile) {
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .setProfileImage(img);
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .addImageApi('doctor', img.name.toString(),
+                          img.path.toString(), "profile_photo",context);
+                } 
+              }
+            },
+            // onTap: () async {
+            //   Navigator.pop(context);
+            //  final img= await _imagePickerHelper.pickImageFromCamera(context, isProfileSelection: true);
+            //  print("xfile: ${img!.path}");
+            //  Provider.of<DoctorAuthViewModel>(context).profileImage;
+            // },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: const Text('Gallery'),
+            onTap: () async {
+              final img = await _imagePickerHelper.pickImageFromGallery(context,
+                  isProfileSelection: true);
+              if (img != null) {
+                if (isProfile) {
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .setProfileImage(img);
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .addImageApi('doctor', img.name.toString(),
+                          img.path.toString(), "profile_photo",context);
+                } 
+              }
+            },
+          ),
+          // ListTile(
+          //   leading: const Icon(Icons.photo_library)
+          //   title: const Text('File'),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     _imagePickerHelper.pickDocument(context);
+          //   },
+          // ),
+        ],
+      ),
+    );
+  }
+
 
   Future<void> _selectLocation() async {
     await Navigator.push(

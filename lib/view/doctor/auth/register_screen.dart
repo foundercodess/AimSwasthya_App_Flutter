@@ -1,3 +1,4 @@
+// view/doctor/auth/register_screen.dart
 import 'dart:io';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/view/common/intro/all_set_doc_screen.dart';
@@ -692,11 +693,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(), context);
+                          img.path.toString(),'profile_photo' ,context);
                 } else {
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .setIdentityImage(img);
+                       Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .addImageApi('doctor', img.name.toString(),
+                          img.path.toString(),'identity_document' ,context);
                 }
+
               }
             },
             // onTap: () async {

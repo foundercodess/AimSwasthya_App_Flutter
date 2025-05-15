@@ -1,3 +1,4 @@
+// view_model/doctor/doc_auth_view_model.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:aim_swasthya/repo/doctor/doc_auth_repo.dart';
@@ -401,14 +402,15 @@ class DoctorAuthViewModel extends ChangeNotifier {
   }
 
   Future<void> addImageApi(
-      dynamic entityType, dynamic imageName,dynamic imagePath, BuildContext context) async {
+      dynamic entityType, dynamic imageName,dynamic imagePath, dynamic fileType,BuildContext context) async {
     setLoading(true);
     final userId = await UserViewModel().getUser();
     final fileType = getImageType(imageName);
     Map data = {
       "entity_id": userId,
       "entity_type": entityType,
-      "image_name": "profile.$fileType"
+      "image_name": "${fileType=='profile_photo'?'profile':'id_prood'}.$fileType",
+      "file_type":fileType
     };
     print("xfghjk" + jsonEncode(data));
     _doctorAuthRepo.addImageUrlApi(data).then((value) {
