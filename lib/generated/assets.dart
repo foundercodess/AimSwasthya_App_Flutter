@@ -57,6 +57,7 @@ class Assets {
   static const String iconsTemperature = 'assets/icons/temperature.png';
   static const String iconsTickIcon = 'assets/icons/tickIcon.png';
   static const String iconsUserBottomImg = 'assets/icons/user_bottom_img.png';
+  static const String iconsWellIcon = 'assets/icons/wellIcon.png';
   static const String imagesAppointment = 'assets/images/appointment.png';
   static const String imagesBackPain = 'assets/images/backPain.png';
   static const String imagesBoxImage = 'assets/images/boxImage.png';

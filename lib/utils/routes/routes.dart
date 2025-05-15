@@ -3,6 +3,7 @@ import 'package:aim_swasthya/view/common/auth/otp_screen.dart';
 import 'package:aim_swasthya/view/common/intro/about_us_screen.dart';
 import 'package:aim_swasthya/view/doctor/bottom_nav_bar_screen.dart';
 import 'package:aim_swasthya/view/doctor/dashboard_page.dart';
+import 'package:aim_swasthya/view/doctor/notification_screen.dart';
 import 'package:aim_swasthya/view/doctor/patients/my_appointments.dart';
 import 'package:aim_swasthya/view/doctor/patients/show_all_patient.dart';
 import 'package:aim_swasthya/view/doctor/payout/payout_screen.dart';
@@ -38,6 +39,7 @@ import 'package:aim_swasthya/view/user/symptoms/all_symptoms_screen.dart';
 import 'package:aim_swasthya/view/user/user_home_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../view/doctor/medical_reports/medical_reports_screen.dart';
 import '../../view/doctor/schedule/clinic_location_screen.dart';
 import '../../view/user/drawer/med_reports/uploaded_on.dart';
 
@@ -64,7 +66,7 @@ class Routers {
       case RoutesName.userRegisterScreen:
         return (context) => const UserRegisterScreen();
       case RoutesName.userHomeScreen:
-        return (context) => UserHomeScreen(
+        return (context) => const UserHomeScreen(
               scaffoldKey: null,
             );
       case RoutesName.allSymptomsScreen:
@@ -129,6 +131,10 @@ class Routers {
         return (context) => const ClinicLocationScreen();
         case RoutesName.fullScreenMapPage:
         return (context) =>  FullScreenMapPage();
+        case RoutesName.docMedicalReportsScreen:
+        return (context) =>  const DocMedicalReportsScreen();
+        case RoutesName.notificationScreen:
+        return (context) =>  const NotificationScreen();
 
       default:
         return (context) => const Scaffold(

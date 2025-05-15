@@ -174,12 +174,21 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                       ),
                       Sizes.spaceWidth10,
                       TextConst(
-                        "Welcome ${docHomeCon.data!.doctors![0].doctorName ?? ""}",
-                        // AppLocalizations.of(context)!.welcome_Vikram,
+                        "Welcome ${docHomeCon.data!.doctors![0].doctorName ?? ""}!",
                         size: Sizes.fontSizeFive,
                         fontWeight: FontWeight.w500,
                         color: AppColor.white,
-                      )
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, RoutesName.notificationScreen);
+                          },
+                          child: Image(
+                            image: const AssetImage(Assets.iconsWellIcon),
+                            height: Sizes.screenHeight * 0.025,
+                          ))
                     ],
                   ),
                 ),
