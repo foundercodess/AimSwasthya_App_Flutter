@@ -20,6 +20,75 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Add edit-related properties
+  bool _isEditMode = false;
+  bool get isEditMode => _isEditMode;
+  
+  int? _editingClinicIndex;
+  int? get editingClinicIndex => _editingClinicIndex;
+
+  void setEditMode(bool value, {int? clinicIndex}) {
+    _isEditMode = value;
+    _editingClinicIndex = clinicIndex;
+    notifyListeners();
+  }
+
+  void clearEditMode() {
+    _isEditMode = false;
+    _editingClinicIndex = null;
+    notifyListeners();
+  }
+
+  // Add clinic data properties for editing
+  String? _editClinicName;
+  String? _editClinicAddress;
+  String? _editClinicPhone;
+  String? _editClinicLandmark;
+  String? _editClinicCity;
+  double? _editClinicLatitude;
+  double? _editClinicLongitude;
+
+  // Getters for edit data
+  String? get editClinicName => _editClinicName;
+  String? get editClinicAddress => _editClinicAddress;
+  String? get editClinicPhone => _editClinicPhone;
+  String? get editClinicLandmark => _editClinicLandmark;
+  String? get editClinicCity => _editClinicCity;
+  double? get editClinicLatitude => _editClinicLatitude;
+  double? get editClinicLongitude => _editClinicLongitude;
+
+  // Setter for edit data
+  void setEditClinicData({
+    String? name,
+    String? address,
+    String? phone,
+    String? landmark,
+    String? city,
+    double? latitude,
+    double? longitude,
+  }) {
+    _editClinicName = name;
+    _editClinicAddress = address;
+    _editClinicPhone = phone;
+    _editClinicLandmark = landmark;
+    _editClinicCity = city;
+    _editClinicLatitude = latitude;
+    _editClinicLongitude = longitude;
+    notifyListeners();
+  }
+
+  // Clear edit data
+  void clearEditClinicData() {
+    _editClinicName = null;
+    _editClinicAddress = null;
+    _editClinicPhone = null;
+    _editClinicLandmark = null;
+    _editClinicCity = null;
+    _editClinicLatitude = null;
+    _editClinicLongitude = null;
+    notifyListeners();
+  }
+
   bool _isClicked = false;
   bool get isClicked => _isClicked;
   setClinicData(bool value) {
@@ -73,19 +142,67 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
 
   Future<void> getAddressFromLatLng(LatLng position) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
+      // List of coordinate offsets to try (in degrees)
+      final List<Map<String, double>> offsets = [
+        {'lat': 0.0, 'lng': 0.0},      // Original coordinates
+        {'lat': 0.0001, 'lng': 0.0},   // Slight north
+        {'lat': -0.0001, 'lng': 0.0},  // Slight south
+        {'lat': 0.0, 'lng': 0.0001},   // Slight east
+        {'lat': 0.0, 'lng': -0.0001},  // Slight west
+      ];
 
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks[0];
-        selectedAddress = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-        selectedCity = place.locality ?? place.subAdministrativeArea ?? place.administrativeArea ?? '';
-        notifyListeners();
+      List<Placemark>? placemarks;
+      
+      // Try each offset until we get a result
+      for (var offset in offsets) {
+        try {
+          placemarks = await placemarkFromCoordinates(
+            position.latitude + offset['lat']!,
+            position.longitude + offset['lng']!,
+          );
+          
+          if (placemarks.isNotEmpty) {
+            break;
+          }
+        } catch (e) {
+          print('Attempt failed with offset ${offset}: $e');
+          continue;
+        }
       }
+
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        
+        // Build address components
+        List<String> addressParts = [];
+        if (place.street?.isNotEmpty ?? false) addressParts.add(place.street!);
+        if (place.subLocality?.isNotEmpty ?? false) addressParts.add(place.subLocality!);
+        if (place.locality?.isNotEmpty ?? false) addressParts.add(place.locality!);
+        if (place.postalCode?.isNotEmpty ?? false) addressParts.add(place.postalCode!);
+        if (place.country?.isNotEmpty ?? false) addressParts.add(place.country!);
+        
+        selectedAddress = addressParts.isNotEmpty ? addressParts.join(', ') : 
+            'Location selected (${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)})';
+        
+        // Try to get city name with multiple fallbacks
+        selectedCity = place.locality ?? 
+                      place.subAdministrativeArea ?? 
+                      place.administrativeArea ?? 
+                      place.subLocality ?? 
+                      place.name ?? 
+                      'Unknown City';
+      } else {
+        // If all attempts failed, set default values
+        selectedAddress = 'Location selected (${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)})';
+        selectedCity = 'Unknown City';
+      }
+      notifyListeners();
     } catch (e) {
       print('Error getting address: $e');
+      // Set default values when all attempts fail
+      selectedAddress = 'Location selected (${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)})';
+      selectedCity = 'Unknown City';
+      notifyListeners();
     }
   }
 
@@ -110,22 +227,22 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addClinicDoctorApi(dynamic clinicName, dynamic address,
+  Future<void> addClinicDoctorApi(dynamic clinicName, dynamic address,dynamic city,
       dynamic phone, dynamic landMark, context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
-      "doctor_id": 6,
+      "doctor_id": userId.toString(),
       "name": clinicName,
       "address": address,
       "fee": "500",
       "phone_number": phone,
-      "city": selectedCity,
+      "city": city,
       "latitude": selectedLatitude!.toStringAsFixed(5),
       "longitude": selectedLongitude!.toStringAsFixed(5),
       "landmark": landMark
     };
-    print(jsonEncode(data));
+    print("dfghjkl; ${jsonEncode(data)}");
     _addClinicDoctorRepo.addClinicDocApi(data).then((value) {
       if (value ["status"] == true) {
         print("mdmkd${value}");

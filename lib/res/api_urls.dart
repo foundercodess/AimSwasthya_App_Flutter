@@ -42,6 +42,7 @@ class DoctorApiUrl {
   static const String verifyOTPDoctor = "${baseUrl}verifyOTPDoctor";
   static const String registerDoctor = "${baseUrl}registerDoctor";
   static const String getProfileDoctor = "${baseUrl}getProfileDoctor";
+  static const String updateProfileDoctor = "${baseUrl}updateDoctorProfile";
   static const String getHomeDoctor = "${baseUrl}getHomeDoctor";
   static const String getPatientAppointmentDoctor =
       "${baseUrl}getPatientAppointmentDoctor";

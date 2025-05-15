@@ -10,6 +10,7 @@ import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
 import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,12 +29,51 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   final TextEditingController _expController = TextEditingController();
   int currentPage = 0;
   bool isClicked = false;
+  bool isEditMode = false;
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _toggleEditMode() {
+    setState(() {
+      isEditMode = !isEditMode;
+    });
+  }
+
+  void _saveProfile() async {
+    final docProfileCon = Provider.of<DoctorProfileViewModel>(context, listen: false);
+    final success = await docProfileCon.updateDoctorProfileApi(
+      context,
+      name: _nameController.text,
+      gender: _genderController.text,
+      phoneNumber: _numberController.text,
+      specializationId: docProfileCon.doctorProfileModel?.data?.doctors?[0].specializationId?.toString() ?? '',
+      practiceStartYear: _expController.text,
+    );
+    
+    if (success) {
+      setState(() {
+        isEditMode = false;
+        _nameController.clear();
+        _genderController.clear();
+        _numberController.clear();
+        _speController.clear();
+        _expController.clear();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
-    return docProfileCon.doctorProfileModel == null ||  docProfileCon.loading
-        ? const Center(child: LoadData())
+    return docProfileCon.doctorProfileModel == null || docProfileCon.loading
+        ? const Center(
+            child: Scaffold(
+            body: LoadData(),
+          ))
         : Scaffold(
             backgroundColor: AppColor.white,
             body: Padding(
@@ -71,12 +111,12 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       contentPadding:
                           const EdgeInsets.only(top: 18, bottom: 20, left: 10),
                       fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText: docProfileCon.doctorProfileModel!.data!
-                              .doctors![0].doctorName ??
+                      hintText: docProfileCon.doctorProfileModel?.data
+                              ?.doctors?[0].doctorName ??
                           "Name",
                       controller: _nameController,
                       cursorColor: AppColor.textGrayColor,
-                      enabled: false,
+                      enabled: isEditMode,
                     ),
                     Sizes.spaceHeight10,
                     Center(
@@ -99,7 +139,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               ? _genderController.text
                               : null,
                           hint: TextConst(
-                            docProfileCon.doctorProfileModel!.data!.doctors![0]
+                            docProfileCon.doctorProfileModel?.data?.doctors?[0]
                                     .gender ??
                                 "Gender",
                             size: Sizes.fontSizeFive,
@@ -119,81 +159,26 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               ),
                             );
                           }).toList(),
-                          onChanged: (String? gender) {
-                            // _selectGender(gender!);
-                          },
+                          onChanged: isEditMode
+                              ? (String? gender) {
+                                  if (gender != null) {
+                                    setState(() {
+                                      _genderController.text = gender;
+                                    });
+                                  }
+                                }
+                              : null,
                         ),
                       ),
                     ),
-                    // Center(
-                    //   child: Container(
-                    //     height: 56,
-                    //     alignment: Alignment.center,
-                    //     decoration: BoxDecoration(
-                    //       color: AppColor.textfieldGrayColor.withOpacity(0.4),
-                    //       borderRadius: BorderRadius.circular(15),
-                    //     ),
-                    //     padding:
-                    //     EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
-                    //     child: DropdownButton<String>(
-                    //       icon: const Icon(
-                    //         Icons.keyboard_arrow_down,
-                    //         // color: Colors.grey,
-                    //         size: 20,
-                    //       ),
-                    //       value: genderOptions.contains(_genderController.text)
-                    //           ? _genderController.text
-                    //           : null,
-                    //       hint: TextConst(
-                    //         "Gender",
-                    //         size: Sizes.fontSizeFour,
-                    //         color: AppColor.textfieldTextColor,
-                    //         fontWeight: FontWeight.w400,
-                    //       ),
-                    //       underline: const SizedBox(),
-                    //       isExpanded: true,
-                    //       items: genderOptions.map((data) {
-                    //         return DropdownMenuItem<String>(
-                    //           value: data,
-                    //           child: TextConst(
-                    //             data.toString() ?? '',
-                    //             fontWeight: FontWeight.w500,
-                    //             size: Sizes.fontSizeFive,
-                    //             color: AppColor.blue,
-                    //           ),
-                    //         );
-                    //       }).toList(),
-                    //       onChanged: (String? gender) {
-                    //         _genderController.text;
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    // CustomTextField(
-                    //   contentPadding:
-                    //       const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                    //   fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                    //   suffixIcon: IconButton(
-                    //     onPressed: () {},
-                    //     icon: Image.asset(
-                    //       Assets.assetsIconsArrowDown,
-                    //       color: AppColor.lightBlack,
-                    //     ),
-                    //   ),
-                    //   hintText: docProfileCon
-                    //           .doctorProfileModel!.data!.doctors![0].gender ??
-                    //       "Gender",
-                    //   controller: _genderController,
-                    //   cursorColor: AppColor.textGrayColor,
-                    // ),
                     Sizes.spaceHeight10,
                     CustomTextField(
                       contentPadding:
                           const EdgeInsets.only(top: 18, bottom: 20, left: 10),
                       fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText: docProfileCon
-                          .doctorProfileModel!.data!.doctors![0].phoneNumber
-                          .toString(),
+                      hintText: docProfileCon.doctorProfileModel?.data
+                              ?.doctors?[0].phoneNumber ??
+                          "Phone Number",
                       controller: _numberController,
                       keyboardType: TextInputType.number,
                       cursorColor: AppColor.textGrayColor,
@@ -201,16 +186,69 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       enabled: false,
                     ),
                     Sizes.spaceHeight10,
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText: docProfileCon.doctorProfileModel!.data!
-                              .doctors![0].specializationName ??
-                          "Specialization",
-                      controller: _speController,
-                      cursorColor: AppColor.textGrayColor,
-                      enabled: false,
+                    Center(
+                      child: Container(
+                        height: 55,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Sizes.screenWidth * 0.03),
+                        child: Consumer<AllSpecializationViewModel>(
+                          builder: (context, docSpecialization, child) {
+                            final specializations = docSpecialization
+                                .allSpecializationDocModel?.specializations;
+                            return (specializations != null &&
+                                    specializations.isNotEmpty)
+                                ? DropdownButton<String>(
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.grey,
+                                      size: 20,
+                                    ),
+                                    value: _speController.text.isNotEmpty
+                                        ? _speController.text
+                                        : null,
+                                    hint: TextConst(
+                                      docProfileCon
+                                              .doctorProfileModel
+                                              ?.data
+                                              ?.doctors?[0]
+                                              .specializationName ??
+                                          "Specialization",
+                                      size: Sizes.fontSizeFour,
+                                      color: AppColor.textfieldTextColor,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    underline: const SizedBox(),
+                                    isExpanded: true,
+                                    items: specializations.map((data) {
+                                      return DropdownMenuItem<String>(
+                                        value: data.specializationId.toString(),
+                                        child: TextConst(
+                                          data.specializationName ?? '',
+                                          fontWeight: FontWeight.w500,
+                                          size: Sizes.fontSizeFive,
+                                          color: AppColor.blue,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: isEditMode
+                                        ? (String? newId) {
+                                            if (newId != null) {
+                                              setState(() {
+                                                _speController.text = newId;
+                                              });
+                                            }
+                                          }
+                                        : null,
+                                  )
+                                : const SizedBox();
+                          },
+                        ),
+                      ),
                     ),
                     Sizes.spaceHeight10,
                     CustomTextField(
@@ -235,17 +273,22 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: docProfileCon.doctorProfileModel?.data?.clinics?.length ?? 0,
+                      itemCount: docProfileCon
+                              .doctorProfileModel?.data?.clinics?.length ??
+                          0,
                       itemBuilder: (context, index) {
-                        final clinic = docProfileCon.doctorProfileModel!.data!.clinics![index];
+                        final clinic = docProfileCon
+                            .doctorProfileModel!.data!.clinics![index];
 
                         Widget clinicInfoTile(String label) {
                           return Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 10),
                             margin: const EdgeInsets.only(bottom: 10),
                             decoration: BoxDecoration(
-                              color: AppColor.textfieldGrayColor.withOpacity(0.5),
+                              color:
+                                  AppColor.textfieldGrayColor.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: TextConst(
@@ -253,14 +296,60 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               size: Sizes.fontSizeFourPFive,
                               fontWeight: FontWeight.normal,
                               color: AppColor.textGrayColor,
-
                             ),
                           );
                         }
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextConst("Clinic ${index + 1}", size:  Sizes.fontSizeFourPFive,fontWeight: FontWeight.w500,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextConst(
+                                  "Clinic ${index + 1}",
+                                  size: Sizes.fontSizeFourPFive,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                if(isEditMode)
+                                IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: AppColor.blue),
+                                  onPressed: () {
+                                    final addClinicVM =
+                                        Provider.of<AddClinicDoctorViewModel>(
+                                            context,
+                                            listen: false);
+                                    addClinicVM.setEditMode(true,
+                                        clinicIndex: index);
+                                    addClinicVM.setEditClinicData(
+                                      name: clinic.name,
+                                      address: clinic.address,
+                                      phone: clinic.phoneNumber,
+                                      landmark: clinic.landmark,
+                                      city: clinic.city,
+                                      latitude: double.tryParse(
+                                          clinic.latitude ?? '0'),
+                                      longitude: double.tryParse(
+                                          clinic.longitude ?? '0'),
+                                    );
+                                    showModalBottomSheet(
+                                      elevation: 10,
+                                      isScrollControlled: true,
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16.0)),
+                                      ),
+                                      backgroundColor: AppColor.white,
+                                      builder: (BuildContext context) {
+                                        return const AddClinicOverlay();
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                             Sizes.spaceHeight10,
                             Container(
                               padding: EdgeInsets.only(
@@ -285,8 +374,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             clinicInfoTile(clinic.name ?? "Clinic name"),
                             clinicInfoTile(clinic.address ?? "Address"),
                             clinicInfoTile(clinic.phoneNumber ?? "Contact no"),
-                            clinicInfoTile(clinic.landmark ?? "Landmark (optional)"),
-
+                            clinicInfoTile(
+                                clinic.landmark ?? "Landmark (optional)"),
                             Sizes.spaceHeight35,
                           ],
                         );
@@ -297,6 +386,10 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     Center(
                       child: TextButton(
                           onPressed: () {
+                            final addClinicVM =
+                                Provider.of<AddClinicDoctorViewModel>(context,
+                                    listen: false);
+                            addClinicVM.setEditMode(false, clinicIndex: -1);
                             showModalBottomSheet(
                               elevation: 10,
                               isScrollControlled: true,
@@ -319,12 +412,19 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     ),
                     Sizes.spaceHeight10,
                     Center(
-                      child: ButtonConst(
-                          title: "Save",
-                          width: Sizes.screenWidth / 1.7,
-                          height: Sizes.screenHeight * 0.055,
-                          color: AppColor.blue,
-                          onTap: () {}),
+                      child: isEditMode
+                          ? ButtonConst(
+                              title: "Save Profile",
+                              width: Sizes.screenWidth / 1.7,
+                              height: Sizes.screenHeight * 0.055,
+                              color: AppColor.blue,
+                              onTap: _saveProfile)
+                          : ButtonConst(
+                              title: "Edit Profile",
+                              width: Sizes.screenWidth / 1.7,
+                              height: Sizes.screenHeight * 0.055,
+                              color: AppColor.blue,
+                              onTap: _toggleEditMode),
                     ),
                     Sizes.spaceHeight30,
                     Sizes.spaceHeight30,
@@ -436,25 +536,23 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
               borderRadius: BorderRadius.circular(12),
               color: const Color(0xffececec),
             ),
-            child: Column(
-              children: [
-                Sizes.spaceHeight3,
+            // child: Column(
+            //   children: [
+            //     Sizes.spaceHeight3,
 
-
-
-                // Sizes.spaceHeight25,
-                // ButtonConst(
-                //     title: "Set location",
-                //     width: Sizes.screenWidth * 0.3,
-                //     height: Sizes.screenHeight * 0.045,
-                //     color: AppColor.blue,
-                //     onTap: () {
-                //       _selectLocation();
-                //       // Navigator.pushNamed(
-                //       //     context, RoutesName.fullScreenMapPage);
-                //     })
-              ],
-            ),
+            //     // Sizes.spaceHeight25,
+            //     // ButtonConst(
+            //     //     title: "Set location",
+            //     //     width: Sizes.screenWidth * 0.3,
+            //     //     height: Sizes.screenHeight * 0.045,
+            //     //     color: AppColor.blue,
+            //     //     onTap: () {
+            //     //       _selectLocation();
+            //     //       // Navigator.pushNamed(
+            //     //       //     context, RoutesName.fullScreenMapPage);
+            //     //     })
+            //   ],
+            // ),
           ),
         )
       ],

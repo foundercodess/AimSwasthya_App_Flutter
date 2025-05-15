@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../utils/utils.dart';
 import '../../user/drawer/med_reports/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -46,7 +47,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       registerCon.resetValues();
       Provider.of<AllSpecializationViewModel>(context, listen: false)
           .docAllSpecializationApi();
-      // selectedYear = _expController.text aint?s ;
     });
     super.initState();
   }
@@ -118,17 +118,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   selectedYear,
                   context);
             } else {
-              await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text);
               final verified =
                   smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
-              if (verified) {
+              if (_smcNumController.text.isEmpty || !verified) {
+                Utils.show(
+                    "Please verify your smc number to continue", context);
+              } else if (doctorCon.profileImage == null) {
+                Utils.show(
+                    "Please upload your profile image to continue", context);
+              } else if (doctorCon.identityImage == null) {
+                Utils.show(
+                    "Please upload your identity proof to continue", context);
+              } else {
                 Navigator.push(context,
                     cupertinoTopToBottomRoute(const AllSetDocScreen()));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("SMC Number verified.")),
-                );
               }
+              // await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text);
+              // final verified =
+              //     smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
+              // if (verified) {
+              //   Navigator.push(context,
+              //       cupertinoTopToBottomRoute(const AllSetDocScreen()));
+              // } else {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(content: Text("SMC Number verified.")),
+              //   );
+              // }
             }
           },
           color: AppColor.blue,
@@ -298,7 +313,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                       },
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ),
           ),
           Sizes.spaceHeight25,
@@ -353,9 +368,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  bool isSmcEntered = false;
+
   Widget identityScreen() {
     final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
     final isVerified = smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
+    final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
 
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
@@ -378,48 +396,89 @@ class _RegisterScreenState extends State<RegisterScreen> {
               hintText: "SMC number",
               hintSize: 10,
               hintWeight: FontWeight.w400,
-              // onChanged: (value) {
-              //   if (value.length >= 6) {
-              //     smcViewModel.docUpsertSmcNumberApi(value);
-              //   }
-              // },
-              suffixIcon: Container(
-                decoration: BoxDecoration(
-                    color: AppColor.textfieldGrayColor,
-                  borderRadius: BorderRadius.circular(12)
-                ),
-                margin: EdgeInsets.all(10),
-                height: Sizes.screenHeight * 0.02,
-                    width: Sizes.screenWidth * 0.22,
-                 child: Center(child: TextConst("verify",size: Sizes.fontSizeFour,fontWeight: FontWeight.w400,)),
+              onChanged: (value) {
+                if (value.isEmpty) {
+                  setState(() {
+                    isSmcEntered = false;
+                  });
+                } else {
+                  setState(() {
+                    isSmcEntered = true;
+                  });
+                }
+              },
+              suffixIcon: GestureDetector(
+                onTap: () async {
+                  if (!isSmcEntered) {
+                    Utils.show("Please enter smc number to verify", context);
+                    return;
+                  }
+                  await smcViewModel
+                      .docUpsertSmcNumberApi(_smcNumController.text);
+                  final verified =
+                      smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
+                  if (verified) {
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("SMC Number verified.")),
+                    );
+                  }
+                },
+                child: smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y"
+                    ? Icon(
+                        Icons.check_circle,
+                        size: Sizes.screenWidth * 0.1,
+                        // color: Color(0xff4ECB71),
+                        color:
+                            isVerified ? const Color(0xff4ECB71) : Colors.grey,
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                            color: isSmcEntered
+                                ? AppColor.blue
+                                : AppColor.textfieldGrayColor,
+                            borderRadius: BorderRadius.circular(12)),
+                        margin: const EdgeInsets.all(10),
+                        height: Sizes.screenHeight * 0.02,
+                        width: Sizes.screenWidth * 0.22,
+                        alignment: Alignment.center,
+                        child: TextConst(
+                          "verify".toUpperCase(),
+                          size: Sizes.fontSizeFour,
+                          fontWeight: FontWeight.w400,
+                          color:
+                              isSmcEntered ? AppColor.whiteColor : Colors.black,
+                        ),
+                      ),
               ),
-              // ButtonConst(
-              //   // padding: EdgeInsets.all(10),
-              //   //   fontSize: 12,
-              //     borderRadius: 12,
-              //     height: Sizes.screenHeight * 0.02,
-              //     width: Sizes.screenWidth * 0.22,
-              //     color: AppColor.textfieldGrayColor,
-              //     title: "verify", onTap: () {}),
-              // Icon(
-              //   Icons.check_circle,
-              //   size: Sizes.screenWidth * 0.1,
-              //   // color: Color(0xff4ECB71),
-              //   color: isVerified ? const Color(0xff4ECB71) : Colors.grey,
-              // ),
               controller: _smcNumController,
               cursorColor: AppColor.textGrayColor,
             ),
             Sizes.spaceHeight30,
             Row(
               children: [
-                TextConst(
-                  padding: EdgeInsets.only(left: Sizes.screenWidth * 0.02),
-                  AppLocalizations.of(context)!.identity_proof,
-                  // size: 10,
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                  color: AppColor.blackColor,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextConst(
+                      padding: EdgeInsets.only(left: Sizes.screenWidth * 0.02),
+                      AppLocalizations.of(context)!.identity_proof,
+                      size: Sizes.fontSizeFour,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.blackColor,
+                    ),
+                    if (doctorCon.identityImage != null) ...[
+                      Sizes.spaceHeight3,
+                      TextConst(
+                        padding:
+                            EdgeInsets.only(left: Sizes.screenWidth * 0.02),
+                        doctorCon.identityImage!.name,
+                        size: Sizes.fontSizeFour,
+                        fontWeight: FontWeight.w500,
+                        color: CupertinoColors.activeGreen,
+                      ),
+                    ]
+                  ],
                 ),
                 const Spacer(),
                 AppBtn(

@@ -209,6 +209,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                 height: Sizes.screenHeight * 0.155,
                                 width: Sizes.screenWidth * 0.4,
                                 fit: BoxFit.cover,
+                                alignment: Alignment.topCenter,
                               )
                             : Image(
                                 image: const AssetImage(Assets.logoDoctor),
@@ -822,8 +823,9 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                   (month) => PopupMenuItem<Map<String, String>>(
                                     value: {
                                       'monthYear': month.monthYear ?? '',
-                                      'totalAmount':
-                                          month.totalamountformatted?.toString() ?? '0',
+                                      'totalAmount': month.totalamountformatted
+                                              ?.toString() ??
+                                          '0',
                                     },
                                     child: Text(month.monthYear ?? ""),
                                   ),
@@ -879,7 +881,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                   height: Sizes.screenHeight * 0.046,
                   color: AppColor.lightBlue,
                   onTap: () {
-                    Provider.of<RevenueDoctorViewModel>(context, listen: false).revenueDoctorApi();
+                    Provider.of<RevenueDoctorViewModel>(context, listen: false)
+                        .revenueDoctorApi();
                     Navigator.pushNamed(
                         context, RoutesName.scheduleHoursScreen);
                   }))
