@@ -5,8 +5,8 @@ import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../view_model/doctor/notification_view_model.dart';
-import '../../model/doctor/notification_model.dart';
+import '../../../view_model/doctor/notification_view_model.dart';
+import '../../../model/doctor/notification_model.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

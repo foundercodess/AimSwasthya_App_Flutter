@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../view_model/doctor/notification_view_model.dart';
-import 'notification_screen.dart';
+import 'drawer/notification_screen.dart';
 
 class DoctorBottomNevBar extends StatefulWidget {
   const DoctorBottomNevBar({super.key});

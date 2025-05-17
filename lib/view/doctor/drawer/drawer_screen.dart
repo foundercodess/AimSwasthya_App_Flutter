@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../view_model/doctor/delete_account_view_model.dart';
 import '../../../view_model/doctor/doc_home_view_model.dart';
 
 class DoctorDrawerScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
   Widget build(BuildContext context) {
     final bottomCon = Provider.of<BottomNavProvider>(context);
     final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
+    final deleteAco = Provider.of<DeleteAccountViewModel>(context);
 
     return Drawer(
       backgroundColor: Colors.transparent,
@@ -135,6 +137,47 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, RoutesName.deleteAccountScreen);
+    },
+                    // onTap: () {
+                    //   showCupertinoDialog(
+                    //       context: context,
+                    //       builder: (context) {
+                    //         return  ActionOverlay(
+                    //           text: "Delete account",
+                    //           subtext:
+                    //           "Are you sure you want to delete\n your appointment?",
+                    //           yesLabel: "Continue",
+                    //        onTap: (){
+                    //          showCupertinoDialog(
+                    //              context: context,
+                    //              builder: (context) {
+                    //                return  ActionOverlay(
+                    //                  text: "Delete account",
+                    //                  subtext:
+                    //                  "Are you sure you want to delete\n your appointment?",
+                    //                  onTap: (){
+                    //                    deleteAco.deleteAccountApi(context);
+                    //                  },
+                    //                );
+                    //
+                    //              });
+                    //        },
+                    //         );
+                    //
+                    //       });
+                    //   // Navigator.pushNamed(context, RoutesName.aboutUsScreen);
+                    // },
+                    child: TextConst(
+                      "Delete account",
+                      size: Sizes.fontSizeFivePFive,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.white,
+                    ),
+                  ),
+                  Sizes.spaceHeight10,
+                  GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, RoutesName.aboutUsScreen);
                     },
@@ -145,15 +188,17 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                       color: AppColor.white,
                     ),
                   ),
+
                   Sizes.spaceHeight10,
                   GestureDetector(
                     onTap: () {
                       showCupertinoDialog(
                           context: context,
                           builder: (context) {
-                            return ActionOverlay(
+                            return const ActionOverlay(
                             );
                           });
+
                     },
                     child: TextConst(
                       "Log Out",

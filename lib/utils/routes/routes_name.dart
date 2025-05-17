@@ -41,6 +41,7 @@ class RoutesName {
   static const fullScreenMapPage = "/fullScreenMapPage";
   static const docMedicalReportsScreen = "/docMedicalReportsScreen";
   static const notificationScreen = "/notificationScreen";
+  static const deleteAccountScreen = "/deleteAccountScreen";
 
 }
 

@@ -5,6 +5,7 @@ import 'package:aim_swasthya/view/user/symptoms/dowenloade_image.dart';
 import 'package:aim_swasthya/view/user/user_home_screen.dart';
 import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
+import 'package:aim_swasthya/view_model/doctor/delete_account_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_graph_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_health_report_view_model.dart';
@@ -119,6 +120,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => AllSpecializationViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpsertSmcNumberViewModel()),
         ChangeNotifierProvider(create: (ctx) => NotificationViewModel()),
+        ChangeNotifierProvider(create: (ctx) => DeleteAccountViewModel()),
       ],
       child: Consumer<ChangeLanguageViewModel>(
           builder: (context, provider, child) {

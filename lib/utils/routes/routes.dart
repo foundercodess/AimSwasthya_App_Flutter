@@ -3,7 +3,8 @@ import 'package:aim_swasthya/view/common/auth/otp_screen.dart';
 import 'package:aim_swasthya/view/common/intro/about_us_screen.dart';
 import 'package:aim_swasthya/view/doctor/bottom_nav_bar_screen.dart';
 import 'package:aim_swasthya/view/doctor/dashboard_page.dart';
-import 'package:aim_swasthya/view/doctor/notification_screen.dart';
+import 'package:aim_swasthya/view/doctor/drawer/delete_account_screen.dart';
+import 'package:aim_swasthya/view/doctor/drawer/notification_screen.dart';
 import 'package:aim_swasthya/view/doctor/patients/my_appointments.dart';
 import 'package:aim_swasthya/view/doctor/patients/show_all_patient.dart';
 import 'package:aim_swasthya/view/doctor/payout/payout_screen.dart';
@@ -135,6 +136,8 @@ class Routers {
         return (context) =>  const DocMedicalReportsScreen();
         case RoutesName.notificationScreen:
         return (context) =>  const NotificationScreen();
+        case RoutesName.deleteAccountScreen:
+        return (context) =>  const DeleteAccountScreen();
 
       default:
         return (context) => const Scaffold(
