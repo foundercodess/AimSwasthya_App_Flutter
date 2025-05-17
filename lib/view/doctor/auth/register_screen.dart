@@ -180,7 +180,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Sizes.spaceHeight10,
           TextConst(
             AppLocalizations.of(context)!.personal_information,
             size: Sizes.fontSizeSix,
@@ -717,21 +716,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
             onTap: () async {
               final img = await _imagePickerHelper.pickImageFromGallery(context,
                   isProfileSelection: true);
-              if (img != null) {
+               if (img != null) {
                 if (isProfile) {
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(), context);
+                          img.path.toString(),'profile_photo' ,context);
                 } else {
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .setIdentityImage(img);
+                       Provider.of<DoctorAuthViewModel>(context, listen: false)
+                      .addImageApi('doctor', img.name.toString(),
+                          img.path.toString(),'identity_document' ,context);
                 }
-
-                print("cghjvjhvhhj: ${img.name}");
-              }
-            },
+               }}
           ),
           // ListTile(
           //   leading: const Icon(Icons.photo_library)

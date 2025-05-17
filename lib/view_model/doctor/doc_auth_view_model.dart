@@ -401,27 +401,28 @@ class DoctorAuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addImageApi(
-      dynamic entityType, dynamic imageName,dynamic imagePath, dynamic fileType,BuildContext context) async {
+  Future<void> addImageApi(dynamic entityType, dynamic imageName,
+      dynamic imagePath, dynamic fileType, BuildContext context) async {
     setLoading(true);
     final userId = await UserViewModel().getUser();
     final fileType = getImageType(imageName);
     Map data = {
       "entity_id": userId,
       "entity_type": entityType,
-      "image_name": "${fileType=='profile_photo'?'profile':'id_prood'}.$fileType",
-      "file_type":fileType
+      "image_name":
+          "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
+      "file_type": fileType
     };
     print("xfghjk" + jsonEncode(data));
     _doctorAuthRepo.addImageUrlApi(data).then((value) {
       print(value);
       // Utils.show(value['message'],);
       if (value['status'] == true) {
-        Provider.of<GetImageUrlViewModel>(context, listen: false).uploadFile(
-            context,
-            filePath: imagePath,
-            // filePath: value['image_url']);
-            fileName: value['image_url']);
+        Provider.of<GetImageUrlViewModel>(context, listen: false)
+            .uploadFile(context,
+                filePath: imagePath,
+                // filePath: value['image_url']);
+                fileName: value['image_url']);
       }
     }).onError((error, stackTrace) {
       LoaderOverlay().hide();

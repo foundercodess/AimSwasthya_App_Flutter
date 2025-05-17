@@ -21,7 +21,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<NotificationViewModel>(context, listen: false)
-          .fetchNotifications( type: 'doctor');
+          .fetchNotifications(type: 'doctor');
     });
   }
 
@@ -29,58 +29,66 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body:  Consumer<NotificationViewModel>(
-          builder: (context, viewModel, child) {
-            final notifications = viewModel.notificationModel?.data ?? [];
-            final today = DateTime.now();
-            final todayList = notifications.where((n) {
-              if (n.sentAt == null) return false;
-              final sentDate = _parseDate(n.sentAt!);
-              return sentDate != null &&
-                  sentDate.year == today.year &&
-                  sentDate.month == today.month &&
-                  sentDate.day == today.day;
-            }).toList();
-            final allList = notifications.where((n) {
-              if (n.sentAt == null) return false;
-              final sentDate = _parseDate(n.sentAt!);
-              return sentDate == null ||
-                  !(sentDate.year == today.year &&
-                      sentDate.month == today.month &&
-                      sentDate.day == today.day);
-            }).toList();
+      body: Consumer<NotificationViewModel>(
+        builder: (context, viewModel, child) {
+          final notifications = viewModel.notificationModel?.data ?? [];
+          final today = DateTime.now();
+          final todayList = notifications.where((n) {
+            if (n.sentAt == null) return false;
+            final sentDate = _parseDate(n.sentAt!);
+            return sentDate != null &&
+                sentDate.year == today.year &&
+                sentDate.month == today.month &&
+                sentDate.day == today.day;
+          }).toList();
+          final allList = notifications.where((n) {
+            if (n.sentAt == null) return false;
+            final sentDate = _parseDate(n.sentAt!);
+            return sentDate == null ||
+                !(sentDate.year == today.year &&
+                    sentDate.month == today.month &&
+                    sentDate.day == today.day);
+          }).toList();
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-               const AppbarConst(title: 'Notifications'),
-                Expanded(
-                  child: viewModel.loading
-                      ? const Scaffold(body: LoadData(),)
-                      : ListView(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          children: [
-                            if (todayList.isNotEmpty) ...[
-                              _sectionHeader('Today'),
-                              ...todayList.map((n) => _notificationTile(n, highlight: true)),
-                            ],
-                            if (allList.isNotEmpty) ...[
-                              _sectionHeader('All notifications'),
-                              ...allList.map((n) => _notificationTile(n)),
-                            ],
-                            if (notifications.isEmpty)
-                              const Padding(
-                                padding: EdgeInsets.only(top: 32.0),
-                                child: Center(child: NoDataMessages(message: "No notification found",title: "You haven't recived any notification yet",)),
-                              ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AppbarConst(title: 'Notifications'),
+              Expanded(
+                child: viewModel.loading
+                    ? const Scaffold(
+                        body: LoadData(),
+                      )
+                    : ListView(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        children: [
+                          if (todayList.isNotEmpty) ...[
+                            _sectionHeader('Today'),
+                            ...todayList.map(
+                                (n) => _notificationTile(n, highlight: true)),
                           ],
-                        ),
-                ),
-              ],
-            );
-          },
-        ),
-      
+                          if (allList.isNotEmpty) ...[
+                            _sectionHeader('All notifications'),
+                            ...allList.map((n) => _notificationTile(n)),
+                          ],
+                          if (notifications.isEmpty)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 32.0),
+                              child: Center(
+                                  child: NoDataMessages(
+                                message: "No notification found",
+                                title:
+                                    "You haven't recived any notification yet",
+                              )),
+                            ),
+                        ],
+                      ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -90,11 +98,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextConst(title, fontWeight: FontWeight.w400, size: Sizes.fontSizeFivePFive),
+          TextConst(title,
+              fontWeight: FontWeight.w400, size: Sizes.fontSizeFivePFive),
           Row(
-            children:  [
+            children: [
               TextConst('Sort', color: Colors.grey),
-             const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
+              const Icon(Icons.keyboard_arrow_down_rounded,
+                  color: Colors.grey, size: 18),
             ],
           ),
         ],
@@ -115,12 +125,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
         children: [
           TextConst(
             n.title ?? '',
-          fontWeight: FontWeight.w400, size: Sizes.fontSizeFive,
+            fontWeight: FontWeight.w400,
+            size: Sizes.fontSizeFive,
           ),
           const SizedBox(height: 4),
           TextConst(
             n.message ?? '',
-          size: Sizes.fontSizeFour,color: Colors.grey,
+            size: Sizes.fontSizeFour,
+            color: Colors.grey,
           ),
         ],
       ),
@@ -130,7 +142,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   DateTime? _parseDate(String dateStr) {
     try {
       // Example: '2025-04-06 09:45 PM'
-      return DateTime.parse(dateStr.replaceAll(' PM', '').replaceAll(' AM', ''));
+      return DateTime.parse(
+          dateStr.replaceAll(' PM', '').replaceAll(' AM', ''));
     } catch (_) {
       return null;
     }
