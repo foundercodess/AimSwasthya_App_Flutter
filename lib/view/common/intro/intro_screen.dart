@@ -55,7 +55,6 @@ class _IntroScreenState extends State<IntroScreen> {
                   Sizes.spaceWidth5,
                   TextConst(
                     AppLocalizations.of(context)!.english,
-                    // "English",
                     size: Sizes.fontSizeFive,
                     fontWeight: FontWeight.w500,
                   ),
@@ -94,7 +93,6 @@ class _IntroScreenState extends State<IntroScreen> {
                 Consumer<UserRegisterViewModel>(
                     builder: (context, authCon, child) {
                   return Row(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(

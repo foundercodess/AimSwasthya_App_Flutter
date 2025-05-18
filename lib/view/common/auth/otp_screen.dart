@@ -33,8 +33,9 @@ class _OtpScreenState extends State<OtpScreen> {
     final doctorAuthCon = Provider.of<DoctorAuthViewModel>(
       context,
     );
-    print(patientAuthCon.seconds);
-    final navType = patientAuthCon.navType;
+    print("patient ${patientAuthCon.seconds}");
+    print("doctor: ${doctorAuthCon.seconds}");
+    final navType = authCon.userRole;
     return Scaffold(
       backgroundColor: AppColor.white,
       body: Column(

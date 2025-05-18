@@ -179,13 +179,36 @@ class DoctorAuthViewModel extends ChangeNotifier {
           "type": type
         };
         if (type == "email") {
-          if (!value['is_registered']) {
-            if (authCon.userRole == 1) {
-              Navigator.pushNamed(context, RoutesName.registerScreen);
-            } else {
-              Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-            }
-          } else {
+           if (!value['is_registered']) {
+            showCupertinoDialog(
+                context: context,
+                builder: (context) {
+                  return ActionOverlay(
+                    text: "User not found",
+                    subtext:
+                        "Looks like you don’t have an account yet. Let’s get you registered!",
+                    noLabel: "Cancel",
+                    yesLabel: "Continue",
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (authCon.userRole == 1) {
+                        Navigator.pushNamed(context, RoutesName.registerScreen);
+                      } else {
+                        Navigator.pushNamed(
+                            context, RoutesName.userRegisterScreen);
+                      }
+                    },
+                  );
+                });
+          } 
+          // if (!value['is_registered']) {
+          //   if (authCon.userRole == 1) {
+          //     Navigator.pushNamed(context, RoutesName.registerScreen);
+          //   } else {
+          //     Navigator.pushNamed(context, RoutesName.userRegisterScreen);
+          //   }
+          // }
+           else {
             Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
         } else {
@@ -259,14 +282,17 @@ class DoctorAuthViewModel extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       print("jljnkjjnjnj");
       if (_seconds > 0) {
+        print("effre");
         _seconds--;
         notifyListeners();
       } else {
+        print("sds");
         _timer!.cancel();
         _resendOtp = true;
         notifyListeners();
       }
     });
+    print(_resendOtp);
   }
 
   clearOtpTimer() {

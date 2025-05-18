@@ -13,7 +13,7 @@ class UpsertSmcNumberViewModel extends ChangeNotifier {
 
   UpsertSmcNumberModel? _upsertSmcNumberModel;
   UpsertSmcNumberModel? get upsertSmcNumberModel => _upsertSmcNumberModel;
-  setUpsertSmcNumber(UpsertSmcNumberModel value) {
+  setUpsertSmcNumber(UpsertSmcNumberModel? value) {
     _upsertSmcNumberModel = value;
     notifyListeners();
   }

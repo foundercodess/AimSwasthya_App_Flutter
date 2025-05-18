@@ -21,10 +21,10 @@ class DocScheduleRepo {
     }
   }
 
-  Future<dynamic> docInsertScheduleApi(dynamic data) async {
+  Future<dynamic> docInsertScheduleApi(dynamic data, String apiUrl) async {
     try {
       dynamic response =
-      await _apiServices.getPostApiResponse(DoctorApiUrl.upsertScheduleDoctor, data);
+      await _apiServices.getPostApiResponse(apiUrl, data);
       return response;
 
     } catch (e) {

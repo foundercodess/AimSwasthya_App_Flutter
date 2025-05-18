@@ -1,5 +1,6 @@
 // view_model/user/slot_schedule_view_model.dart
 import 'dart:convert';
+import 'package:aim_swasthya/res/api_urls.dart';
 import 'package:aim_swasthya/utils/show_server_error.dart';
 import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
@@ -17,6 +18,23 @@ class SlotScheduleViewModel extends ChangeNotifier {
       end: now.add(const Duration(days: 6)),
     );
   }
+
+  String getFullWeekdayName(String shortName) {
+    // Create a date for Monday (1) to Sunday (7)
+    final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final index = weekdays.indexOf(shortName);
+    if (index == -1) return shortName;
+    
+    // Create a date for the corresponding weekday
+    final now = DateTime.now();
+    final daysUntilMonday = (DateTime.monday - now.weekday) % 7;
+    final monday = now.add(Duration(days: daysUntilMonday));
+    final targetDate = monday.add(Duration(days: index));
+    
+    // Format the date to get full weekday name
+    return DateFormat('EEEE').format(targetDate);
+  }
+
   final _docScheduleRepo = DocScheduleRepo();
   bool _loading = false;
   bool get loading => _loading;
@@ -70,13 +88,15 @@ class SlotScheduleViewModel extends ChangeNotifier {
         String ddMonthName = dayName;
 
         print("Checking indefinitely - availabilityDate: $availabilityDate");
-        print("Available dates in model: ${scheduleDoctorModel?.schedules?.map((e) => e.availabilityDate).toList()}");
-        
-        final existingIndex = scheduleDoctorModel?.schedules?.indexWhere(
-            (element) {
-              print("Comparing indefinitely - element.availabilityDate: ${element.availabilityDate} with availabilityDate: $availabilityDate");
-              return element.availabilityDate == availabilityDate;
-            });
+        print(
+            "Available dates in model: ${scheduleDoctorModel?.schedules?.map((e) => e.availabilityDate).toList()}");
+
+        final existingIndex =
+            scheduleDoctorModel?.schedules?.indexWhere((element) {
+          print(
+              "Comparing indefinitely - element.availabilityDate: ${element.availabilityDate} with availabilityDate: $availabilityDate");
+          return element.availabilityDate == availabilityDate;
+        });
         if (existingIndex != null && existingIndex != -1) {
           List<Timings>? timings =
               scheduleDoctorModel?.schedules?[existingIndex].timings;
@@ -123,14 +143,16 @@ class SlotScheduleViewModel extends ChangeNotifier {
           String ddMonthName = DateFormat('dd MMM').format(date);
 
           print("Checking range - availabilityDateM: $availabilityDateM");
-          print("Available dates in model: ${scheduleDoctorModel?.schedules?.map((e) => e.availabilityDate).toList()}");
-          
-          final existingIndex = scheduleDoctorModel?.schedules?.indexWhere(
-              (element) {
-                print(element.availabilityDate == availabilityDateM);
-                print("Comparing range - element.availabilityDate: ${element.availabilityDate} with availabilityDateM: $availabilityDateM");
-                return element.availabilityDate == availabilityDateM;
-              });
+          print(
+              "Available dates in model: ${scheduleDoctorModel?.schedules?.map((e) => e.availabilityDate).toList()}");
+
+          final existingIndex =
+              scheduleDoctorModel?.schedules?.indexWhere((element) {
+            print(element.availabilityDate == availabilityDateM);
+            print(
+                "Comparing range - element.availabilityDate: ${element.availabilityDate} with availabilityDateM: $availabilityDateM");
+            return element.availabilityDate == availabilityDateM;
+          });
           if (existingIndex != null && existingIndex != -1) {
             List<Timings>? timings =
                 scheduleDoctorModel?.schedules?[existingIndex].timings;
@@ -232,33 +254,46 @@ class SlotScheduleViewModel extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>> flattenTimingsWith24HrFormat() {
-    final inputFormat = DateFormat.jm();
-    final outputFormat = DateFormat.Hm();
+    final inputFormat = DateFormat.jm(); // For parsing 12-hour format
+    final outputFormat = DateFormat.Hm(); // For outputting 24-hour format
 
     List<Map<String, dynamic>> result = [];
 
     for (var item in _allSlots) {
       List timings = item['timings'];
+      List<Map<String, String>> formattedTimings = [];
+
       for (var t in timings) {
         final parsedStart = inputFormat.parse(t['start_time']);
         final parsedEnd = inputFormat.parse(t['end_time']);
 
+        formattedTimings.add({
+          'start_time': outputFormat.format(parsedStart),
+          'end_time': outputFormat.format(parsedEnd),
+        });
+      }
+
+      if (_slotType == "weekly") {
         // Convert date from DD-MM-YYYY to YYYY-MM-DD
         final dateParts = item['availability_date'].split('-');
         final formattedDate = '${dateParts[2]}-${dateParts[1]}-${dateParts[0]}';
-
+        
         result.add({
           'availability_date': formattedDate,
           'available_flag': item['available_flag'],
-          'timings': [
-            {
-              'start_time': outputFormat.format(parsedStart),
-              'end_time': outputFormat.format(parsedEnd),
-            }
-          ],
+          'timings': formattedTimings,
+        });
+      } else {
+        // For indefinite schedule, use working_day instead of availability_date
+        final weekdayName = getFullWeekdayName(item['dd_month_name']);
+        result.add({
+          'working_day': weekdayName,
+          'available_flag': item['available_flag'],
+          'timings': formattedTimings,
         });
       }
     }
+
     return result;
   }
 
@@ -290,21 +325,51 @@ class SlotScheduleViewModel extends ChangeNotifier {
     _scheduleDoctorModel = value;
     if (value.schedules != null && value.schedules!.isNotEmpty) {
       try {
-        final startDateParts =
-            value.schedules!.first.availabilityDate?.split('-') ?? [];
-        final endDateParts =
-            value.schedules!.last.availabilityDate?.split('-') ?? [];
+        // Set slot type from API response
+        if (value.slotType != null && value.slotType!.isNotEmpty) {
+          _slotType = value.slotType![0].scheduleType;
+          _appointmentDuration = value.slotType![0].slotType ?? '15_MINUTES';
+        }
+
+        // Convert dates from DD-MM-YYYY to DateTime objects
+        final startDateParts = value.schedules!.first.availabilityDate?.split('-') ?? [];
+        final endDateParts = value.schedules!.last.availabilityDate?.split('-') ?? [];
 
         if (startDateParts.length == 3 && endDateParts.length == 3) {
-          final formattedStartDate =
-              '${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]} 00:00:00';
-          final formattedEndDate =
-              '${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]} 00:00:00';
+          final formattedStartDate = '${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}';
+          final formattedEndDate = '${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}';
 
           _selectedRange = DateTimeRange(
-              start: DateTime.parse(formattedStartDate),
-              end: DateTime.parse(formattedEndDate));
+            start: DateTime.parse(formattedStartDate),
+            end: DateTime.parse(formattedEndDate)
+          );
         }
+
+        // Set up _allSlots with the schedule data
+        _allSlots = value.schedules!.map((schedule) {
+          return {
+            'availability_date': schedule.availabilityDate,
+            'dd_month_name': schedule.ddMonthName,
+            'available_flag': schedule.availableFlag,
+            'timings': schedule.timings?.map((timing) => {
+              'start_time': timing.startTime,
+              'end_time': timing.endTime,
+            }).toList() ?? [],
+          };
+        }).toList();
+
+        // Original code (backup)
+        // final startDateParts = value.schedules!.first.availabilityDate?.split('-') ?? [];
+        // final endDateParts = value.schedules!.last.availabilityDate?.split('-') ?? [];
+        // if (startDateParts.length == 3 && endDateParts.length == 3) {
+        //   final formattedStartDate = '${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]} 00:00:00';
+        //   final formattedEndDate = '${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]} 00:00:00';
+        //   _selectedRange = DateTimeRange(
+        //     start: DateTime.parse(formattedStartDate),
+        //     end: DateTime.parse(formattedEndDate)
+        //   );
+        // }
+
       } catch (e) {
         debugPrint('Error parsing dates: $e');
       }
@@ -392,7 +457,13 @@ class SlotScheduleViewModel extends ChangeNotifier {
       "schedules": schedule
     };
     debugPrint("insert data: ${jsonEncode(data)}");
-    _docScheduleRepo.docInsertScheduleApi(data).then((value) {
+    _docScheduleRepo
+        .docInsertScheduleApi(
+            data,
+            _slotType == 'weekly'
+                ? DoctorApiUrl.upsertScheduleDoctor
+                : DoctorApiUrl.upsertIndefiniteScheduleDoctor)
+        .then((value) {
       if (value["status"] == true) {
         docScheduleApi();
         // showInfoOverlay(title: "Success", errorMessage: value['message']);

@@ -54,6 +54,7 @@ class DoctorApiUrl {
   static const String revenueDoctor = "${baseUrl}getRevenueDoctor";
   static const String scheduleDoctor = "${baseUrl}getScheduleDoctor";
   static const String upsertScheduleDoctor = "${baseUrl}upsertScheduleDoctor";
+  static const String upsertIndefiniteScheduleDoctor = "${baseUrl}upsertIndefinitlyScheduleDoctor";
   static const String upsertScheduleSlotTypeDoctor =
       "${baseUrl}upsertScheduleSlotTypeDoctor";
   static const String getAllSpecializationsDoctor =

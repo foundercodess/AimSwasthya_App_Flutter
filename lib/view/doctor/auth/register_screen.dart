@@ -25,10 +25,23 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _numberEmailController = TextEditingController();
   final TextEditingController _speController = TextEditingController();
   final TextEditingController _expController = TextEditingController();
   final TextEditingController _smcNumController = TextEditingController();
+
+  String getFullWeekdayName(String shortName) {
+    final Map<String, String> weekdayMap = {
+      'Mon': 'Monday',
+      'Tue': 'Tuesday',
+      'Wed': 'Wednesday',
+      'Thu': 'Thursday',
+      'Fri': 'Friday',
+      'Sat': 'Saturday',
+      'Sun': 'Sunday',
+    };
+    return weekdayMap[shortName] ?? shortName;
+  }
 
   void _selectGender(String gender) {
     setState(() {
@@ -45,8 +58,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final registerCon =
           Provider.of<RegisterViewModel>(context, listen: false);
       registerCon.resetValues();
+      final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
+      doctorCon.setIdentityImage(null);
+      doctorCon.setProfileImage(null);
       Provider.of<AllSpecializationViewModel>(context, listen: false)
           .docAllSpecializationApi();
+      Provider.of<UpsertSmcNumberViewModel>(context, listen: false)
+          .setUpsertSmcNumber(null);
     });
     super.initState();
   }
@@ -55,9 +73,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
     final registerCon = Provider.of<RegisterViewModel>(context);
-    _numberController.text = doctorCon.senOtpData['phone'];
+    _numberEmailController.text = doctorCon.senOtpData['type']=='email'?doctorCon.senOtpData['email'] :doctorCon.senOtpData['phone'];
     final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
-
     return Scaffold(
       backgroundColor: AppColor.white,
       appBar: appBarConstant(context,
@@ -80,6 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
                   ),
+
                 ),
                 Container(
                   width: Sizes.screenWidth * 0.2,
@@ -258,7 +276,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.textfieldGrayColor,
             hintText: "Contact no",
-            controller: _numberController,
+            controller: _numberEmailController,
             keyboardType: TextInputType.number,
             cursorColor: AppColor.textGrayColor,
             maxLength: 10,
@@ -372,7 +390,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget identityScreen() {
     final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
     final isVerified = smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
-    final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
+    final doctorCon = Provider.of<DoctorAuthViewModel>(context,);
 
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
@@ -427,7 +445,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ? Icon(
                         Icons.check_circle,
                         size: Sizes.screenWidth * 0.1,
-                        // color: Color(0xff4ECB71),
                         color:
                             isVerified ? const Color(0xff4ECB71) : Colors.grey,
                       )
@@ -483,7 +500,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AppBtn(
                     fontSize: 12,
                     borderRadius: 12,
-                    title: AppLocalizations.of(context)!.add,
+                    title:doctorCon.identityImage != null?"Change": AppLocalizations.of(context)!.add,
                     height: Sizes.screenHeight * 0.044,
                     width: Sizes.screenWidth * 0.38,
                     color: AppColor.blue,
@@ -552,23 +569,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                       },
                       child: viewModel.profileImage != null
-                          ? Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  // borderRadius: BorderRadius.circular(15),
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: FileImage(
-                                        File(viewModel.profileImage!.path),
+                          ? GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  elevation: 10,
+                                  isScrollControlled: true,
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16.0)),
+                                  ),
+                                  backgroundColor: AppColor.white,
+                                  builder: (BuildContext context) {
+                                    return showImageBottomSheet(true);
+                                  },
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: FileImage(
+                                          File(viewModel.profileImage!.path),
+                                        ),
+                                        fit: BoxFit.cover,
                                       ),
-                                      fit: BoxFit.cover)),
-                              // child: Image.file(
-                              //   File(viewModel.profileImage!.path),
-                              //   fit: BoxFit.cover,
-                              //   width: double.infinity,
-                              //   height: 200,
-                              // ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                        color: AppColor.blue,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.camera_alt,
+                                        color: AppColor.whiteColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             )
                           : Container(
                               height: 50,
@@ -591,66 +640,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             );
           },
         ),
-
-        // DottedBorder(
-        //   color: AppColor.lightBlue,
-        //   strokeWidth: 4,
-        //   borderType: BorderType.RRect,
-        //   radius: const Radius.circular(15),
-        //   dashPattern: const [5, 4],
-        //   padding: EdgeInsets.zero,
-        //   child: constContainer(
-        //     child: Column(
-        //       children: [
-        //         TextConst(
-        //           AppLocalizations.of(context)!.profile_photo,
-        //           size: 16,
-        //           // size: Sizes.fontSizeFivePFive,
-        //           fontWeight: FontWeight.w400,
-        //         ),
-        //         SizedBox(height: Sizes.screenHeight * 0.003),
-        //         TextConst(
-        //           AppLocalizations.of(context)!.add_a_profile_photo_for,
-        //           size: 12,
-        //           // size: Sizes.fontSizeFour,
-        //           fontWeight: FontWeight.w400,
-        //           color: AppColor.lightBlack,
-        //         ),
-        //         SizedBox(height: Sizes.screenHeight * 0.05),
-        //         GestureDetector(
-        //           onTap: (){
-        //             showModalBottomSheet(
-        //               elevation: 10,
-        //               isScrollControlled: true,
-        //               context: context,
-        //               shape: const RoundedRectangleBorder(
-        //                 borderRadius:
-        //                 BorderRadius.vertical(top: Radius.circular(16.0)),
-        //               ),
-        //               backgroundColor: AppColor.white,
-        //               builder: (BuildContext context) {
-        //                 return showImageBottomSheet();
-        //               },
-        //             );
-        //           },
-        //           child: Container(
-        //             height: 50,
-        //             width: 50,
-        //             decoration: const BoxDecoration(
-        //                 shape: BoxShape.circle, color: AppColor.lightSkyBlue),
-        //             child: const Icon(
-        //               Icons.add,
-        //               color: AppColor.blue,
-        //               size: 45,
-        //             ),
-        //           ),
-        //         ),
-        //         // Sizes.spaceHeight35,
-        //         SizedBox(height: Sizes.screenHeight * 0.06),
-        //       ],
-        //     ),
-        //   ),
-        // ),
         Sizes.spaceHeight10,
       ]),
     );
@@ -692,46 +681,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(),'profile_photo' ,context);
+                          img.path.toString(), 'profile_photo', context);
                 } else {
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .setIdentityImage(img);
-                       Provider.of<DoctorAuthViewModel>(context, listen: false)
+                  Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(),'identity_document' ,context);
+                          img.path.toString(), 'identity_document', context);
                 }
-
               }
+              Navigator.pop(context);
             },
-            // onTap: () async {
-            //   Navigator.pop(context);
-            //  final img= await _imagePickerHelper.pickImageFromCamera(context, isProfileSelection: true);
-            //  print("xfile: ${img!.path}");
-            //  Provider.of<DoctorAuthViewModel>(context).profileImage;
-            // },
           ),
           ListTile(
-            leading: const Icon(Icons.photo_library),
-            title: const Text('Gallery'),
-            onTap: () async {
-              final img = await _imagePickerHelper.pickImageFromGallery(context,
-                  isProfileSelection: true);
-               if (img != null) {
-                if (isProfile) {
-                  Provider.of<DoctorAuthViewModel>(context, listen: false)
-                      .setProfileImage(img);
-                  Provider.of<DoctorAuthViewModel>(context, listen: false)
-                      .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(),'profile_photo' ,context);
-                } else {
-                  Provider.of<DoctorAuthViewModel>(context, listen: false)
-                      .setIdentityImage(img);
-                       Provider.of<DoctorAuthViewModel>(context, listen: false)
-                      .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(),'identity_document' ,context);
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () async {
+                final img = await _imagePickerHelper
+                    .pickImageFromGallery(context, isProfileSelection: true);
+                if (img != null) {
+                  if (isProfile) {
+                    Provider.of<DoctorAuthViewModel>(context, listen: false)
+                        .setProfileImage(img);
+                    Provider.of<DoctorAuthViewModel>(context, listen: false)
+                        .addImageApi('doctor', img.name.toString(),
+                            img.path.toString(), 'profile_photo', context);
+                  } else {
+                    Provider.of<DoctorAuthViewModel>(context, listen: false)
+                        .setIdentityImage(img);
+                    Provider.of<DoctorAuthViewModel>(context, listen: false)
+                        .addImageApi('doctor', img.name.toString(),
+                            img.path.toString(), 'identity_document', context);
+                  }
                 }
-               }}
-          ),
+                Navigator.pop(context);
+              }),
           // ListTile(
           //   leading: const Icon(Icons.photo_library)
           //   title: const Text('File'),

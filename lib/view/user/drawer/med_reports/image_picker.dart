@@ -69,13 +69,15 @@ import 'package:aim_swasthya/view/user/drawer/med_reports/medical_overlay_screen
 
 class ImagePickerHelper {
   final ImagePicker _picker = ImagePicker();
-String pickedImage='';
-  Future<XFile?> pickImageFromCamera(BuildContext context, {bool isProfileSelection= false}) async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+  String pickedImage = '';
+  Future<XFile?> pickImageFromCamera(BuildContext context,
+      {bool isProfileSelection = false}) async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       String base64Image = await _convertToBase64(pickedFile);
-      if(isProfileSelection){
+      if (isProfileSelection) {
         return pickedFile;
       }
       showModalBottomSheet(
@@ -87,20 +89,24 @@ String pickedImage='';
         ),
         backgroundColor: AppColor.white,
         builder: (BuildContext context) {
-          return MedicalOverlayScreen(pickedFile: [
-            pickedFile.path
-          ]);
+          return MedicalOverlayScreen(pickedFile: [pickedFile.path]);
         },
       );
     }
   }
 
-  Future<XFile?> pickImageFromGallery(BuildContext context, {bool allowMultiple = false,bool isProfileSelection= false}) async {
+  Future<XFile?> pickImageFromGallery(BuildContext context,
+      {bool allowMultiple = false, bool isProfileSelection = false}) async {
+    if (isProfileSelection = true) {
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+      return pickedFile;
+    }
     final List<XFile> pickedFileList = await _picker.pickMultiImage();
 
-    if ( pickedFileList.isNotEmpty) {
+    if (pickedFileList.isNotEmpty) {
       List<String> base64Images = [];
-      if(isProfileSelection){
+      if (isProfileSelection) {
         return pickedFileList.first;
       }
       for (var file in pickedFileList) {
@@ -117,15 +123,17 @@ String pickedImage='';
         ),
         backgroundColor: AppColor.white,
         builder: (BuildContext context) {
-          return MedicalOverlayScreen(pickedFile: pickedFileList.map((e)=>
-              e.path.toString()).toList());
+          return MedicalOverlayScreen(
+              pickedFile:
+                  pickedFileList.map((e) => e.path.toString()).toList());
         },
       );
     }
   }
 
   Future<void> pickSingleImageFromGallery(BuildContext context) async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       String base64Image = await _convertToBase64(pickedFile);
@@ -140,14 +148,14 @@ String pickedImage='';
         backgroundColor: AppColor.white,
         builder: (BuildContext context) {
           return MedicalOverlayScreen(
-            pickedFile: [pickedFile.path], // still pass as list for compatibility
+            pickedFile: [
+              pickedFile.path
+            ], // still pass as list for compatibility
           );
         },
       );
     }
   }
-
-
 
   Future<String> _convertToBase64(XFile imageFile) async {
     try {
@@ -181,7 +189,7 @@ String pickedImage='';
           return MedicalOverlayScreen(pickedFile: [file.path.toString()]
               // .map((e)=>
               // e.path.toString()).toList()
-          );
+              );
         },
       );
       // Provider.of<GetImageUrlViewModel>(context, listen: false).addMedicalRecord(filePath: file.path!, fileName: file.name);
@@ -200,9 +208,7 @@ String pickedImage='';
       // );
     }
   }
-
 }
-
 
 // import 'dart:convert';
 // import 'package:aim_swasthya/view/user/drawer/med_reports/medical_overlay_screen.dart';
