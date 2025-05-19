@@ -24,13 +24,13 @@ class SlotScheduleViewModel extends ChangeNotifier {
     final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     final index = weekdays.indexOf(shortName);
     if (index == -1) return shortName;
-    
+
     // Create a date for the corresponding weekday
     final now = DateTime.now();
     final daysUntilMonday = (DateTime.monday - now.weekday) % 7;
     final monday = now.add(Duration(days: daysUntilMonday));
     final targetDate = monday.add(Duration(days: index));
-    
+
     // Format the date to get full weekday name
     return DateFormat('EEEE').format(targetDate);
   }
@@ -277,7 +277,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
         // Convert date from DD-MM-YYYY to YYYY-MM-DD
         final dateParts = item['availability_date'].split('-');
         final formattedDate = '${dateParts[2]}-${dateParts[1]}-${dateParts[0]}';
-        
+
         result.add({
           'availability_date': formattedDate,
           'available_flag': item['available_flag'],
@@ -332,17 +332,20 @@ class SlotScheduleViewModel extends ChangeNotifier {
         }
 
         // Convert dates from DD-MM-YYYY to DateTime objects
-        final startDateParts = value.schedules!.first.availabilityDate?.split('-') ?? [];
-        final endDateParts = value.schedules!.last.availabilityDate?.split('-') ?? [];
+        final startDateParts =
+            value.schedules!.first.availabilityDate?.split('-') ?? [];
+        final endDateParts =
+            value.schedules!.last.availabilityDate?.split('-') ?? [];
 
         if (startDateParts.length == 3 && endDateParts.length == 3) {
-          final formattedStartDate = '${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}';
-          final formattedEndDate = '${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}';
+          final formattedStartDate =
+              '${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}';
+          final formattedEndDate =
+              '${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}';
 
           _selectedRange = DateTimeRange(
-            start: DateTime.parse(formattedStartDate),
-            end: DateTime.parse(formattedEndDate)
-          );
+              start: DateTime.parse(formattedStartDate),
+              end: DateTime.parse(formattedEndDate));
         }
 
         // Set up _allSlots with the schedule data
@@ -351,10 +354,13 @@ class SlotScheduleViewModel extends ChangeNotifier {
             'availability_date': schedule.availabilityDate,
             'dd_month_name': schedule.ddMonthName,
             'available_flag': schedule.availableFlag,
-            'timings': schedule.timings?.map((timing) => {
-              'start_time': timing.startTime,
-              'end_time': timing.endTime,
-            }).toList() ?? [],
+            'timings': schedule.timings
+                    ?.map((timing) => {
+                          'start_time': timing.startTime,
+                          'end_time': timing.endTime,
+                        })
+                    .toList() ??
+                [],
           };
         }).toList();
 
@@ -369,7 +375,6 @@ class SlotScheduleViewModel extends ChangeNotifier {
         //     end: DateTime.parse(formattedEndDate)
         //   );
         // }
-
       } catch (e) {
         debugPrint('Error parsing dates: $e');
       }

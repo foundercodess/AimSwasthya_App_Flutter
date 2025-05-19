@@ -454,10 +454,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
           );
   }
 
-  
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
 
-Widget showImageBottomSheet(bool isProfile) {
+  Widget showImageBottomSheet(bool isProfile) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -476,8 +475,12 @@ Widget showImageBottomSheet(bool isProfile) {
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(), "profile_photo",context);
-                } 
+                          img.path.toString(), "profile_photo", context)
+                      .then((_) {
+                    Provider.of<DoctorProfileViewModel>(context, listen: false)
+                        .doctorProfileApi(context);
+                  });
+                }
               }
             },
             // onTap: () async {
@@ -499,24 +502,15 @@ Widget showImageBottomSheet(bool isProfile) {
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(), "profile_photo",context);
-                } 
+                          img.path.toString(), "profile_photo", context);
+                }
               }
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.photo_library)
-          //   title: const Text('File'),
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //     _imagePickerHelper.pickDocument(context);
-          //   },
-          // ),
         ],
       ),
     );
   }
-
 
   Future<void> _selectLocation() async {
     await Navigator.push(
@@ -535,61 +529,66 @@ Widget showImageBottomSheet(bool isProfile) {
 
   Widget docProfileSec() {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
-    return Container(
-      width: Sizes.screenWidth,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: AppColor.textfieldGrayColor.withOpacity(0.5)),
-      child: Row(
-        children: [
-          Container(
-            height: Sizes.screenHeight * 0.18,
-            width: Sizes.screenWidth / 3.2,
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  bottomLeft: Radius.circular(15),
-                ),
-                image: DecorationImage(
-                    image: docProfileCon.doctorProfileModel!.data!.doctors![0]
-                                .signedImageUrl !=
-                            null
-                        ? NetworkImage(docProfileCon.doctorProfileModel!.data!
-                            .doctors![0].signedImageUrl!)
-                        : const AssetImage(Assets.logoDoctor),
-                    fit: BoxFit.fitHeight)),
-          ),
-          Sizes.spaceWidth15,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+    return GestureDetector(
+        onTap: () {
+          print("sdfsa");
+          showImageBottomSheet(true);
+        },
+        child: Container(
+          width: Sizes.screenWidth,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: AppColor.textfieldGrayColor.withOpacity(0.5)),
+          child: Row(
             children: [
-              TextConst(
-                docProfileCon
-                        .doctorProfileModel!.data!.doctors![0].experience ??
-                    "5 years Experience",
-                size: Sizes.fontSizeFour,
-                fontWeight: FontWeight.w400,
+              Container(
+                height: Sizes.screenHeight * 0.18,
+                width: Sizes.screenWidth / 3.2,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                    ),
+                    image: DecorationImage(
+                        image: docProfileCon.doctorProfileModel!.data!
+                                    .doctors![0].signedImageUrl !=
+                                null
+                            ? NetworkImage(docProfileCon.doctorProfileModel!
+                                .data!.doctors![0].signedImageUrl!)
+                            : const AssetImage(Assets.logoDoctor),
+                        fit: BoxFit.fitHeight)),
               ),
-              Sizes.spaceHeight5,
-              TextConst(
-                docProfileCon
-                        .doctorProfileModel!.data!.doctors![0].doctorName ??
-                    "",
-                size: Sizes.fontSizeSix * 1.06,
-                fontWeight: FontWeight.w500,
-              ),
-              Sizes.spaceHeight3,
-              TextConst(
-                "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
-                size: Sizes.fontSizeFive * 1.08,
-                fontWeight: FontWeight.w400,
+              Sizes.spaceWidth15,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextConst(
+                    docProfileCon
+                            .doctorProfileModel!.data!.doctors![0].experience ??
+                        "5 years Experience",
+                    size: Sizes.fontSizeFour,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  Sizes.spaceHeight5,
+                  TextConst(
+                    docProfileCon
+                            .doctorProfileModel!.data!.doctors![0].doctorName ??
+                        "",
+                    size: Sizes.fontSizeSix * 1.06,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  Sizes.spaceHeight3,
+                  TextConst(
+                    "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
+                    size: Sizes.fontSizeFive * 1.08,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget clinicDetails() {
