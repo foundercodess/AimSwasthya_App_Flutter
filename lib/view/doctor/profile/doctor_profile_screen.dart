@@ -26,6 +26,7 @@ class UserDocProfilePage extends StatefulWidget {
 class _UserDocProfilePageState extends State<UserDocProfilePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _speController = TextEditingController();
   final TextEditingController _expController = TextEditingController();
@@ -56,6 +57,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
       context,
       name: _nameController.text,
       gender: _genderController.text,
+      email: _emailController.text,
       phoneNumber: _numberController.text,
       specializationId: docProfileCon
               .doctorProfileModel?.data?.doctors?[0].specializationId
@@ -69,6 +71,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
         isEditMode = false;
         _nameController.clear();
         _genderController.clear();
+        _emailController.clear();
         _numberController.clear();
         _speController.clear();
         _expController.clear();
@@ -196,6 +199,20 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       enabled: false,
                     ),
                     Sizes.spaceHeight10,
+                    CustomTextField(
+                      contentPadding:
+                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
+                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
+                      hintText: docProfileCon
+                              .doctorProfileModel?.data?.doctors?[0].email ??
+                          "Email address",
+                      controller: _emailController,
+                      keyboardType: TextInputType.text,
+                      cursorColor: AppColor.textGrayColor,
+                      maxLength: 10,
+                      enabled: false,
+                    ),
+                    Sizes.spaceHeight10,
                     Center(
                       child: Container(
                         height: 55,
@@ -281,7 +298,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       fontWeight: FontWeight.w500,
                     ),
                     // Sizes.spaceHeight10,
-
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -386,6 +402,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             Sizes.spaceHeight35,
                             clinicInfoTile(clinic.name ?? "Clinic name"),
                             clinicInfoTile(clinic.address ?? "Address"),
+                            // clinicInfoTile(clinic. ?? "Address"),
+                            clinicInfoTile(clinic.address ?? "Address"),
                             clinicInfoTile(clinic.phoneNumber ?? "Contact no"),
                             clinicInfoTile(
                                 clinic.landmark ?? "Landmark (optional)"),
@@ -394,7 +412,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                         );
                       },
                     ),
-
                     Sizes.spaceHeight10,
                     Center(
                       child: TextButton(
@@ -451,6 +468,12 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
               color: Colors.transparent,
               child: const DocComBottomNevBar(),
             ),
+            // bottomNavigationBar: Container(
+            //   height: 70,
+            //   width: Sizes.screenWidth,
+            //   color: Colors.transparent,
+            //   child: const DocComBottomNevBar(),
+            // ),
           );
   }
 
@@ -475,11 +498,15 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
+<<<<<<< HEAD
                           img.path.toString(), "profile_photo", context)
                       .then((_) {
                     Provider.of<DoctorProfileViewModel>(context, listen: false)
                         .doctorProfileApi(context);
                   });
+=======
+                          img.path.toString(), "profile_photo", context);
+>>>>>>> 862ad3a7b03d6c010ca6e9ed99d55aa22db605b8
                 }
               }
             },

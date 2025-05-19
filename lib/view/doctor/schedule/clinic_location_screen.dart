@@ -1,5 +1,6 @@
 // view/doctor/schedule/clinic_location_screen.dart
 import 'package:aim_swasthya/res/common_material.dart';
+import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_reg_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
@@ -45,6 +46,7 @@ class _ClinicLocationScreenState extends State<ClinicLocationScreen> {
             ),
           ),
           Sizes.spaceHeight20,
+
           Column(
             children: [
               Container(

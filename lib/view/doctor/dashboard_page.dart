@@ -1,17 +1,22 @@
 // view/doctor/dashboard_page.dart
 import 'package:aim_swasthya/res/border_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
+import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
+import 'package:aim_swasthya/utils/show_server_error.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_home_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../view_model/user/cancelAppointment_view_model.dart';
 
 class DoctorDashboardScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -337,6 +342,14 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                 itemBuilder: (context, index) {
                   final schedule =
                       docHomeCon.doctorHomeModel!.data!.appointments![index];
+                  print("udysue${schedule.status}");
+                  final cancelRescheduleAllowed = isMoreThanOneHourAway(
+                      schedule.appointmentDate.toString(),
+                      schedule.appointmentTime.toString());
+                  final isCancelled =
+                      schedule.status!.toLowerCase() == "cancelled";
+                  final isRescheduled =
+                      schedule.status!.toLowerCase() == "reschduled";
                   return Container(
                     margin: EdgeInsets.only(
                       left: index == 0
@@ -411,7 +424,8 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                   ],
                                 ),
                                 Sizes.spaceHeight5,
-                                ButtonConst(
+                                if (!isRescheduled && !isCancelled)
+                                  ButtonConst(
                                     title: "Reschedule",
                                     size: Sizes.fontSizeThree * 1.05,
                                     fontWeight: FontWeight.w400,
@@ -420,9 +434,54 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                                     width: Sizes.screenWidth * 0.33,
                                     color: AppColor.blue,
                                     onTap: () {
-                                      // Navigator.pushNamed(context,
-                                      //     RoutesName.patientProfileScreen);
-                                    })
+                                      if (cancelRescheduleAllowed) {
+                                        showCupertinoDialog(
+                                          context: context,
+                                          builder: (_) => ActionOverlay(
+                                            text: "Reschedule Appointment",
+                                            subtext:
+                                                "Are you sure you want to reschedule\n your appointment?",
+                                            onTap: () {
+                                              Provider.of<CancelAppointmentViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  .cancelAppointmentApi(
+                                                      status: 'reschduled',
+                                                      isDoctorCancel: true,
+                                                      context,
+                                                      schedule.appointmentId
+                                                          .toString());
+                                            },
+                                          ),
+                                        );
+                                      } else {
+                                        showInfoOverlay(
+                                            title: "Info",
+                                            errorMessage:
+                                                "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
+                                      }
+
+                                      // Navigator.pop(context);
+                                    },
+                                  ),
+                                if (isCancelled || isRescheduled) ...[
+                                  Sizes.spaceWidth5,
+                                  Center(
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 4),
+                                      alignment: Alignment.center,
+                                      // height: Sizes.screenHeight * 0.06,
+                                      child: TextConst(
+                                        isCancelled
+                                            ? "Cancelled"
+                                            : "Rescheduled",
+                                        color: Colors.grey,
+                                        size: Sizes.fontSizeFour,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                           ],
@@ -546,13 +605,6 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
           apptDate.month == now.month &&
           apptDate.day == now.day;
     }).toList();
-    // List<Map<String, dynamic>> todayAppointmentList = [
-    //   {"date": "7 June", "time": "10:30", "name": "Alice", "status": 1},
-    //   {"date": "7 June", "time": "12:00", "name": "Bob", "status": 2},
-    //   {"date": "7 June", "time": "15:45", "name": "Charlie", "status": null},
-    //   {"date": "7 June", "time": "18:20", "name": "David", "status": 0},
-    //   {"date": "7 June", "time": "21:10", "name": "Eve", "status": 0},
-    // ];
     return Container(
       clipBehavior: Clip.none,
       width: Sizes.screenWidth / 1.95,
@@ -663,14 +715,14 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                               Container(
                                 height: Sizes.screenHeight * 0.054,
                                 width: Sizes.screenWidth * 0.079,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color:
-                                        AppColor.lightSkyBlue.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: TextConst(
-                                  "+1",
-                                ),
+                                // alignment: Alignment.center,
+                                // decoration: BoxDecoration(
+                                //     color:
+                                //         AppColor.lightSkyBlue.withOpacity(0.5),
+                                //     borderRadius: BorderRadius.circular(5)),
+                                // child: TextConst(
+                                //   "+1",
+                                // ),
                               )
                             ]
                           ],
@@ -938,5 +990,23 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
         ],
       ),
     );
+  }
+
+  bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+    // Combine date and time
+    String dateTimeString = "$bookingDate $hour24Format";
+
+    // Parse using the correct format
+    DateFormat format = DateFormat("yyyy-MM-dd hh:mm a");
+    DateTime bookingDateTime = format.parse(dateTimeString);
+
+    // Get current time
+    DateTime now = DateTime.now();
+
+    // Calculate difference
+    Duration difference = bookingDateTime.difference(now);
+
+    // Return true if more than 1 hour away
+    return difference.inMinutes > 60;
   }
 }

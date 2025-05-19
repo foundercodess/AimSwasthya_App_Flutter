@@ -2,6 +2,7 @@ import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/show_server_error.dart';
+import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_update_appointment_view_model.dart';
 import 'package:aim_swasthya/view_model/user/cancelAppointment_view_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,18 +21,17 @@ class DocMedicalReportsScreen extends StatefulWidget {
       _DocMedicalReportsScreenState();
 }
 
-final List<Map<String, String>> bloodGroupList = [
-  {"title": "Blood group", "value": "A+"},
-  {"title": "Allergies", "value": "B-"},
-  {"title": "Current medication", "value": "O+"},
-  {"title": "Chronic illnesses", "value": "AB+"},
-  {"title": "Lifestyle habits", "value": "A-"},
-];
+// final List<Map<String, String>> bloodGroupList = [
+//   {"title": "Blood group", "value": "A+"},
+//   {"title": "Allergies", "value": "B-"},
+//   {"title": "Current medication", "value": "O+"},
+//   {"title": "Chronic illnesses", "value": "AB+"},
+//   {"title": "Lifestyle habits", "value": "A-"},
+// ];
 
 class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
   @override
   Widget build(BuildContext context) {
-    // final medData = Provider.of<DocHealthReportViewModel>(context);
     final medData = Provider.of<DocHealthReportViewModel>(context);
     final medicalHealthList =
         medData.medicalHealthReportModel?.medicalHealth ?? [];
@@ -80,7 +80,7 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                         .replaceAll('_', ' ')
                         .toUpperCase(); // e.g. BLOOD GROUP
                     final value = (entry.value ?? '').toString().isEmpty
-                        ? 'N/A'
+                        ? 'null'
                         : entry.value.toString();
 
                     return Padding(
@@ -120,7 +120,7 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                 );
               },
             ),
-
+            Sizes.spaceHeight20,
             // ListView.builder(
             //       padding: const EdgeInsets.all(15),
             //       itemCount: medData.medicalHealthReportModel!.medicalHealth!.length,
@@ -168,6 +168,12 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        height: 70,
+        width: Sizes.screenWidth,
+        color: Colors.transparent,
+        child: const DocComBottomNevBar(),
+      ),
     );
   }
 
@@ -183,6 +189,7 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
     final isRescheduled =
         patientAppointmentData.status!.toLowerCase() == "reschduled";
     print("status ${patientAppointmentData.status}");
+
     return patientAppointmentData != null
         ? Container(
             margin: EdgeInsets.only(

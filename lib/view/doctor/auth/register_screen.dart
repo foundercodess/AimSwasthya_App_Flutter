@@ -499,8 +499,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const Spacer(),
                 AppBtn(
                     fontSize: 12,
+
+
+
+
+
                     borderRadius: 12,
-                    title:doctorCon.identityImage != null?"Change": AppLocalizations.of(context)!.add,
+                    title:doctorCon.identityImage != null?"Edit": AppLocalizations.of(context)!.add,
                     height: Sizes.screenHeight * 0.044,
                     width: Sizes.screenWidth * 0.38,
                     color: AppColor.blue,
