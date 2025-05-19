@@ -90,6 +90,7 @@ class DoctorTile extends StatelessWidget {
                       ),
                       Sizes.spaceHeight3,
                       TextConst(
+                        overflow: TextOverflow.ellipsis,
                         doctor.doctorName ?? "",
                         size: Sizes.fontSizeFour * 1.1,
                         fontWeight: FontWeight.w500,

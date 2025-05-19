@@ -443,59 +443,107 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
       ),
     );
   }
-
   Widget uploadedRecords() {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
+
     return patientProfileData.patientProfileModel != null &&
-            patientProfileData.patientProfileModel!.medicalRecords != null &&
-            patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
+        patientProfileData.patientProfileModel!.medicalRecords != null &&
+        patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
         ? Container(
-            margin: const EdgeInsets.all(12),
-            padding: EdgeInsets.symmetric(
-                horizontal: Sizes.screenWidth * 0.035,
-                vertical: Sizes.screenHeight * 0.015),
-            width: Sizes.screenWidth,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12), color: AppColor.grey),
-            child: Column(
-              children: [
-                SizedBox(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(0),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: patientProfileData
-                        .patientProfileModel!.medicalRecords!.length,
-                    itemBuilder: (context, index) {
-                      final docData = patientProfileData
-                          .patientProfileModel!.medicalRecords![index];
-                      return index == 0
-                          ? DottedBorder(
-                              color: AppColor.lightBlue,
-                              strokeWidth: 1,
-                              borderType: BorderType.RRect,
-                              radius: const Radius.circular(8),
-                              dashPattern: const [3, 2],
-                              padding: EdgeInsets.zero,
-                              child: reportData(docData, true),
-                            )
-                          : reportData(docData, false);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          )
+      margin: const EdgeInsets.all(12),
+      padding: EdgeInsets.symmetric(
+        horizontal: Sizes.screenWidth * 0.035,
+        vertical: Sizes.screenHeight * 0.015,
+      ),
+      width: Sizes.screenWidth,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: AppColor.grey,
+      ),
+      child: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(0),
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: patientProfileData
+                .patientProfileModel!.medicalRecords!.length,
+            itemBuilder: (context, index) {
+              final docData = patientProfileData
+                  .patientProfileModel!.medicalRecords![index];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (index == 0)
+                    Column(
+                      children: [
+                        DottedBorder(
+                          color: AppColor.lightBlue,
+                          strokeWidth: 1,
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(8),
+                          dashPattern: const [3, 2],
+                          padding: const EdgeInsets.only(left: 8,right: 8,top: 4,bottom: 4),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                Assets.imagesMedicalReports,
+                                width: Sizes.screenWidth * 0.09,
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(width: Sizes.screenWidth * 0.02),
+                              TextConst(
+                                "Medical Health Report",
+                                size: Sizes.fontSizeFour,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  Provider.of<DocHealthReportViewModel>(
+                                      context,
+                                      listen: false)
+                                      .medicalHealthReportApi(
+                                      patientProfileData
+                                          .patientProfileModel!
+                                          .patientProfile![0]
+                                          .patientId
+                                          .toString());
+                                  Navigator.pushNamed(context,
+                                      RoutesName.docMedicalReportsScreen);
+                                },
+                                child: TextConst(
+                                  "Tap to view",
+                                  size: Sizes.fontSizeTwo,
+                                  color: AppColor.blue,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                      ],
+                    ),
+                  reportData(docData),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    )
         : const Center(child: NoDataMessages());
   }
-  // final patientProfileData = Provider.of<PatientProfileViewModel>(context);
 
-  Widget reportData(MedicalRecords docData, bool isDate) {
-    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
+
+  Widget reportData(MedicalRecords docData) {
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: Sizes.screenWidth * 0.02,
-          vertical: Sizes.screenHeight * 0.009),
+        horizontal: Sizes.screenWidth * 0.02,
+        vertical: Sizes.screenHeight * 0.009,
+      ),
       child: Row(
         children: [
           Image.asset(
@@ -513,33 +561,13 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   size: Sizes.fontSizeFour,
                   fontWeight: FontWeight.w400,
                 ),
-
-                isDate == 0
-                    ? TextConst(
-                        DateFormat('dd/MM/yyyy').format(
-                            DateTime.parse(docData.uploadedAt.toString())),
-                        size: Sizes.fontSizeTwo,
-                        color: AppColor.blue,
-                        fontWeight: FontWeight.w400,
-                      )
-                    : GestureDetector(
-                  onTap: (){
-                    Provider.of<DocHealthReportViewModel>(context,listen: false).medicalHealthReportApi(patientProfileData.patientProfileModel!.patientProfile![0].patientId.toString());
-                    Navigator.pushNamed(context, RoutesName.docMedicalReportsScreen);
-                  },
-                      child: TextConst(
-                          "Tap to view",
-                          size: Sizes.fontSizeFour,
-                          color: AppColor.textGrayColor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                    ),
-                // TextConst(
-                //   DateFormat('dd/MM/yyyy').format(DateTime.parse(docData.uploadedAt.toString())),
-                //   size: isDate ? Sizes.fontSizeTwo : Sizes.fontSizeFour,
-                //   color: isDate ? AppColor.blue : null,
-                //   fontWeight: FontWeight.w400,
-                // ),
+                TextConst(
+                  DateFormat('dd/MM/yyyy')
+                      .format(DateTime.parse(docData.uploadedAt.toString())),
+                  size: Sizes.fontSizeThree,
+                  color: AppColor.black,
+                  fontWeight: FontWeight.w400,
+                ),
               ],
             ),
           ),
@@ -548,6 +576,101 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     );
   }
 
+  // Widget reportData(MedicalRecords docData, bool isDate) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(
+  //         horizontal: Sizes.screenWidth * 0.02,
+  //         vertical: Sizes.screenHeight * 0.009),
+  //     child: Row(
+  //       children: [
+  //         Image.asset(
+  //           Assets.imagesMedicalReports,
+  //           width: Sizes.screenWidth * 0.09,
+  //           fit: BoxFit.cover,
+  //         ),
+  //         SizedBox(width: Sizes.screenWidth * 0.02),
+  //         Expanded(
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               TextConst(
+  //                 docData.documentName ?? "",
+  //                 size: Sizes.fontSizeFour,
+  //                 fontWeight: FontWeight.w400,
+  //               ),
+  //               TextConst(
+  //                 DateFormat('dd/MM/yyyy').format(DateTime.parse(docData.uploadedAt.toString())),
+  //                 size: isDate ? Sizes.fontSizeTwo : Sizes.fontSizeFour,
+  //                 color: isDate ? AppColor.blue : null,
+  //                 fontWeight: FontWeight.w400,
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+  // Widget uploadedRecords() {
+  //   final patientProfileData = Provider.of<PatientProfileViewModel>(context);
+  //   return patientProfileData.patientProfileModel != null &&
+  //           patientProfileData.patientProfileModel!.medicalRecords != null &&
+  //           patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
+  //       ? Container(
+  //           margin: const EdgeInsets.all(12),
+  //           padding: EdgeInsets.symmetric(
+  //               horizontal: Sizes.screenWidth * 0.035,
+  //               vertical: Sizes.screenHeight * 0.015),
+  //           width: Sizes.screenWidth,
+  //           decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.circular(12), color: AppColor.grey),
+  //           child: Column(
+  //             children: [
+  //               SizedBox(
+  //                 child: ListView.builder(
+  //                   shrinkWrap: true,
+  //                   padding: const EdgeInsets.all(0),
+  //                   physics: const NeverScrollableScrollPhysics(),
+  //                   itemCount: patientProfileData
+  //                       .patientProfileModel!.medicalRecords!.length,
+  //                   itemBuilder: (context, index) {
+  //                     final docData = patientProfileData
+  //                         .patientProfileModel!.medicalRecords![index];
+  //                     return index == 0
+  //                         ? DottedBorder(
+  //                             color: AppColor.lightBlue,
+  //                             strokeWidth: 1,
+  //                             borderType: BorderType.RRect,
+  //                             radius: const Radius.circular(8),
+  //                             dashPattern: const [3, 2],
+  //                             padding: EdgeInsets.zero,
+  //                             child:Row(
+  //                               children: [
+  //                                 TextConst(
+  //                                   "Medical Health Report",
+  //                                   size: Sizes.fontSizeFour,
+  //                                   fontWeight: FontWeight.w400,
+  //                                 ),
+  //                                 Spacer(),
+  //                                 TextConst(
+  //                                   "Tap to view",
+  //                                   size: Sizes.fontSizeFour,
+  //                                   color: AppColor.textGrayColor,
+  //                                   fontWeight: FontWeight.w400,
+  //                                 ),
+  //                               ],
+  //                             )
+  //                             // reportData(docData, true),
+  //                           )
+  //                         : reportData(docData, true);
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         )
+  //       : const Center(child: NoDataMessages());
+  // }
   bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
     try {
       // Try parsing bookingDate in multiple known formats

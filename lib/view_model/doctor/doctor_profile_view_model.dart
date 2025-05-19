@@ -54,6 +54,7 @@ class DoctorProfileViewModel extends ChangeNotifier {
     BuildContext context, {
     required String name,
     required String gender,
+    required String email,
     required String phoneNumber,
     required String specializationId,
     required String practiceStartYear,
@@ -64,6 +65,7 @@ class DoctorProfileViewModel extends ChangeNotifier {
         "doctor_id": userId,
         "name": name,
         "gender": gender,
+        "email": email,
         "phone_number": phoneNumber,
         "specialization_id": specializationId,
         "practice_start_year": practiceStartYear,
@@ -72,8 +74,8 @@ class DoctorProfileViewModel extends ChangeNotifier {
       final response = await _doctorProfileRepo.updateDoctorProfileApi(data);
       if (response['status'] == true) {
         await doctorProfileApi(context, isLoad: false);
-              Provider.of<DoctorHomeViewModel>(context, listen: false)
-          .doctorHomeApi(context);
+        Provider.of<DoctorHomeViewModel>(context, listen: false)
+            .doctorHomeApi(context);
         Utils.show(response['message'], context);
         return true;
       } else {

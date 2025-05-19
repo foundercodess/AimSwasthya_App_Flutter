@@ -41,7 +41,7 @@ class _DocComBottomNevBarState extends State<DocComBottomNevBar> {
             ),
             child: IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, RoutesName.dashboardPage);
+                Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);
               },
               icon:  Image(image: const AssetImage(Assets.iconsBottomHome),width: Sizes.screenWidth*0.09,),
             ),
