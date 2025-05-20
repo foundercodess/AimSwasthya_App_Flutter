@@ -30,11 +30,12 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
   // }
   Widget build(BuildContext context) {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
-    return revenueDocCon.revenueDoctorModel == null || revenueDocCon.loading
-        ? const Center(child: LoadData())
-        : Scaffold(
+    return Scaffold(
             backgroundColor: AppColor.white,
-            body: SingleChildScrollView(
+            body:revenueDocCon.revenueDoctorModel == null || revenueDocCon.loading
+                ? const Center(child: LoadData())
+                :
+            SingleChildScrollView(
               child: Column(
 
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,6 +300,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                                                   .totalAmount
                                                   .toString()) /
                                               1000,
+
                                           // double.parse(weekdays.totalAmount.toString() / 1000),
                                           backgroundColor: Colors.transparent,
                                           valueColor:

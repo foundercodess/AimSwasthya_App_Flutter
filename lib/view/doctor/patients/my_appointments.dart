@@ -354,13 +354,14 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
     final appointmentCon = Provider.of<DocPatientAppointmentViewModel>(context);
 
     final bottomCon = Provider.of<BottomNavProvider>(context);
-    return appointmentCon.docPatientAppointmentModel == null ||
-            appointmentCon.loading
-        ? const Center(child: LoadData())
-        : Scaffold(
+    return  Scaffold(
             extendBody: true,
             primary: false,
-            body: SingleChildScrollView(
+            body: appointmentCon.docPatientAppointmentModel == null ||
+                appointmentCon.loading
+                ? const Center(child: LoadData())
+                :
+            SingleChildScrollView(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

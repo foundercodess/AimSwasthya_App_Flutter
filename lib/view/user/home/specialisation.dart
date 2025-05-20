@@ -121,6 +121,7 @@ class _SpecialiasationScreenState extends State<SpecialiasationScreen> {
                                 fontWeight: FontWeight.w400,
                                 color: AppColor.white,
                               ),
+
                             ],
                           ),
                         ),

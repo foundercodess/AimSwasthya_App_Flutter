@@ -643,7 +643,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             Sizes.spaceWidth5,
                             Container(
                               height: Sizes.screenHeight * 0.054,
-                              width: Sizes.screenWidth / 3.35,
+                              width: Sizes.screenWidth / 2.9,
                               padding: const EdgeInsets.only(
                                 left: 3,
                                 top: 2,
@@ -714,7 +714,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                               Sizes.spaceWidth3,
                               Container(
                                 height: Sizes.screenHeight * 0.054,
-                                width: Sizes.screenWidth * 0.079,
+                                width: Sizes.screenWidth * 0.06,
                                 // alignment: Alignment.center,
                                 // decoration: BoxDecoration(
                                 //     color:
@@ -736,7 +736,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                               children: [
                                 TextConst(
                                   item.appointmentTime.toString(),
-                                  size: Sizes.fontSizeFour,
+                                  size: Sizes.fontSizeThree,
                                 ),
                                 if (item.status != null && item.status != 0)
                                   item.status == 1
