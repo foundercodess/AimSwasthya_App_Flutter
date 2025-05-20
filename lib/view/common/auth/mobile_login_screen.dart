@@ -1,3 +1,4 @@
+// view/common/auth/mobile_login_screen.dart
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/view/common/info/terms_of_user.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
@@ -23,7 +24,11 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
   bool isChecked = false;
   @override
   void initState() {
-    ImageDownloader().fetchAndDownloadImages(context, folderName: 'logos/static_icons/');
+        final patientAuthCon =
+        Provider.of<PatientAuthViewModel>(context, listen: false);
+        if(patientAuthCon.navType==2){
+           ImageDownloader().fetchAndDownloadImages(context, folderName: 'logos/static_icons/');
+        }
     super.initState();
   }
 

@@ -39,7 +39,7 @@ class _DocComBottomNevBarState extends State<DocComBottomNevBar> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: const Color(0xffB6E5FF).withOpacity(0.6),
-            ),
+            ), 
             child: IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);

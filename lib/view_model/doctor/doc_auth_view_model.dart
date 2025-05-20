@@ -166,6 +166,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
                   );
                 });
           } else {
+            UserViewModel().saveUser(value['doctor_id']);
             Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
         } else {
@@ -179,7 +180,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
           "type": type
         };
         if (type == "email") {
-           if (!value['is_registered']) {
+          if (!value['is_registered']) {
             showCupertinoDialog(
                 context: context,
                 builder: (context) {
@@ -200,7 +201,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
                     },
                   );
                 });
-          } 
+          }
           // if (!value['is_registered']) {
           //   if (authCon.userRole == 1) {
           //     Navigator.pushNamed(context, RoutesName.registerScreen);
@@ -208,7 +209,8 @@ class DoctorAuthViewModel extends ChangeNotifier {
           //     Navigator.pushNamed(context, RoutesName.userRegisterScreen);
           //   }
           // }
-           else {
+          else {
+            UserViewModel().saveUser(value['doctor_id']);
             Navigator.pushNamed(context, RoutesName.allSetDocScreen);
           }
         } else {
