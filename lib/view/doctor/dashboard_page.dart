@@ -995,7 +995,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
   bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
     // Combine date and time
     String dateTimeString = "$bookingDate $hour24Format";
-
+    print("date time : ${dateTimeString}");
     // Parse using the correct format
     DateFormat format = DateFormat("yyyy-MM-dd hh:mm a");
     DateTime bookingDateTime = format.parse(dateTimeString);

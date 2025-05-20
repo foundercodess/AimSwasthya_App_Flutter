@@ -1,3 +1,4 @@
+// view/doctor/common_nav_bar.dart
 import 'dart:ui';
 
 import 'package:aim_swasthya/generated/assets.dart';
@@ -71,7 +72,7 @@ class _DocComBottomNevBarState extends State<DocComBottomNevBar> {
               IconButton(
                 onPressed: () {
                   regCon.disposeKey();
-                  bottomCon.setIndex(0);
+                  bottomCon.setIndex(1);
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const DoctorBottomNevBar()),
@@ -89,7 +90,7 @@ class _DocComBottomNevBarState extends State<DocComBottomNevBar> {
               IconButton(
                 onPressed: () {
                   regCon.disposeKey();
-                  bottomCon.setIndex(0);
+                  bottomCon.setIndex(2);
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const DoctorBottomNevBar()),

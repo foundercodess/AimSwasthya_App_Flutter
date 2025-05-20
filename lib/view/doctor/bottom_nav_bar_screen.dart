@@ -1,16 +1,11 @@
 // view/doctor/bottom_nav_bar_screen.dart
 import 'dart:ui';
-
-import 'package:aim_swasthya/generated/assets.dart';
-import 'package:aim_swasthya/res/color_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/view/doctor/dashboard_page.dart';
 import 'package:aim_swasthya/view/doctor/drawer/drawer_screen.dart';
 import 'package:aim_swasthya/view/doctor/patients/my_appointments.dart';
-import 'package:aim_swasthya/view/doctor/patients/patient_profile_screen.dart';
 import 'package:aim_swasthya/view/doctor/patients/show_all_patient.dart';
-import 'package:aim_swasthya/view/doctor/schedule/schedule_screen.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart'
     show UserRegisterViewModel;
@@ -18,8 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../../view_model/doctor/notification_view_model.dart';
-import 'drawer/notification_screen.dart';
 
 class DoctorBottomNevBar extends StatefulWidget {
   const DoctorBottomNevBar({super.key});
@@ -46,9 +39,10 @@ class _DoctorBottomNevBarState extends State<DoctorBottomNevBar> {
     ];
     final regCon = Provider.of<UserRegisterViewModel>(context);
     final bottomCon = Provider.of<BottomNavProvider>(context);
+    print("current index f bottom: ${bottomCon.currentIndex}");
     return WillPopScope(
       onWillPop: () async {
-        if(bottomCon.currentIndex != 0){
+        if (bottomCon.currentIndex != 0) {
           bottomCon.setIndex(0);
           return false;
         }
@@ -57,7 +51,7 @@ class _DoctorBottomNevBarState extends State<DoctorBottomNevBar> {
             builder: (context) {
               return ActionOverlay(
                 text: "Exit App",
-                subtext:"Do you really want to close the app?",
+                subtext: "Do you really want to close the app?",
                 onTap: () {
                   SystemNavigator.pop();
                 },

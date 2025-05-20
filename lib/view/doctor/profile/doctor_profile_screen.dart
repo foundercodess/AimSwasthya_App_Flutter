@@ -498,15 +498,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       .setProfileImage(img);
                   Provider.of<DoctorAuthViewModel>(context, listen: false)
                       .addImageApi('doctor', img.name.toString(),
-<<<<<<< HEAD
-                          img.path.toString(), "profile_photo", context)
-                      .then((_) {
-                    Provider.of<DoctorProfileViewModel>(context, listen: false)
-                        .doctorProfileApi(context);
-                  });
-=======
                           img.path.toString(), "profile_photo", context);
->>>>>>> 862ad3a7b03d6c010ca6e9ed99d55aa22db605b8
                 }
               }
             },
