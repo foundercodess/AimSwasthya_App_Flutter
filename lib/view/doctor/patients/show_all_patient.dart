@@ -35,10 +35,10 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
     final bottomCon = Provider.of<BottomNavProvider>(context);
     final patientappCon = Provider.of<DocPatientAppointmentViewModel>(context);
 
-    return patientappCon.docPatientAppointmentModel ==null|| patientappCon.loading
-        ? const Center(child: LoadData()) : Scaffold(
+    return  Scaffold(
       backgroundColor: AppColor.white,
-      body: SingleChildScrollView(
+      body:patientappCon.docPatientAppointmentModel ==null|| patientappCon.loading
+          ? const Center(child: LoadData()) : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

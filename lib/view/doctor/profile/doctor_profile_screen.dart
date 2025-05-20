@@ -60,8 +60,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
       email: _emailController.text,
       phoneNumber: _numberController.text,
       specializationId: docProfileCon
-              .doctorProfileModel?.data?.doctors?[0].specializationId
-              ?.toString() ??
+              .doctorProfileModel?.data?.doctors?[0].specializationId?.toString() ??
           '',
       practiceStartYear: _expController.text,
     );

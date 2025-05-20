@@ -32,14 +32,15 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    return patientProfileData.patientProfileModel == null ||
-            patientProfileData.loading
-        ? const Center(child: LoadData())
-        : Scaffold(
+    return  Scaffold(
             extendBody: true,
             primary: false,
             backgroundColor: AppColor.white,
-            body: SingleChildScrollView(
+            body:patientProfileData.patientProfileModel == null ||
+                patientProfileData.loading
+                ? const Center(child: LoadData())
+                :
+            SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

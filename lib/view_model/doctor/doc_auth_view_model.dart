@@ -428,7 +428,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
   }
 
   Future<void> addImageApi(dynamic entityType, dynamic imageName,
-      dynamic imagePath, dynamic fileType, BuildContext context) async {
+      dynamic imagePath, dynamic fileTypeName, BuildContext context) async {
     setLoading(true);
     final userId = await UserViewModel().getUser();
     final fileType = getImageType(imageName);
@@ -437,7 +437,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
       "entity_type": entityType,
       "image_name":
           "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
-      "file_type": fileType
+      "file_type": fileTypeName
     };
     print("xfghjk" + jsonEncode(data));
     _doctorAuthRepo.addImageUrlApi(data).then((value) {
