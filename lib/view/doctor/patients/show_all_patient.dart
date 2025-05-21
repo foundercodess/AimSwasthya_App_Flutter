@@ -197,7 +197,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                     color: AppColor.blue,
                                     onTap: () {
                                       patientappCon.setDoctorsAppointmentsData(schedule);
-                                        patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
+                                        patientProfileData.patientProfileApi(schedule.patientId.toString(),schedule.appointmentId.toString(), context);
                                         Navigator.pushNamed(context,
                                             RoutesName.patientProfileScreen);
                                       // patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
@@ -331,7 +331,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                       color: AppColor.blue,
                                       onTap: () {
                                         patientappCon.setDoctorsAppointmentsData(patientData);
-                                        patientProfileData.patientProfileApi(patientData.patientId.toString(),context);
+                                        patientProfileData.patientProfileApi(patientData.patientId.toString(),patientData.appointmentId.toString(), context);
                                         Navigator.pushNamed(context,
                                             RoutesName.patientProfileScreen);
                                       })

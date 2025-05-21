@@ -797,7 +797,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                               patientProfileData
                                                   .patientProfileApi(
                                                       scheduleData.patientId
-                                                          .toString(),
+                                                          .toString(), scheduleData.appointmentId.toString(),
                                                       context);
                                               Navigator.pushNamed(
                                                   context,

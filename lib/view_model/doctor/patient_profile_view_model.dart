@@ -24,12 +24,13 @@ class PatientProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> patientProfileApi(patientId,context) async {
+  Future<void> patientProfileApi(patientId,dynamic appId,context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
       "patient_id": patientId,
-      "doctor_id" : userId
+      "doctor_id" : userId,
+      "appointment_id": appId
     };
     debugPrint("body: $data");
     _patientProfileRepo.patientProfileApi(data).then((value) {
