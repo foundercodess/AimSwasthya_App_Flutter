@@ -233,7 +233,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addClinicDoctorApi(dynamic clinicId,dynamic clinicName, dynamic address,dynamic city,
+  Future<void> addClinicDoctorApi(dynamic clinicId,dynamic clinicName, dynamic address, dynamic fee,dynamic city,
       dynamic phone, dynamic landMark, context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
@@ -242,7 +242,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       "clinic_id":clinicId,
       "name": clinicName,
       "address": address,
-      "fee": "500",
+      "fee": fee,
       "phone_number": phone,
       "city": city,
       "latitude": selectedLatitude!.toStringAsFixed(5),
