@@ -22,6 +22,7 @@ class AddClinicOverlay extends StatefulWidget {
 class _AddClinicOverlayState extends State<AddClinicOverlay> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController feeController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController landmarkController = TextEditingController();
@@ -37,6 +38,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
         // Pre-fill the form fields when in edit mode
         nameController.text = addClinicVM.editClinicName ?? '';
         addressController.text = addClinicVM.editClinicAddress ?? '';
+        // feeController.text = addClinicVM.editClinicFee ?? '';
         phoneController.text = addClinicVM.editClinicPhone ?? '';
         landmarkController.text = addClinicVM.editClinicLandmark ?? '';
 
@@ -259,6 +261,46 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                             cursorColor: AppColor.textGrayColor,
                           ),
                           Sizes.spaceHeight10,
+
+                          TextField(
+                            controller: feeController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: "Fee",
+                              counterText: "",
+                              hintStyle: TextStyle(
+                                  color: const Color(0xffC3C3C3),
+                                  fontWeight: FontWeight.w400,
+                                  // fontSize: 12,
+                                  fontSize: Sizes.fontSizeFourPFive),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 1.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 1.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 1.0),
+                              ),
+                              fillColor: const Color(0xffF5F5F5),
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                left: 10,
+                              ),
+                            ),
+                            maxLength: 10,
+                            style: const TextStyle(
+                              color: AppColor.blue,
+                            ),
+                            cursorColor: AppColor.textGrayColor,
+                          ),
+                          Sizes.spaceHeight10,
                           TextField(
                             controller: phoneController,
                             keyboardType: TextInputType.number,
@@ -379,6 +421,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                                 addClinicData.editClinicId??"",
                                   nameController.text,
                                   addressController.text,
+                                  feeController.text,
                                   cityController.text,
                                   phoneController.text,
                                   landmarkController.text,

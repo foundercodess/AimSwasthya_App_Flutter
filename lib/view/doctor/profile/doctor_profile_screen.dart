@@ -401,7 +401,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             Sizes.spaceHeight35,
                             clinicInfoTile(clinic.name ?? "Clinic name"),
                             clinicInfoTile(clinic.address ?? "Address"),
-                            // clinicInfoTile(clinic. ?? "Address"),
                             clinicInfoTile(clinic.address ?? "Address"),
                             clinicInfoTile(clinic.phoneNumber ?? "Contact no"),
                             clinicInfoTile(
