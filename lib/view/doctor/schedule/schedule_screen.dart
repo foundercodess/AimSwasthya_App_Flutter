@@ -186,7 +186,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             Center(
               child: TextConst(
                 AppLocalizations.of(context)!.select_maximum_days,
-                size: Sizes.fontSizeFive * 1.2,
+                size: Sizes.fontSizeFive ,
                 fontWeight: FontWeight.w400,
                 color: AppColor.textfieldTextColor.withOpacity(0.7),
               ),

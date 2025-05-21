@@ -23,10 +23,20 @@ class ScheduleHour extends StatelessWidget {
         child: Column(
           children: [
             Sizes.spaceHeight10,
-            TextConst(
-              AppLocalizations.of(context)!.working_hours,
-              size: Sizes.fontSizeSix * 1.07,
-              fontWeight: FontWeight.w500,
+            Center(
+              child: TextConst(
+                AppLocalizations.of(context)!.working_hours,
+                size: Sizes.fontSizeSix * 1.07,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Center(
+              child: TextConst(
+                "Create slot timings for this location",
+                size: Sizes.fontSizeFive ,
+                fontWeight: FontWeight.w400,
+                color: AppColor.textfieldTextColor.withOpacity(0.7),
+              ),
             ),
             SizedBox(
               height: Sizes.screenHeight * 0.05,
