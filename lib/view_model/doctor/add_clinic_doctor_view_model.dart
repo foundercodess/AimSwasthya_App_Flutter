@@ -49,6 +49,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   double? _editClinicLatitude;
   double? _editClinicLongitude;
   String? _editClinicId;
+  dynamic _editCFees;
 
   // Getters for edit data
   String? get editClinicName => _editClinicName;
@@ -59,6 +60,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   String? get editClinicId => _editClinicId;
   double? get editClinicLatitude => _editClinicLatitude;
   double? get editClinicLongitude => _editClinicLongitude;
+  dynamic get editCFees =>_editCFees;
 
   // Setter for edit data
   void setEditClinicData({
@@ -69,7 +71,8 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     String? city,
     double? latitude,
     double? longitude,
-    String? clinicId
+    String? clinicId,
+    dynamic editCFees
   }) {
     _editClinicName = name;
     _editClinicAddress = address;
@@ -79,6 +82,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     _editClinicLatitude = latitude;
     _editClinicLongitude = longitude;
     _editClinicId= clinicId;
+    _editCFees=editCFees;
     notifyListeners();
   }
 
@@ -91,6 +95,8 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     _editClinicCity = null;
     _editClinicLatitude = null;
     _editClinicLongitude = null;
+    _editClinicId= null;
+    _editCFees=null;
     notifyListeners();
   }
 

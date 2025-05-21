@@ -1,3 +1,4 @@
+// model/doctor/doctor_profile_model.dart
 class DoctorProfileModel {
   bool? status;
   Data? data;
@@ -146,6 +147,7 @@ class Clinics {
   String? createdAt;
   String? updatedAt;
   dynamic deletedAt;
+  dynamic consultationFee;
 
   Clinics(
       {this.clinicId,
@@ -163,7 +165,9 @@ class Clinics {
         this.locationId,
         this.createdAt,
         this.updatedAt,
-        this.deletedAt});
+        this.deletedAt,
+        this.consultationFee
+        });
 
   Clinics.fromJson(Map<String, dynamic> json) {
     clinicId = json['clinic_id'];
@@ -182,6 +186,7 @@ class Clinics {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
+    consultationFee= json['consultation_fee'];
   }
 
   Map<String, dynamic> toJson() {
@@ -202,6 +207,7 @@ class Clinics {
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     data['deleted_at'] = deletedAt;
+    data['consultation_fee']= consultationFee;
     return data;
   }
 }

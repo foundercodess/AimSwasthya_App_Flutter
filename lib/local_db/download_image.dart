@@ -1,3 +1,4 @@
+// local_db/download_image.dart
 // import 'dart:io';
 // import 'package:flutter/cupertino.dart';
 // import 'package:http/http.dart' as http;
@@ -99,7 +100,7 @@ class ImageDownloader {
       const String apiUrl = "http://3.7.71.4:3000/getPresignedS3DownloadURIs";
 
       final Map<String, dynamic> body = {"folderName": folderName};
-
+      print("ghhwdhdvhdvh: ${body}");
       final response = await _dio.post(apiUrl, data: body);
 
       if (response.statusCode == 200 && response.data['status'] == true) {

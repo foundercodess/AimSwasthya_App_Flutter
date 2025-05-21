@@ -1,3 +1,4 @@
+// view/user/booking/doctor_profile_screen.dart
 import 'dart:ui';
 import 'package:aim_swasthya/res/border_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -55,7 +56,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   void _scrollToTop() {
     scrollController.animateTo(
       0.0, // Top of the list
-      duration: Duration(milliseconds: 500),
+      duration:const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }

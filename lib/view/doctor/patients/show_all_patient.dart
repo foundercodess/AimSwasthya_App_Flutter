@@ -136,7 +136,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                     bottomLeft: Radius.circular(20),
                                   ),
                                   image: DecorationImage(
-                                      image: schedule.signedImageUrl == null
+                                      image: schedule.signedImageUrl != null
                                           ? NetworkImage(
                                               schedule.signedImageUrl!)
                                           : const AssetImage(

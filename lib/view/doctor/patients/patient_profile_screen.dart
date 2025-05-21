@@ -1,5 +1,7 @@
 // view/doctor/patients/patient_profile_screen.dart
 import 'dart:core';
+import 'dart:io';
+import 'package:aim_swasthya/local_db/download_image.dart';
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -7,11 +9,14 @@ import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view/doctor/common_nav_bar.dart';
+import 'package:aim_swasthya/view/user/symptoms/dowenloade_image.dart';
 import 'package:aim_swasthya/view_model/doctor/doc_health_report_view_model.dart';
 import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
+import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../model/doctor/patient_profile_model.dart';
@@ -32,15 +37,14 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    return  Scaffold(
-            extendBody: true,
-            primary: false,
-            backgroundColor: AppColor.white,
-            body:patientProfileData.patientProfileModel == null ||
-                patientProfileData.loading
-                ? const Center(child: LoadData())
-                :
-            SingleChildScrollView(
+    return Scaffold(
+      extendBody: true,
+      primary: false,
+      backgroundColor: AppColor.white,
+      body: patientProfileData.patientProfileModel == null ||
+              patientProfileData.loading
+          ? const Center(child: LoadData())
+          : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -91,13 +95,13 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                 ],
               ),
             ),
-            bottomNavigationBar: Container(
-              height: 70,
-              width: Sizes.screenWidth,
-              color: Colors.transparent,
-              child: const DocComBottomNevBar(),
-            ),
-          );
+      bottomNavigationBar: Container(
+        height: 70,
+        width: Sizes.screenWidth,
+        color: Colors.transparent,
+        child: const DocComBottomNevBar(),
+      ),
+    );
   }
 
   Widget patientProfile({bool isCancelAllowed = true}) {
@@ -137,7 +141,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                   patientAppointmentData.signedImageUrl!)
                               : const AssetImage(Assets.logoDoctor),
                           fit: BoxFit.fitHeight)),
-
                 ),
                 Sizes.spaceWidth15,
                 SizedBox(
@@ -233,18 +236,18 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                             builder: (_) => ActionOverlay(
                                               text: "Reschedule Appointment",
                                               subtext:
-                                              "Are you sure you want to reschedule\n your appointment?",
+                                                  "Are you sure you want to reschedule\n your appointment?",
                                               onTap: () {
                                                 Provider.of<CancelAppointmentViewModel>(
-                                                    context,
-                                                    listen: false)
+                                                        context,
+                                                        listen: false)
                                                     .cancelAppointmentApi(
-                                                    status: 'reschduled',
-                                                    isDoctorCancel: true,
-                                                    context,
-                                                    patientAppointmentData
-                                                        .appointmentId
-                                                        .toString());
+                                                        status: 'reschduled',
+                                                        isDoctorCancel: true,
+                                                        context,
+                                                        patientAppointmentData
+                                                            .appointmentId
+                                                            .toString());
                                               },
                                             ),
                                           );
@@ -252,7 +255,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                           showInfoOverlay(
                                               title: "Info",
                                               errorMessage:
-                                              "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
+                                                  "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
                                         }
                                         // Navigator.pop(context);
                                       }),
@@ -352,40 +355,40 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                 //   ),
                                 if (isCancelAllowed && !isCancelled)
                                   TextButton(
-                                    onPressed: () {
-                                      if (cancelRescheduleAllowed) {
-                                        showCupertinoDialog(
-                                          context: context,
-                                          builder: (_) => ActionOverlay(
-                                            text: "Cancel Appointment",
-                                            subtext:
-                                                "Are you sure you want to cancel\n your appointment?",
-                                            onTap: () {
-                                              Provider.of<CancelAppointmentViewModel>(
-                                                      context,
-                                                      listen: false)
-                                                  .cancelAppointmentApi(
-                                                      isDoctorCancel: true,
-                                                      context,
-                                                      patientAppointmentData
-                                                          .appointmentId
-                                                          .toString());
-                                            },
-                                          ),
-                                        );
-                                      } else {
-                                        showInfoOverlay(
-                                            title: "Info",
-                                            errorMessage:
-                                                "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
-                                      }
-                                    },
-                                    child: TextConst(
-                                      "Cancel",
-                                      size: Sizes.fontSizeFour,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.red,
-                                    )),
+                                      onPressed: () {
+                                        if (cancelRescheduleAllowed) {
+                                          showCupertinoDialog(
+                                            context: context,
+                                            builder: (_) => ActionOverlay(
+                                              text: "Cancel Appointment",
+                                              subtext:
+                                                  "Are you sure you want to cancel\n your appointment?",
+                                              onTap: () {
+                                                Provider.of<CancelAppointmentViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    .cancelAppointmentApi(
+                                                        isDoctorCancel: true,
+                                                        context,
+                                                        patientAppointmentData
+                                                            .appointmentId
+                                                            .toString());
+                                              },
+                                            ),
+                                          );
+                                        } else {
+                                          showInfoOverlay(
+                                              title: "Info",
+                                              errorMessage:
+                                                  "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                        }
+                                      },
+                                      child: TextConst(
+                                        "Cancel",
+                                        size: Sizes.fontSizeFour,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.red,
+                                      )),
                                 if (isCancelled)
                                   Center(
                                     child: Container(
@@ -401,22 +404,19 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                   ),
                               ],
                             ),
-
                       Sizes.spaceHeight5,
                       Sizes.spaceHeight3,
                     ],
                   ),
-
                 ),
-
               ],
             ),
           )
         : const SizedBox();
-
   }
 
   Widget symptomsSec() {
+    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
     return Container(
       padding: const EdgeInsets.all(15),
       margin: EdgeInsets.symmetric(
@@ -435,146 +435,248 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         width: Sizes.screenWidth,
         child: Center(
           child: TextConst(
-            "Chest pain, High blood pressure, and Fatigue",
+            patientProfileData
+                        .patientProfileModel?.patientSymptoms?.isNotEmpty ==
+                    true
+                ? patientProfileData
+                    .patientProfileModel!.patientSymptoms!.first.symptoms!
+                    .replaceAll("~", ", ")
+                : "No symptoms available",
             size: 12,
-            // size: Sizes.fontSizeFour,
             fontWeight: FontWeight.w400,
           ),
         ),
       ),
     );
   }
+
   Widget uploadedRecords() {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
 
     return patientProfileData.patientProfileModel != null &&
-        patientProfileData.patientProfileModel!.medicalRecords != null &&
-        patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
+            patientProfileData.patientProfileModel!.medicalRecords != null &&
+            patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
         ? Container(
-      margin: const EdgeInsets.all(12),
-      padding: EdgeInsets.symmetric(
-        horizontal: Sizes.screenWidth * 0.035,
-        vertical: Sizes.screenHeight * 0.015,
-      ),
-      width: Sizes.screenWidth,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: AppColor.grey,
-      ),
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(0),
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: patientProfileData
-                .patientProfileModel!.medicalRecords!.length,
-            itemBuilder: (context, index) {
-              final docData = patientProfileData
-                  .patientProfileModel!.medicalRecords![index];
+            margin: const EdgeInsets.all(12),
+            padding: EdgeInsets.symmetric(
+              horizontal: Sizes.screenWidth * 0.035,
+              vertical: Sizes.screenHeight * 0.015,
+            ),
+            width: Sizes.screenWidth,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: AppColor.grey,
+            ),
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0),
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: patientProfileData
+                      .patientProfileModel!.medicalRecords!.length,
+                  itemBuilder: (context, index) {
+                    final docData = patientProfileData
+                        .patientProfileModel!.medicalRecords![index];
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (index == 0)
-                    Column(
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        DottedBorder(
-                          color: AppColor.lightBlue,
-                          strokeWidth: 1,
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(8),
-                          dashPattern: const [3, 2],
-                          padding: const EdgeInsets.only(left: 8,right: 8,top: 4,bottom: 4),
-                          child: Row(
+                        if (index == 0)
+                          Column(
                             children: [
-                              Image.asset(
-                                Assets.imagesMedicalReports,
-                                width: Sizes.screenWidth * 0.09,
-                                fit: BoxFit.cover,
-                              ),
-                              SizedBox(width: Sizes.screenWidth * 0.02),
-                              TextConst(
-                                "Medical Health Report",
-                                size: Sizes.fontSizeFour,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  Provider.of<DocHealthReportViewModel>(
-                                      context,
-                                      listen: false)
-                                      .medicalHealthReportApi(
-                                      patientProfileData
-                                          .patientProfileModel!
-                                          .patientProfile![0]
-                                          .patientId
-                                          .toString());
-                                  Navigator.pushNamed(context,
-                                      RoutesName.docMedicalReportsScreen);
-                                },
-                                child: TextConst(
-                                  "Tap to view",
-                                  size: Sizes.fontSizeTwo,
-                                  color: AppColor.blue,
-                                  fontWeight: FontWeight.w400,
+                              DottedBorder(
+                                color: AppColor.lightBlue,
+                                strokeWidth: 1,
+                                borderType: BorderType.RRect,
+                                radius: const Radius.circular(8),
+                                dashPattern: const [3, 2],
+                                padding: const EdgeInsets.only(
+                                    left: 8, right: 8, top: 4, bottom: 4),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      Assets.imagesMedicalReports,
+                                      width: Sizes.screenWidth * 0.09,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(width: Sizes.screenWidth * 0.02),
+                                    TextConst(
+                                      "Medical Health Report",
+                                      size: Sizes.fontSizeFour,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    const Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Provider.of<DocHealthReportViewModel>(
+                                                context,
+                                                listen: false)
+                                            .medicalHealthReportApi(
+                                                patientProfileData
+                                                    .patientProfileModel!
+                                                    .patientProfile![0]
+                                                    .patientId
+                                                    .toString());
+                                        Navigator.pushNamed(context,
+                                            RoutesName.docMedicalReportsScreen);
+                                      },
+                                      child: TextConst(
+                                        "Tap to view",
+                                        size: Sizes.fontSizeTwo,
+                                        color: AppColor.blue,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              const SizedBox(height: 6),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 6),
+                        reportData(docData),
                       ],
-                    ),
-                  reportData(docData),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    )
-        : const Center(child: NoDataMessages());
-  }
-
-
-  Widget reportData(MedicalRecords docData) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: Sizes.screenWidth * 0.02,
-        vertical: Sizes.screenHeight * 0.009,
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            Assets.imagesMedicalReports,
-            width: Sizes.screenWidth * 0.09,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(width: Sizes.screenWidth * 0.02),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextConst(
-                  docData.documentName ?? "",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                TextConst(
-                  DateFormat('dd/MM/yyyy')
-                      .format(DateTime.parse(docData.uploadedAt.toString())),
-                  size: Sizes.fontSizeThree,
-                  color: AppColor.black,
-                  fontWeight: FontWeight.w400,
+                    );
+                  },
                 ),
               ],
             ),
+          )
+        : const Center(child: NoDataMessages());
+  }
+
+  Widget reportData(MedicalRecords docData) {
+    String imageUrl = docData.imageUrl ?? "";
+    String documentName = imageUrl.split('/').last;
+    print(documentName); // Output: ffgi.pdf
+    return GestureDetector(
+        onTap: () async {
+          // String imageUrl = "patient/52/medical_record/20250430/ffgi.pdf";
+          List<String> parts = imageUrl.split('/');
+          parts.removeLast(); // Removes 'ffgi.pdf'
+          String directoryPath = parts.join('/') + '/';
+          print("rtbnfyuf" +
+              directoryPath); // Output: patient/52/medical_record/20250430/
+          final userId = await UserViewModel().getUser();
+          ImageDownloader()
+              .fetchAndDownloadImages(context,
+                  folderName: directoryPath,
+                  fileNames: documentName,
+                  matchName: docData.imageUrl,
+                  loopAllowed: false)
+              .then((_) {});
+          await Future.delayed(const Duration(seconds: 3));
+          LocalImageHelper.instance.loadingComplete.then((_) {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                builder: (_) {
+                  return showImage(docData, documentName);
+                });
+          });
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: Sizes.screenWidth * 0.02,
+            vertical: Sizes.screenHeight * 0.009,
           ),
+          child: Row(
+            children: [
+              Image.asset(
+                Assets.imagesMedicalReports,
+                width: Sizes.screenWidth * 0.09,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(width: Sizes.screenWidth * 0.02),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextConst(
+                      documentName ?? "",
+                      size: Sizes.fontSizeFour,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    // TextConst(
+                    //   DateFormat('dd/MM/yyyy')
+                    //       .format(DateTime.parse("docData.uploadedAt.toString()")),
+                    //   size: Sizes.fontSizeThree,
+                    //   color: AppColor.black,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Widget showImage(MedicalRecords medRecData, String docName) {
+    String? imagePath = LocalImageHelper.instance.getImagePath(docName ?? "");
+    print(imagePath);
+    if (imagePath == null) {
+      return const CircularProgressIndicator();
+    }
+    if (medRecData.imageUrl!.endsWith('.pdf')) {
+      print("pdfcase");
+      return Stack(
+        children: [
+          Container(
+            width: Sizes.screenWidth,
+            height: Sizes.screenHeight,
+            child: imagePath.toLowerCase().endsWith('.pdf')
+                ? PDFView(filePath: imagePath)
+                : Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(File(imagePath)),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+          ),
+          Positioned(
+              top: 40,
+              left: 16,
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Icon(Icons.arrow_back, color: Colors.black))),
         ],
-      ),
+      );
+    }
+
+    return Stack(
+      children: [
+        Container(
+          width: Sizes.screenWidth,
+          height: Sizes.screenHeight,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: FileImage(File(imagePath.toString())),
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        Positioned(
+            top: 40,
+            left: 16,
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Icon(Icons.arrow_back, color: Colors.black))),
+      ],
     );
+
+    // return Container(
+    //   width: Sizes.screenWidth,
+    //   height: Sizes.screenHeight,
+    //   decoration: BoxDecoration(
+    //       image: DecorationImage(image: FileImage(File(imagePath.toString())))),
+    // );
   }
 
   // Widget reportData(MedicalRecords docData, bool isDate) {
@@ -698,12 +800,12 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
       String dateTimeString = "$formattedDate $hour24Format";
 
       // Parse combined string using standard format
-      DateTime bookingDateTime = DateFormat("dd-MM-yyyy hh:mm a").parse(dateTimeString);
+      DateTime bookingDateTime =
+          DateFormat("dd-MM-yyyy hh:mm a").parse(dateTimeString);
 
       // Compare with current time
       Duration difference = bookingDateTime.difference(DateTime.now());
       return difference.inMinutes > 60;
-
     } catch (e) {
       print("Error in date comparison: $e");
       return false;

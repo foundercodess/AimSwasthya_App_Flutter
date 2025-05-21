@@ -60,7 +60,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
       email: _emailController.text,
       phoneNumber: _numberController.text,
       specializationId: docProfileCon
-              .doctorProfileModel?.data?.doctors?[0].specializationId?.toString() ??
+              .doctorProfileModel?.data?.doctors?[0].specializationId
+              ?.toString() ??
           '',
       practiceStartYear: _expController.text,
     );
@@ -307,7 +308,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                         final clinic = docProfileCon
                             .doctorProfileModel!.data!.clinics![index];
 
-                        Widget clinicInfoTile(String label) {
+                        Widget clinicInfoTile(dynamic label) {
                           return Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
@@ -319,7 +320,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: TextConst(
-                              label,
+                              label.toString(),
                               size: Sizes.fontSizeFourPFive,
                               fontWeight: FontWeight.normal,
                               color: AppColor.textGrayColor,
@@ -401,10 +402,13 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             Sizes.spaceHeight35,
                             clinicInfoTile(clinic.name ?? "Clinic name"),
                             clinicInfoTile(clinic.address ?? "Address"),
+                            // clinicInfoTile(clinic. ?? "Address"),
                             clinicInfoTile(clinic.address ?? "Address"),
                             clinicInfoTile(clinic.phoneNumber ?? "Contact no"),
                             clinicInfoTile(
                                 clinic.landmark ?? "Landmark (optional)"),
+                            clinicInfoTile(
+                                clinic.consultationFee ?? "Consultation Fees"),
                             Sizes.spaceHeight35,
                           ],
                         );
@@ -606,49 +610,5 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
             ],
           ),
         ));
-  }
-
-  Widget clinicDetails() {
-    final mapVM = Provider.of<MapViewModel>(context);
-    final addClinicData = Provider.of<AddClinicDoctorViewModel>(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            padding: EdgeInsets.only(
-                left: Sizes.screenWidth * 0.03,
-                right: Sizes.screenWidth * 0.03,
-                top: Sizes.screenHeight * 0.017,
-                bottom: Sizes.screenHeight * 0.02),
-            // height: Sizes.screenHeight * 0.3,
-            width: Sizes.screenWidth,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: const Color(0xffececec),
-            ),
-            // child: Column(
-            //   children: [
-            //     Sizes.spaceHeight3,
-
-            //     // Sizes.spaceHeight25,
-            //     // ButtonConst(
-            //     //     title: "Set location",
-            //     //     width: Sizes.screenWidth * 0.3,
-            //     //     height: Sizes.screenHeight * 0.045,
-            //     //     color: AppColor.blue,
-            //     //     onTap: () {
-            //     //       _selectLocation();
-            //     //       // Navigator.pushNamed(
-            //     //       //     context, RoutesName.fullScreenMapPage);
-            //     //     })
-            //   ],
-            // ),
-          ),
-        )
-      ],
-    );
   }
 }
