@@ -6,7 +6,6 @@ import 'package:aim_swasthya/view_model/user/services/map_con.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
@@ -234,7 +233,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   }
 
   Future<void> addClinicDoctorApi(dynamic clinicId,dynamic clinicName, dynamic address,dynamic city,
-      dynamic phone, dynamic landMark, context) async {
+      dynamic phone, dynamic landMark, dynamic fee,context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
@@ -242,17 +241,15 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       "clinic_id":clinicId,
       "name": clinicName,
       "address": address,
-      "fee": "500",
+      "fee": fee,
       "phone_number": phone,
       "city": city,
       "latitude": selectedLatitude!.toStringAsFixed(5),
       "longitude": selectedLongitude!.toStringAsFixed(5),
       "landmark": landMark
     };
-    print("dfghjkl; ${jsonEncode(data)}");
     _addClinicDoctorRepo.addClinicDocApi(data).then((value) {
       if (value ["status"] == true) {
-        print("mdmkd${value}");
         setClinicData(true);
         Provider.of<DoctorProfileViewModel>(context, listen:false).doctorProfileApi(context, isLoad: false);
       }

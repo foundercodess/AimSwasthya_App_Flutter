@@ -25,6 +25,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController landmarkController = TextEditingController();
+  final TextEditingController feesController = TextEditingController();
 
   @override
   void initState() {
@@ -332,6 +333,42 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                             ),
                             cursorColor: AppColor.textGrayColor,
                           ),
+                           Sizes.spaceHeight10,
+                          TextField(
+                            controller: feesController,
+                            decoration: InputDecoration(
+                              hintText: "Fees",
+                              hintStyle: TextStyle(
+                                  color: const Color(0xffC3C3C3),
+                                  fontWeight: FontWeight.w400,
+                                  // fontSize: 12,
+                                  fontSize: Sizes.fontSizeFourPFive),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 1.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 1.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 1.0),
+                              ),
+                              fillColor: const Color(0xffF5F5F5),
+                              filled: true,
+                              contentPadding: const EdgeInsets.only(
+                                left: 10,
+                              ),
+                            ),
+                            style: const TextStyle(
+                              color: AppColor.blue,
+                            ),
+                            cursorColor: AppColor.textGrayColor,
+                          ),
                           Sizes.spaceHeight10,
                           ButtonConst(
                             height: Sizes.screenHeight * 0.06,
@@ -345,6 +382,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                                   cityController.text,
                                   phoneController.text,
                                   landmarkController.text,
+                                  feesController.text,
                                   context);
                             },
                             color: AppColor.blue,
@@ -404,10 +442,24 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
                 fontWeight: FontWeight.w400,
               ),
               Sizes.spaceHeight20,
-              SizedBox(
-                width: Sizes.screenWidth,
-                child: const Image(image: AssetImage(Assets.imagesMapImg)),
-              ),
+              Container(
+                      height: Sizes.screenHeight * 0.165,
+                      width: Sizes.screenWidth,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: const DecorationImage(
+                          image: AssetImage(Assets.imagesSetLocationPage),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: addClinicData.selectedLatitude != null &&
+                              addClinicData.selectedLongitude != null
+                          ? GetLocationOnMap(
+                              latitude: addClinicData.selectedLatitude!,
+                              longitude: addClinicData.selectedLongitude!,
+                            )
+                          : null,
+                    ),
               Sizes.spaceHeight25,
               ButtonConst(
                 title: "Confirm",

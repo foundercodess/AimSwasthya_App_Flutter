@@ -96,6 +96,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
       isSigningIn = false;
       setLoading(false);
       notifyListeners();
+      // isRegisterDocApi("", "tripathiji183@gmail.com", "email", context);
       isRegisterDocApi("", userCredential.user!.email, "email", context);
       return userCredential.user;
     } catch (e) {
