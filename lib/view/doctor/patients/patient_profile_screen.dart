@@ -679,6 +679,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     // );
   }
 
+
   // Widget reportData(MedicalRecords docData, bool isDate) {
   //   return Padding(
   //     padding: EdgeInsets.symmetric(
