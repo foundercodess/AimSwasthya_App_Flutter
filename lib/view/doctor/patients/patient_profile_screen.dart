@@ -550,7 +550,34 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     String documentName = imageUrl.split('/').last;
     print(documentName); // Output: ffgi.pdf
     return GestureDetector(
-        onTap: () async {
+      // onTap: () async {
+      //   List<String> parts = imageUrl.split('/');
+      //   parts.removeLast();
+      //   String directoryPath = parts.join('/') + '/';
+      //   final userId = await UserViewModel().getUser();
+      //
+      //   await ImageDownloader().fetchAndDownloadImages(
+      //     context,
+      //     folderName: directoryPath,
+      //     fileNames: documentName,
+      //     matchName: docData.imageUrl,
+      //     loopAllowed: false,
+      //   );
+      //
+      //   await LocalImageHelper.instance.loadingComplete;
+      //
+      //   if (!context.mounted) return; // prevents "context no longer mounted" error
+      //   LocalImageHelper.instance.loadingComplete.then((_) {
+      //     showModalBottomSheet(
+      //         isScrollControlled: true,
+      //         context: context,
+      //         builder: (_) {
+      //           return showImage(docData, documentName);
+      //         });
+      //   });
+      //
+      // },
+      onTap: () async {
           // String imageUrl = "patient/52/medical_record/20250430/ffgi.pdf";
           List<String> parts = imageUrl.split('/');
           parts.removeLast(); // Removes 'ffgi.pdf'
@@ -593,6 +620,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextConst(
+                      overflow:
+                      TextOverflow.ellipsis,
                       documentName ?? "",
                       size: Sizes.fontSizeFour,
                       fontWeight: FontWeight.w400,
@@ -647,7 +676,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         ],
       );
     }
-
     return Stack(
       children: [
         Container(
