@@ -136,6 +136,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           } else if (slotScheduleCon.widgetIndex == 2) {
             slotScheduleCon.docScheduleSlotTypeApi(context);
           }else{
+
             slotScheduleCon.docScheduleInsertApi(context);
           }
         },

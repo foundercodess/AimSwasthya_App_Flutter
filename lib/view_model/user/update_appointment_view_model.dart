@@ -35,6 +35,7 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
     dynamic clinicId,
     dynamic bookingDate,
     dynamic timeId,
+    dynamic appId,
   }) async {
     print("jhghjgj");
     final userId = await UserViewModel().getUser();
@@ -46,14 +47,15 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
       "booking_date": DateFormat("yyyy-MM-dd")
           .format(DateTime.parse(bookingDate)),
       "time_id": timeId,
-      "appointment_id": _rescheduleAppointmentID,
+      "appointment_id": appId,
+      // "appointment_id": _rescheduleAppointmentID,
       "status": "scheduled"
     };
-    print("data: ${jsonEncode(data)}");
+    print("datfkhja: ${jsonEncode(data)}");
     _updateAppointmentRepo.updateAppointmentApi(data).then((value) {
       Utils.show(value['message'], context);
       if (value['status'] == true) {
-        setRescheduleAppointmentID('');
+        // setRescheduleAppointmentID("");
         Provider.of<PatientAppointmentViewModel>(context, listen: false)
             .patientAppointmentApi(context);
         Provider.of<PatientHomeViewModel>(context, listen: false)

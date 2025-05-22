@@ -421,6 +421,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
   }
 
   String? getImageType(String fileName) {
+
     if (fileName.endsWith('.png')) {
       return 'png';
     } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
@@ -445,15 +446,17 @@ class DoctorAuthViewModel extends ChangeNotifier {
     print("xfghjk" + jsonEncode(data));
     _doctorAuthRepo.addImageUrlApi(data).then((value) {
       print(value);
-      // Utils.show(value['message'],);
+      Utils.show(value['message'], context);
       if (value['status'] == true) {
         Provider.of<GetImageUrlViewModel>(context, listen: false)
             .uploadFile(context,
                 filePath: imagePath,
                 // filePath: value['image_url']);
                 fileName: value['image_url']);
+        Utils.show(value['message'], context);
       }
     }).onError((error, stackTrace) {
+
       LoaderOverlay().hide();
       setLoading(false);
       notifyListeners();

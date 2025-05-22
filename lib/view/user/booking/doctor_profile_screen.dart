@@ -1376,6 +1376,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         bookingDate:
                             docAppointmentCon.selectedDate!.availabilityDate,
                         timeId: docAppointmentCon.selectedTime!.timeId!,
+                        appId: patientHomeCon.patientHomeModel!.data!.appointments![0].appointmentId.toString()
                       );
                     },
                     child: Container(

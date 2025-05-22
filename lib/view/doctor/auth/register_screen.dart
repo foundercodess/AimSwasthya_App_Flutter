@@ -58,7 +58,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final registerCon =
           Provider.of<RegisterViewModel>(context, listen: false);
       registerCon.resetValues();
-      final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
+      final doctorCon =
+          Provider.of<DoctorAuthViewModel>(context, listen: false);
       doctorCon.setIdentityImage(null);
       doctorCon.setProfileImage(null);
       Provider.of<AllSpecializationViewModel>(context, listen: false)
@@ -73,7 +74,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final doctorCon = Provider.of<DoctorAuthViewModel>(context, listen: false);
     final registerCon = Provider.of<RegisterViewModel>(context);
-    _numberEmailController.text = doctorCon.senOtpData['type']=='email'?doctorCon.senOtpData['email'] :doctorCon.senOtpData['phone'];
+    _numberEmailController.text = doctorCon.senOtpData['type'] == 'email'
+        ? doctorCon.senOtpData['email']
+        : doctorCon.senOtpData['phone'];
     final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
     return Scaffold(
       backgroundColor: AppColor.white,
@@ -97,7 +100,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
                   ),
-
                 ),
                 Container(
                   width: Sizes.screenWidth * 0.2,
@@ -390,7 +392,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget identityScreen() {
     final smcViewModel = Provider.of<UpsertSmcNumberViewModel>(context);
     final isVerified = smcViewModel.upsertSmcNumberModel?.verifiedFlag == "Y";
-    final doctorCon = Provider.of<DoctorAuthViewModel>(context,);
+    final doctorCon = Provider.of<DoctorAuthViewModel>(
+      context,
+    );
 
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
@@ -499,13 +503,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const Spacer(),
                 AppBtn(
                     fontSize: 12,
-
-
-
-
-
                     borderRadius: 12,
-                    title:doctorCon.identityImage != null?"Edit": AppLocalizations.of(context)!.add,
+                    title: doctorCon.identityImage != null
+                        ? "Edit"
+                        : AppLocalizations.of(context)!.add,
                     height: Sizes.screenHeight * 0.044,
                     width: Sizes.screenWidth * 0.38,
                     color: AppColor.blue,
@@ -677,7 +678,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             leading: const Icon(Icons.camera_alt),
             title: const Text('Camera'),
             onTap: () async {
-              Navigator.pop(context);
+              // Navigator.pop(context);
               final img = await _imagePickerHelper.pickImageFromCamera(context,
                   isProfileSelection: true);
               if (img != null) {
@@ -694,6 +695,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       .addImageApi('doctor', img.name.toString(),
                           img.path.toString(), 'identity_document', context);
                 }
+                // if (isProfile) {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(content: Text('Profile photo uploaded successfully')),
+                //   );
+                // } else {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(content: Text('Upload failed, please try again')),
+                //   );
+                // }
               }
               Navigator.pop(context);
             },
@@ -718,6 +728,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         .addImageApi('doctor', img.name.toString(),
                             img.path.toString(), 'identity_document', context);
                   }
+                  // if (isProfile) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     const SnackBar(content: Text('Profile photo uploaded successfully')),
+                  //   );
+                  // } else {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     const SnackBar(content: Text('Upload failed, please try again')),
+                  //   );
+                  // }
                 }
                 Navigator.pop(context);
               }),
