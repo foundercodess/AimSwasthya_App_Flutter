@@ -40,7 +40,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
         cityController.text = addClinicVM.editClinicCity ?? '';
         phoneController.text = addClinicVM.editClinicPhone ?? '';
         landmarkController.text = addClinicVM.editClinicLandmark ?? '';
-        feesController.text = addClinicVM.editCFees.toString();
+        feesController.text = addClinicVM.editCFees ?? '';
         // Set the location if available
         if (addClinicVM.editClinicLatitude != null &&
             addClinicVM.editClinicLongitude != null) {

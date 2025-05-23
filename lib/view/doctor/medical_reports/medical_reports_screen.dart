@@ -65,12 +65,8 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                 final Map<String, dynamic> itemMap = item.toJson();
                 return Column(
                   children: itemMap.entries.map((entry) {
-                    // final title = entry.key
-                    //     .replaceAll('_', ' ')
-                    //     .toUpperCase(); // e.g. BLOOD GROUP
                     final title = entry.key
-                        .replaceAll('_', ' ')
-                        .toUpperCase(); // e.g. BLOOD GROUP
+                        .replaceAll('_', ' ');
                     final value = (entry.value ?? '').toString().isEmpty
                         ? 'null'
                         : entry.value.toString();
