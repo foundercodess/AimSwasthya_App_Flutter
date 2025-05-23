@@ -452,7 +452,9 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
 
   Widget uploadedRecords() {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-
+    final patientAppointmentData =
+        Provider.of<DocPatientAppointmentViewModel>(context)
+            .doctorsAppointmentsDataModel;
     return patientProfileData.patientProfileModel != null &&
             patientProfileData.patientProfileModel!.medicalRecords != null &&
             patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
@@ -513,9 +515,13 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                                 context,
                                                 listen: false)
                                             .medicalHealthReportApi(
-                                                patientProfileData
-                                                    .patientProfileModel!
-                                                    .patientProfile![0]
+
+                                                // patientProfileData
+                                                //     .patientProfileModel!
+                                                //     .patientProfile![0]
+                                                //     .patientId
+                                                //     .toString()
+                                                patientAppointmentData!
                                                     .patientId
                                                     .toString());
                                         Navigator.pushNamed(context,
@@ -550,34 +556,34 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     String documentName = imageUrl.split('/').last;
     print(documentName); // Output: ffgi.pdf
     return GestureDetector(
-      // onTap: () async {
-      //   List<String> parts = imageUrl.split('/');
-      //   parts.removeLast();
-      //   String directoryPath = parts.join('/') + '/';
-      //   final userId = await UserViewModel().getUser();
-      //
-      //   await ImageDownloader().fetchAndDownloadImages(
-      //     context,
-      //     folderName: directoryPath,
-      //     fileNames: documentName,
-      //     matchName: docData.imageUrl,
-      //     loopAllowed: false,
-      //   );
-      //
-      //   await LocalImageHelper.instance.loadingComplete;
-      //
-      //   if (!context.mounted) return; // prevents "context no longer mounted" error
-      //   LocalImageHelper.instance.loadingComplete.then((_) {
-      //     showModalBottomSheet(
-      //         isScrollControlled: true,
-      //         context: context,
-      //         builder: (_) {
-      //           return showImage(docData, documentName);
-      //         });
-      //   });
-      //
-      // },
-      onTap: () async {
+        // onTap: () async {
+        //   List<String> parts = imageUrl.split('/');
+        //   parts.removeLast();
+        //   String directoryPath = parts.join('/') + '/';
+        //   final userId = await UserViewModel().getUser();
+        //
+        //   await ImageDownloader().fetchAndDownloadImages(
+        //     context,
+        //     folderName: directoryPath,
+        //     fileNames: documentName,
+        //     matchName: docData.imageUrl,
+        //     loopAllowed: false,
+        //   );
+        //
+        //   await LocalImageHelper.instance.loadingComplete;
+        //
+        //   if (!context.mounted) return; // prevents "context no longer mounted" error
+        //   LocalImageHelper.instance.loadingComplete.then((_) {
+        //     showModalBottomSheet(
+        //         isScrollControlled: true,
+        //         context: context,
+        //         builder: (_) {
+        //           return showImage(docData, documentName);
+        //         });
+        //   });
+        //
+        // },
+        onTap: () async {
           // String imageUrl = "patient/52/medical_record/20250430/ffgi.pdf";
           List<String> parts = imageUrl.split('/');
           parts.removeLast(); // Removes 'ffgi.pdf'
@@ -620,8 +626,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextConst(
-                      overflow:
-                      TextOverflow.ellipsis,
+                      overflow: TextOverflow.ellipsis,
                       documentName ?? "",
                       size: Sizes.fontSizeFour,
                       fontWeight: FontWeight.w400,
@@ -706,7 +711,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     //       image: DecorationImage(image: FileImage(File(imagePath.toString())))),
     // );
   }
-
 
   // Widget reportData(MedicalRecords docData, bool isDate) {
   //   return Padding(

@@ -6,7 +6,6 @@ import 'package:aim_swasthya/res/color_const.dart';
 import 'package:aim_swasthya/res/size_const.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view/doctor/bottom_nav_bar_screen.dart';
-import 'package:aim_swasthya/view/user/bottom_nev_bar.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +41,7 @@ class _DocComBottomNevBarState extends State<DocComBottomNevBar> {
             ), 
             child: IconButton(
               onPressed: () {
+                 bottomCon.setIndex(0);
                 Navigator.pushNamed(context, RoutesName.doctorBottomNevBar);
               },
               icon:  Image(image: const AssetImage(Assets.iconsBottomHome),width: Sizes.screenWidth*0.09,),

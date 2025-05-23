@@ -1,3 +1,4 @@
+// view/doctor/medical_reports/medical_reports_screen.dart
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -20,14 +21,6 @@ class DocMedicalReportsScreen extends StatefulWidget {
   State<DocMedicalReportsScreen> createState() =>
       _DocMedicalReportsScreenState();
 }
-
-// final List<Map<String, String>> bloodGroupList = [
-//   {"title": "Blood group", "value": "A+"},
-//   {"title": "Allergies", "value": "B-"},
-//   {"title": "Current medication", "value": "O+"},
-//   {"title": "Chronic illnesses", "value": "AB+"},
-//   {"title": "Lifestyle habits", "value": "A-"},
-// ];
 
 class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
   @override
@@ -73,15 +66,8 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                 final Map<String, dynamic> itemMap = item.toJson();
                 return Column(
                   children: itemMap.entries.map((entry) {
-                    // final title = entry.key
-                    //     .replaceAll('_', ' ')
-                    //     .toUpperCase(); // e.g. BLOOD GROUP
-                    final title = entry.key
-                        .replaceAll('_', ' ')
-                        .toUpperCase(); // e.g. BLOOD GROUP
-                    final value = (entry.value ?? '').toString().isEmpty
-                        ? 'null'
-                        : entry.value.toString();
+                    final title = entry.key.replaceAll('_', ' ').toUpperCase();
+                    final value = entry.value?.toString() ?? '';
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 15),
@@ -349,7 +335,7 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                                           showInfoOverlay(
                                               title: "Info",
                                               errorMessage:
-                                                  "Oops! You can’t cancellation appointments less than 1 hour before the scheduled time.");
+                                                  "Oops! You can't cancellation appointments less than 1 hour before the scheduled time.");
                                         }
                                       },
                                       child: TextConst(
