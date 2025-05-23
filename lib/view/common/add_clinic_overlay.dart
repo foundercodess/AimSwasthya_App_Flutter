@@ -37,7 +37,7 @@ class _AddClinicOverlayState extends State<AddClinicOverlay> {
         // Pre-fill the form fields when in edit mode
         nameController.text = addClinicVM.editClinicName ?? '';
         addressController.text = addClinicVM.editClinicAddress ?? '';
-        // feeController.text = addClinicVM.editClinicFee ?? '';
+        cityController.text = addClinicVM.editClinicCity ?? '';
         phoneController.text = addClinicVM.editClinicPhone ?? '';
         landmarkController.text = addClinicVM.editClinicLandmark ?? '';
         feesController.text = addClinicVM.editCFees.toString();

@@ -249,13 +249,15 @@ class PatientSymptoms {
 class MedicalRecords {
   int? entityId;
   String? imageUrl;
+  String? uploadedAt;
   String? signedImageUrl;
 
-  MedicalRecords({this.entityId, this.imageUrl, this.signedImageUrl});
+  MedicalRecords({this.entityId, this.imageUrl, this.uploadedAt ,this.signedImageUrl});
 
   MedicalRecords.fromJson(Map<String, dynamic> json) {
     entityId = json['entity_id'];
     imageUrl = json['image_url'];
+    uploadedAt = json['uploaded_at'];
     signedImageUrl = json['signedImageUrl'];
   }
 
@@ -263,6 +265,7 @@ class MedicalRecords {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['entity_id'] = entityId;
     data['image_url'] = imageUrl;
+    data['uploaded_at'] = uploadedAt;
     data['signedImageUrl'] = signedImageUrl;
     return data;
   }

@@ -70,7 +70,7 @@ class DoctorProfileViewModel extends ChangeNotifier {
         "specialization_id": specializationId,
         "practice_start_year": practiceStartYear,
       };
-      debugPrint("body: ${jsonEncode(data)}");
+      debugPrint("bodyff: ${jsonEncode(data)}");
       final response = await _doctorProfileRepo.updateDoctorProfileApi(data);
       if (response['status'] == true) {
         await doctorProfileApi(context, isLoad: false);

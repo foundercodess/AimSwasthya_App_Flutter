@@ -147,6 +147,7 @@ class _AllSymptomsScreenState extends State<AllSymptomsScreen> {
             Sizes.spaceHeight10,
             Center(
               child: Container(
+                alignment: Alignment.bottomCenter,
                   margin: EdgeInsets.symmetric(
                       horizontal: Sizes.screenWidth * 0.07),
                   // height: Sizes.screenHeight * 0.12,
@@ -187,6 +188,7 @@ class _AllSymptomsScreenState extends State<AllSymptomsScreen> {
                               });
                             }),
                       ),
+                      Sizes.spaceHeight5,
                     ],
                   )
                   ),

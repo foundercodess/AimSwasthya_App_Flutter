@@ -56,7 +56,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   void _scrollToTop() {
     scrollController.animateTo(
       0.0, // Top of the list
-      duration:const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }
@@ -310,13 +310,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                             ?.toLowerCase() ==
                                         "Y".toLowerCase()
                                     ? AddButton(
-                                           fontSize: Sizes.screenWidth / 60,
-                                           color: AppColor.white.withOpacity(0.9),
-                                           width: Sizes.screenWidth / 3.8,
-                                           height: Sizes.screenHeight * 0.035,
-                                           title: "Preferred Doctor!",
-                                           onTap: () {},
-                                         )
+                                        fontSize: Sizes.screenWidth / 60,
+                                        color: AppColor.white.withOpacity(0.9),
+                                        width: Sizes.screenWidth / 3.8,
+                                        height: Sizes.screenHeight * 0.035,
+                                        title: "Preferred Doctor!",
+                                        onTap: () {},
+                                      )
                                     : GestureDetector(
                                         onTap: () {
                                           addDoctor.addDoctorApi(
@@ -335,7 +335,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                                 .toString(),
                                           );
                                         },
-                                        child:Align(
+                                        child: Align(
                                           alignment: Alignment.center,
                                           child: AddButton(
                                             fontSize: Sizes.screenWidth / 60,
@@ -882,7 +882,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             builder: (context, docAppCon, _) {
           if (docAppCon.doctorAvlAppointmentModel!.data!.slots == null) {
             return const NoDataMessages(
-              title:  "No slots found for the doctor",
+              title: "No slots found for the doctor",
               message: "No available slots for this doctor at the moment.",
             );
             const ConstText(title: "No slots found for the doctor");
@@ -982,7 +982,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           docAppCon.selectedDate == null) {
         return const Center(
           child: NoDataMessages(
-            title:  "No slots found for the doctor",
+            title: "No slots found for the doctor",
             message: "No available slots for this doctor at the moment.",
           ),
         );
@@ -1367,17 +1367,17 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   Sizes.spaceHeight10,
                   GestureDetector(
                     onTap: () {
-                      updateAppDetails.updateAppointmentApi(
-                        context,
-                        docId: docAppointmentCon.doctorAvlAppointmentModel!
-                            .data!.details![0].doctorId,
-                        clinicId: docAppointmentCon.doctorAvlAppointmentModel!
-                            .data!.slots![0].clinicId,
-                        bookingDate:
-                            docAppointmentCon.selectedDate!.availabilityDate,
-                        timeId: docAppointmentCon.selectedTime!.timeId!,
-                        appId: patientHomeCon.patientHomeModel!.data!.appointments![0].appointmentId.toString()
-                      );
+                      updateAppDetails.updateAppointmentApi(context,
+                          docId: docAppointmentCon.doctorAvlAppointmentModel!
+                              .data!.details![0].doctorId,
+                          clinicId: docAppointmentCon.doctorAvlAppointmentModel!
+                              .data!.slots![0].clinicId,
+                          bookingDate:
+                              docAppointmentCon.selectedDate!.availabilityDate,
+                          timeId: docAppointmentCon.selectedTime!.timeId!,
+                          appId: patientHomeCon.patientHomeModel!.data!
+                              .appointments![0].appointmentId
+                              .toString());
                     },
                     child: Container(
                       height: Sizes.screenHeight * 0.055,

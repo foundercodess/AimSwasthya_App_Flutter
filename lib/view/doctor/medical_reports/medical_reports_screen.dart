@@ -21,14 +21,6 @@ class DocMedicalReportsScreen extends StatefulWidget {
       _DocMedicalReportsScreenState();
 }
 
-// final List<Map<String, String>> bloodGroupList = [
-//   {"title": "Blood group", "value": "A+"},
-//   {"title": "Allergies", "value": "B-"},
-//   {"title": "Current medication", "value": "O+"},
-//   {"title": "Chronic illnesses", "value": "AB+"},
-//   {"title": "Lifestyle habits", "value": "A-"},
-// ];
-
 class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
   @override
   Widget build(BuildContext context) {

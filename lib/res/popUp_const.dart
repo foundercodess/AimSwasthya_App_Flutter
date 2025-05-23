@@ -88,7 +88,7 @@ class ActionOverlay extends StatelessWidget {
                     },
                     child: Container(
                       height: Sizes.screenHeight * 0.055,
-                      width: Sizes.screenWidth * 0.38,
+                      width: Sizes.screenWidth * 0.37,
                       decoration: const BoxDecoration(
                         borderRadius:
                             BorderRadius.only(bottomLeft: Radius.circular(30)),
@@ -119,7 +119,7 @@ class ActionOverlay extends StatelessWidget {
                         },
                     child: Container(
                       height: Sizes.screenHeight * 0.055,
-                      width: Sizes.screenWidth * 0.33,
+                      width: Sizes.screenWidth * 0.34,
                       decoration: const BoxDecoration(
                         borderRadius:
                             BorderRadius.only(bottomRight: Radius.circular(30)),

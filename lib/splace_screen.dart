@@ -92,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
           height: Sizes.screenHeight / 5.2,
           padding: EdgeInsets.only(
             left: Sizes.screenWidth * 0.03,
-            right: Sizes.screenWidth * 0.05,
+            right: Sizes.screenWidth * 0.03,
             top: Sizes.screenHeight * 0.02,
           ),
           text: "Permission Required",
