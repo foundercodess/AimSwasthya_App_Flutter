@@ -3,6 +3,11 @@ class Assets {
   Assets._();
 
   static const String aimSwasthyaAppFlutterAssetsNoDataFound = 'assets/no_data_found.png';
+  static const String assetsAnimation2mic = 'assets/animation_2mic.png';
+  static const String assetsAnimation3mic = 'assets/animation_3mic.png';
+  static const String assetsAnimation4mic = 'assets/animation_4mic.png';
+  static const String assetsAnimation5mic = 'assets/animation_5mic.png';
+  static const String assetsAnimationMic = 'assets/animation_mic.png';
   static const String assetsClinicLocation = 'assets/clinic_location.png';
   static const String assetsGooglePayConfig = 'assets/google_pay_config.json';
   static const String assetsGroupInfo = 'assets/groupInfo.png';
@@ -13,6 +18,7 @@ class Assets {
   static const String assetsMic3 = 'assets/mic-3.png';
   static const String assetsMic4 = 'assets/mic-4.png';
   static const String assetsMic5 = 'assets/mic-5.png';
+  static const String assetsMicc = 'assets/micc.png';
   static const String assetsNoDataFound = 'assets/no_data_found.jpg';
   static const String assetsNoService = 'assets/no_service.png';
   static const String iconsAppointmens = 'assets/icons/appointmens.png';

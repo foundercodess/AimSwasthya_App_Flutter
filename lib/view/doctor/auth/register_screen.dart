@@ -550,13 +550,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     if (doctorCon.identityImage != null) ...[
                       Sizes.spaceHeight3,
-                      TextConst(
-                        padding:
-                            EdgeInsets.only(left: Sizes.screenWidth * 0.02),
-                        doctorCon.identityImage!.name,
-                        size: Sizes.fontSizeFour,
-                        fontWeight: FontWeight.w500,
-                        color: CupertinoColors.activeGreen,
+                      SizedBox(
+                        width: Sizes.screenWidth*0.32,
+                        child: TextConst(
+                          overflow: TextOverflow.ellipsis,
+                          padding:
+                              EdgeInsets.only(left: Sizes.screenWidth * 0.01),
+                          doctorCon.identityImage!.name,
+                          size: Sizes.fontSizeFour,
+                          fontWeight: FontWeight.w500,
+                          color: CupertinoColors.activeGreen,
+                        ),
                       ),
                     ]
                   ],
@@ -569,7 +573,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ? "Edit"
                         : AppLocalizations.of(context)!.add,
                     height: Sizes.screenHeight * 0.044,
-                    width: Sizes.screenWidth * 0.38,
+                    width: Sizes.screenWidth * 0.37,
                     color: AppColor.blue,
                     onTap: () {
                       showModalBottomSheet(

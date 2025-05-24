@@ -305,6 +305,7 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
   Future<void> aiSearchApi(context, {bool isVoiceSearchReq = true}) async {
     setLoading(true);
     setAiSearchData(null);
+
     final locationData =
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .selectedLocationData;
@@ -332,6 +333,7 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
     print("ansjnsj${jsonEncode(data)}");
     _aiSearchRepo.aiSearch(data).then((value) {
       if (value.success == true) {
+        clearValues();
         setAiSearchData(value);
       }
       setLoading(false);

@@ -21,7 +21,7 @@ Future<void> showInfoOverlay(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: Container(
-                height: Sizes.screenHeight / 5,
+                height: Sizes.screenHeight / 4.5,
                 padding: EdgeInsets.only(
                     top: Sizes.screenHeight * 0.02, left: 10, right: 10),
                 width: Sizes.screenWidth,

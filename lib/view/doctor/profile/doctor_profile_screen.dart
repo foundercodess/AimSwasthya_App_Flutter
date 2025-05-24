@@ -551,10 +551,12 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
           showImageBottomSheet(true);
         },
         child: Container(
+          // padding: EdgeInsets.only(right: 5),
           width: Sizes.screenWidth,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: AppColor.textfieldGrayColor.withOpacity(0.5)),
+              color: AppColor.textfieldGrayColor.withOpacity(0.5)
+          ),
           child: Row(
             children: [
               Container(
@@ -574,7 +576,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             : const AssetImage(Assets.logoDoctor),
                         fit: BoxFit.fitHeight)),
               ),
-              Sizes.spaceWidth15,
+              Sizes.spaceWidth10,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -587,18 +589,26 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     fontWeight: FontWeight.w400,
                   ),
                   Sizes.spaceHeight5,
-                  TextConst(
-                    docProfileCon
-                            .doctorProfileModel!.data!.doctors![0].doctorName ??
-                        "",
-                    size: Sizes.fontSizeSix * 1.06,
-                    fontWeight: FontWeight.w500,
+                  SizedBox(  width: Sizes.screenWidth*0.55,
+
+                    child: TextConst(
+                      overflow: TextOverflow.ellipsis,
+                      docProfileCon
+                              .doctorProfileModel!.data!.doctors![0].doctorName ??
+                          "",
+                      size: Sizes.fontSizeSix * 1.06,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   Sizes.spaceHeight3,
-                  TextConst(
-                    "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
-                    size: Sizes.fontSizeFive * 1.08,
-                    fontWeight: FontWeight.w400,
+                  SizedBox(
+                    width: Sizes.screenWidth*0.55,
+                    child: TextConst(
+                      overflow: TextOverflow.ellipsis,
+                      "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
+                      size: Sizes.fontSizeFive * 1.08,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
