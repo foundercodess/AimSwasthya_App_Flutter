@@ -66,8 +66,11 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                 final Map<String, dynamic> itemMap = item.toJson();
                 return Column(
                   children: itemMap.entries.map((entry) {
-                    final title = entry.key.replaceAll('_', ' ').toUpperCase();
-                    final value = entry.value?.toString() ?? '';
+                    final title = entry.key
+                        .replaceAll('_', ' ');
+                    final value = (entry.value ?? '').toString().isEmpty
+                        ? ''
+                        : entry.value.toString();
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 15),

@@ -30,6 +30,18 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
     }
     return medicalRecordsSec();
   }
+  // Widget imageListView() {
+  //   if (filesWithFileName.isNotEmpty) {
+  //     return ListView.builder(
+  //       itemCount: filesWithFileName.length,
+  //       itemBuilder: (context, index) {
+  //         return Image.file(File(filesWithFileName[index]['path']));
+  //       },
+  //     );
+  //   } else {
+  //     return const Center(child: Text("No image selected"));
+  //   }
+  // }
 
   bool isClicked = false;
   Widget medicalRecordsSec() {
@@ -149,6 +161,56 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
                   color: AppColor.blue, fontWeight: FontWeight.w500),
             ),
             Sizes.spaceHeight20,
+            // ButtonConst(
+            //   title: (widget.pickedFile.length == 1 || selectedIndex + 1 == widget.pickedFile.length)
+            //       ? 'Submit'
+            //       : 'Next record',
+            //   onTap: () async {
+            //     if (textController.text.isEmpty) {
+            //       Utils.show("Please enter title to continue", context);
+            //       return;
+            //     }
+            //
+            //     // Save current record
+            //     filesWithFileName.add({
+            //       'path': widget.pickedFile[selectedIndex],
+            //       'fileName': textController.text
+            //     });
+            //
+            //     // If all records done
+            //     if (selectedIndex + 1 == widget.pickedFile.length) {
+            //       for (var data in filesWithFileName) {
+            //         bool? success = await Provider.of<GetImageUrlViewModel>(context, listen: false)
+            //             .addMedicalRecord(
+            //           context,
+            //           filePath: data['path'],
+            //           fileName: data['fileName'],
+            //         );
+            //
+            //         if (success == true) {
+            //           setState(() {
+            //             isClicked = true;
+            //           });
+            //         } else {
+            //           Utils.show("Failed to upload. Please try again.", context);
+            //         }
+            //       }
+            //
+            //       if (context.mounted) {
+            //         Navigator.pop(context);
+            //         ScaffoldMessenger.of(context).showSnackBar(
+            //           const SnackBar(content: Text("Uploaded Successfully")),
+            //         );
+            //       }
+            //     } else {
+            //       setState(() {
+            //         selectedIndex++;
+            //         textController.clear();
+            //       });
+            //     }
+            //   },
+            // ),
+
             ButtonConst(
               height: Sizes.screenHeight * 0.06,
               title: widget.pickedFile.length == 1 || ((widget.pickedFile.length) == selectedIndex + 1) ? 'Next' : "Next record",
@@ -244,13 +306,16 @@ class _MedicalOverlayScreenState extends State<MedicalOverlayScreen> {
               width: Sizes.screenWidth,
               onTap: () async {
                 Navigator.pop(context);
+
               },
+
             ),
           )
         ],
       ),
     );
   }
+
 
   Widget imageListView() {
     if (widget.pickedFile.isNotEmpty) {

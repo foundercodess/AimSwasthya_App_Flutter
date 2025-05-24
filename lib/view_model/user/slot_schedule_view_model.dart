@@ -385,7 +385,11 @@ class SlotScheduleViewModel extends ChangeNotifier {
   Future<void> docScheduleApi() async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    Map data = {"doctor_id": userId.toString(), "clinic_id": _selectedClinicId};
+    Map data = {
+      "doctor_id": userId.toString(),
+      "clinic_id": _selectedClinicId
+    };
+    print("ijfeiorjfio${jsonEncode(data)}");
     _docScheduleRepo.docScheduleApi(data).then((value) {
       if (value.status == true) {
         setDoctorScheduleData(value);

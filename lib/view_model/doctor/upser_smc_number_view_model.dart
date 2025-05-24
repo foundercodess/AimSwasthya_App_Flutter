@@ -6,6 +6,8 @@ import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../utils/utils.dart' show Utils;
+
 class UpsertSmcNumberViewModel extends ChangeNotifier {
   final _upsertSmcNumberRepo = UpsertSmcNumberRepo();
   bool _loading = false;
@@ -23,7 +25,7 @@ class UpsertSmcNumberViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> docUpsertSmcNumberApi(dynamic smcNumber) async {
+  Future<void> docUpsertSmcNumberApi(dynamic smcNumber,context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
@@ -32,6 +34,7 @@ class UpsertSmcNumberViewModel extends ChangeNotifier {
     };
     debugPrint("body: $data");
     _upsertSmcNumberRepo.upsertSmcNumberApi(data).then((value) {
+      Utils.show(value.message ?? "No message", context);
       if (value.status == true) {
         setUpsertSmcNumber(value);
       }

@@ -21,24 +21,24 @@ class ScheduleDoctorViewModel extends ChangeNotifier {
     _scheduleDoctorModel = value;
     notifyListeners();
   }
-  Future<void> docScheduleApi(dynamic clinicId) async {
-    final userId = await UserViewModel().getUser();
-    setLoading(true);
-    Map data = {
-      "doctor_id": userId,
-      "clinic_id": clinicId
-    };
-    print("app sch dt: ${jsonEncode(data)}");
-    _docScheduleRepo.docScheduleApi(data).then((value) {
-      if (value.status == true) {
-        setRevenueDoctorData(value);
-      }
-      setLoading(false);
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print('error: $error');
-      }
-      setLoading(false);
-    });
-  }
+  // Future<void> docScheduleApi(dynamic clinicId) async {
+  //   final userId = await UserViewModel().getUser();
+  //   setLoading(true);
+  //   Map data = {
+  //     "doctor_id": userId,
+  //     "clinic_id": clinicId
+  //   };
+  //   print("app sch dt: ${jsonEncode(data)}");
+  //   _docScheduleRepo.docScheduleApi(data).then((value) {
+  //     if (value.status == true) {
+  //       setRevenueDoctorData(value);
+  //     }
+  //     setLoading(false);
+  //   }).onError((error, stackTrace) {
+  //     if (kDebugMode) {
+  //       print('error: $error');
+  //     }
+  //     setLoading(false);
+  //   });
+  // }
 }

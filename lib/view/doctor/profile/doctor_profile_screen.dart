@@ -59,10 +59,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
       gender: _genderController.text,
       email: _emailController.text,
       phoneNumber: _numberController.text,
-      specializationId: docProfileCon
-              .doctorProfileModel?.data?.doctors?[0].specializationId
-              ?.toString() ??
-          '',
+      // specializationId: docProfileCon
+      //         .doctorProfileModel?.data?.doctors?[0].specializationId?.toString() ?? '',
+      specializationId: _speController.text,
       practiceStartYear: _expController.text,
     );
 
@@ -361,6 +360,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                             clinic.latitude ?? '0'),
                                         longitude: double.tryParse(
                                             clinic.longitude ?? '0'),
+                                            editCFees: clinic.consultationFee.toString()
                                       );
                                       showModalBottomSheet(
                                         elevation: 10,
@@ -403,7 +403,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             clinicInfoTile(clinic.name ?? "Clinic name"),
                             clinicInfoTile(clinic.address ?? "Address"),
                             // clinicInfoTile(clinic. ?? "Address"),
-                            clinicInfoTile(clinic.address ?? "Address"),
+                            clinicInfoTile(clinic.city ?? "City"),
                             clinicInfoTile(clinic.phoneNumber ?? "Contact no"),
                             clinicInfoTile(
                                 clinic.landmark ?? "Landmark (optional)"),

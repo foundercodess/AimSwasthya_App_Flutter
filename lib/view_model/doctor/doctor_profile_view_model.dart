@@ -15,6 +15,14 @@ class DoctorProfileViewModel extends ChangeNotifier {
   bool _loading = false;
   bool get loading => _loading;
 
+  bool _isEditMode = false;
+  bool get isEditMode => _isEditMode;
+
+  void setEditMode(bool value) {
+    _isEditMode = value;
+    notifyListeners();
+  }
+
   DoctorProfileModel? _doctorProfileModel;
   DoctorProfileModel? get doctorProfileModel => _doctorProfileModel;
   setProfileDate(DoctorProfileModel value) {
@@ -70,7 +78,7 @@ class DoctorProfileViewModel extends ChangeNotifier {
         "specialization_id": specializationId,
         "practice_start_year": practiceStartYear,
       };
-      debugPrint("body: ${jsonEncode(data)}");
+      debugPrint("bodyff: ${jsonEncode(data)}");
       final response = await _doctorProfileRepo.updateDoctorProfileApi(data);
       if (response['status'] == true) {
         await doctorProfileApi(context, isLoad: false);

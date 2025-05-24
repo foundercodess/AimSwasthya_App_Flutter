@@ -59,11 +59,9 @@
 //
 // }
 import 'dart:convert';
-import 'package:aim_swasthya/view_model/user/get_image_url_view_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import '../../../../res/color_const.dart';
 import 'package:aim_swasthya/view/user/drawer/med_reports/medical_overlay_screen.dart';
 
@@ -91,8 +89,11 @@ class ImagePickerHelper {
         builder: (BuildContext context) {
           return MedicalOverlayScreen(pickedFile: [pickedFile.path]);
         },
+
       );
+
     }
+
   }
 
   Future<XFile?> pickImageFromGallery(BuildContext context,
@@ -155,6 +156,7 @@ class ImagePickerHelper {
         },
       );
     }
+
   }
 
   Future<String> _convertToBase64(XFile imageFile) async {

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -10,7 +9,6 @@ import 'package:aim_swasthya/view_model/user/patient_medical_records_view_model.
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../local_db/download_image.dart';
 import '../../../../model/user/patient_medical_records_model.dart';
@@ -217,15 +215,15 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    // print("sdds");
-                    // var documentUrl = medRecCon.patientMedicalRecordsModel!
-                    //         .data!.medicalRecord![0].imageUrl ??
-                    //     "";
-                    // Navigator.pushNamed(
-                    //   context,
-                    //   RoutesName.uploadedOn,
-                    //   arguments: documentUrl,
-                    // );
+                    print("sdds");
+                    var documentUrl = medRecCon.patientMedicalRecordsModel!
+                            .data!.medicalRecord![0].imageUrl ??
+                        "";
+                    Navigator.pushNamed(
+                      context,
+                      RoutesName.uploadedOn,
+                      arguments: documentUrl,
+                    );
                   },
                   child: TextConst(
                     "Uploaded on",
@@ -400,7 +398,8 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
             title: const Text('Gallery'),
             onTap: () {
               Navigator.pop(context);
-              _imagePickerHelper.pickImageFromGallery(context);
+              // _imagePickerHelper.pickImageFromGallery(context);
+              _imagePickerHelper.pickSingleImageFromGallery(context);
             },
           ),
           ListTile(

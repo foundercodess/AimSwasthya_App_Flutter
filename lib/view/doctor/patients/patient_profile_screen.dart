@@ -451,10 +451,10 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   }
 
   Widget uploadedRecords() {
-    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    final patientAppointmentData =
+        final patientAppointmentData =
         Provider.of<DocPatientAppointmentViewModel>(context)
             .doctorsAppointmentsDataModel;
+    final patientProfileData = Provider.of<PatientProfileViewModel>(context);
     return patientProfileData.patientProfileModel != null &&
             patientProfileData.patientProfileModel!.medicalRecords != null &&
             patientProfileData.patientProfileModel!.medicalRecords!.isNotEmpty
@@ -480,7 +480,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   itemBuilder: (context, index) {
                     final docData = patientProfileData
                         .patientProfileModel!.medicalRecords![index];
-
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -523,7 +522,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                                 //     .toString()
                                                 patientAppointmentData!
                                                     .patientId
-                                                    .toString());
+                                                    .toString()
+                                                    );
                                         Navigator.pushNamed(context,
                                             RoutesName.docMedicalReportsScreen);
                                       },
@@ -625,19 +625,24 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    SizedBox(
+                      width: Sizes.screenWidth*0.5,
+                      child: TextConst(
+                        overflow:
+                        TextOverflow.ellipsis,
+                        documentName ?? "",
+                        size: Sizes.fontSizeFour,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                     TextConst(
-                      overflow: TextOverflow.ellipsis,
-                      documentName ?? "",
-                      size: Sizes.fontSizeFour,
+                      docData.uploadedAt.toString(),
+                      // DateFormat('dd/MM/yyyy')
+                      //     .format(DateTime.parse("docData.uploadedAt.toString()")),
+                      size: Sizes.fontSizeThree,
+                      color: AppColor.black,
                       fontWeight: FontWeight.w400,
                     ),
-                    // TextConst(
-                    //   DateFormat('dd/MM/yyyy')
-                    //       .format(DateTime.parse("docData.uploadedAt.toString()")),
-                    //   size: Sizes.fontSizeThree,
-                    //   color: AppColor.black,
-                    //   fontWeight: FontWeight.w400,
-                    // ),
                   ],
                 ),
               ),
@@ -656,7 +661,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
       print("pdfcase");
       return Stack(
         children: [
-          Container(
+          SizedBox(
             width: Sizes.screenWidth,
             height: Sizes.screenHeight,
             child: imagePath.toLowerCase().endsWith('.pdf')

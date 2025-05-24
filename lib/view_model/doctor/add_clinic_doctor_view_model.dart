@@ -49,7 +49,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   double? _editClinicLatitude;
   double? _editClinicLongitude;
   String? _editClinicId;
-  dynamic _editCFees;
+  String? _editCFees;
 
   // Getters for edit data
   String? get editClinicName => _editClinicName;
@@ -57,10 +57,10 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
   String? get editClinicPhone => _editClinicPhone;
   String? get editClinicLandmark => _editClinicLandmark;
   String? get editClinicCity => _editClinicCity;
-  String? get editClinicId => _editClinicId;
   double? get editClinicLatitude => _editClinicLatitude;
   double? get editClinicLongitude => _editClinicLongitude;
-  dynamic get editCFees =>_editCFees;
+  String? get editClinicId => _editClinicId;
+  String? get editCFees => _editCFees;
 
   // Setter for edit data
   void setEditClinicData({
@@ -72,7 +72,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     double? latitude,
     double? longitude,
     String? clinicId,
-    dynamic editCFees
+    String? editCFees
   }) {
     _editClinicName = name;
     _editClinicAddress = address;
@@ -82,7 +82,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     _editClinicLatitude = latitude;
     _editClinicLongitude = longitude;
     _editClinicId= clinicId;
-    _editCFees=editCFees;
+    _editCFees = editCFees;
     notifyListeners();
   }
 
@@ -96,7 +96,7 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
     _editClinicLatitude = null;
     _editClinicLongitude = null;
     _editClinicId= null;
-    _editCFees=null;
+    _editCFees = null;
     notifyListeners();
   }
 
@@ -258,6 +258,13 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       if (value ["status"] == true) {
         setClinicData(true);
         Provider.of<DoctorProfileViewModel>(context, listen:false).doctorProfileApi(context, isLoad: false);
+        // If in edit mode, turn it off after successful API call
+        if (isEditMode) {
+          setEditMode(false, clinicIndex: -1);
+          clearEditClinicData();
+          // Also turn off the profile screen's edit mode
+          Provider.of<DoctorProfileViewModel>(context, listen: false).setEditMode(false);
+        }
       }
       setClinicData(true);
       setLoading(false);
