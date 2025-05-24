@@ -32,7 +32,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   final TextEditingController _expController = TextEditingController();
   int currentPage = 0;
   bool isClicked = false;
-  bool isEditMode = false;
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
 
   @override
@@ -45,29 +44,24 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   }
 
   void _toggleEditMode() {
-    setState(() {
-      isEditMode = !isEditMode;
-    });
+    final docProfileCon = Provider.of<DoctorProfileViewModel>(context, listen: false);
+    docProfileCon.setEditMode(!docProfileCon.isEditMode);
   }
 
   void _saveProfile() async {
-    final docProfileCon =
-        Provider.of<DoctorProfileViewModel>(context, listen: false);
+    final docProfileCon = Provider.of<DoctorProfileViewModel>(context, listen: false);
     final success = await docProfileCon.updateDoctorProfileApi(
       context,
       name: _nameController.text,
       gender: _genderController.text,
       email: _emailController.text,
       phoneNumber: _numberController.text,
-      // specializationId: docProfileCon
-      //         .doctorProfileModel?.data?.doctors?[0].specializationId?.toString() ?? '',
       specializationId: _speController.text,
       practiceStartYear: _expController.text,
     );
 
     if (success) {
       setState(() {
-        isEditMode = false;
         _nameController.clear();
         _genderController.clear();
         _emailController.clear();
@@ -75,6 +69,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
         _speController.clear();
         _expController.clear();
       });
+      _toggleEditMode();
     }
   }
 
@@ -128,7 +123,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                           "Name",
                       controller: _nameController,
                       cursorColor: AppColor.textGrayColor,
-                      enabled: isEditMode,
+                      enabled: docProfileCon.isEditMode,
                     ),
                     Sizes.spaceHeight10,
                     Center(
@@ -171,7 +166,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               ),
                             );
                           }).toList(),
-                          onChanged: isEditMode
+                          onChanged: docProfileCon.isEditMode
                               ? (String? gender) {
                                   if (gender != null) {
                                     setState(() {
@@ -261,7 +256,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                         ),
                                       );
                                     }).toList(),
-                                    onChanged: isEditMode
+                                    onChanged: docProfileCon.isEditMode
                                         ? (String? newId) {
                                             if (newId != null) {
                                               setState(() {
@@ -286,7 +281,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                           "Experience",
                       controller: _expController,
                       cursorColor: AppColor.textGrayColor,
-                      enabled: isEditMode,
+                      enabled: docProfileCon.isEditMode,
                       keyboardType: TextInputType.number,
                       maxLength: 4,
                     ),
@@ -338,7 +333,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                   size: Sizes.fontSizeFourPFive,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                if (isEditMode)
+                                if (docProfileCon.isEditMode)
                                   IconButton(
                                     icon: const Icon(Icons.edit,
                                         color: AppColor.blue),
@@ -444,7 +439,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     ),
                     Sizes.spaceHeight10,
                     Center(
-                      child: isEditMode
+                      child: docProfileCon.isEditMode
                           ? ButtonConst(
                               title: "Save Profile",
                               width: Sizes.screenWidth / 1.7,
