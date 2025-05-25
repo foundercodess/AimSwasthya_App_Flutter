@@ -104,7 +104,7 @@ class _DoctorBottomNevBarState extends State<DoctorBottomNevBar> {
           child: BottomAppBar(
             elevation: 20,
             shadowColor: AppColor.black,
-            height: 60,
+            height: 60 + MediaQuery.of(context).padding.bottom,
             padding: const EdgeInsets.only(left: 40, right: 40),
             shape: const CircularNotchedRectangle(),
             color: const Color(0xffF0F0F0),
