@@ -3,6 +3,7 @@ import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
+import 'package:aim_swasthya/utils/no_data_found.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,8 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                     ),
                   ),
                   Sizes.spaceHeight10,
-                  transaction()
+                  transaction(),
+                  Sizes.spaceHeight20,
                 ],
               ),
             ),
@@ -213,13 +215,23 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     );
   }
 
+
   Widget scheduleGraph() {
-    // final weekdayAnalytics = Provider.of<DocGraphViewModel>(context);
     final PageController pageController = PageController();
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
-    int itemCount = revenueDocCon.revenueDoctorModel!.revenueAnalytics!.length;
-    return Column(
 
+    final analyticsList = revenueDocCon.revenueDoctorModel?.revenueAnalytics;
+    final itemCount = analyticsList?.length ?? 0;
+
+    if (analyticsList == null || analyticsList.isEmpty) {
+      return const Center(child: NoDataMessages(
+        message: "No Revenue analytics found",
+        title:
+        "You haven't recived any revenue analytics yet",
+      ));
+    }
+
+    return Column(
       children: [
         SizedBox(
           height: Sizes.screenHeight * 0.23,
@@ -345,6 +357,26 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
 
   Widget transaction() {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
+    final patientPayments = revenueDocCon.revenueDoctorModel!.patientPayment;
+
+    if (patientPayments == null || patientPayments.isEmpty) {
+      return  const Center(child: NoDataMessages(
+        message: "No transaction found",
+        title:
+        "You haven't recived any transaction yet",
+      ));
+      //   Center(
+      //   child: Padding(
+      //     padding: EdgeInsets.symmetric(vertical: Sizes.screenHeight * 0.02),
+      //     child: TextConst(
+      //       "No transactions found",
+      //       size: Sizes.fontSizeFive,
+      //       fontWeight: FontWeight.w500,
+      //       color: AppColor.lightBlack,
+      //     ),
+      //   ),
+      // );
+    }
     return ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(0),

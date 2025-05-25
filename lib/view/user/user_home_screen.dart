@@ -807,11 +807,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     color: AppColor.white,
                   ),
                   Sizes.spaceHeight3,
-                  TextConst(
-                    "${appointmentData.qualification} (${appointmentData.specializationName})",
-                    size: Sizes.fontSizeFivePFive,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.white,
+                  SizedBox(
+                    width: Sizes.screenWidth*0.66,
+                    child: TextConst(
+                      overflow: TextOverflow.ellipsis,
+                      "${appointmentData.qualification} (${appointmentData.specializationName})",
+                      size: Sizes.fontSizeFivePFive,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.white,
+                    ),
                   ),
                   Sizes.spaceHeight3,
                   TextConst(

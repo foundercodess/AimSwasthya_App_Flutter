@@ -184,6 +184,7 @@ class _DoctorSpeakerScreenState extends State<DoctorSpeakerScreen> {
                             color: AppColor.purple, shape: BoxShape.circle),
                         alignment: Alignment.center,
                         child: voiceSearchCon.isListening
+                            // ? const MicAnimation()
                             ? const MicAnimation()
                             : Image(
                                 image: const AssetImage(

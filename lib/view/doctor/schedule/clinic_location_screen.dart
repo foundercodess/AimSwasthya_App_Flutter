@@ -49,6 +49,17 @@ class _ClinicLocationScreenState extends State<ClinicLocationScreen> {
 
           Column(
             children: [
+              if (clinics == null || clinics.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: const Center(
+                    child: NoDataMessages(
+                      message: "No Clinics Found",
+                      title: "You haven’t added any clinics yet.",
+                    ),
+                  )
+                )
+              else
               Container(
                 margin: const EdgeInsets.all(20),
                 padding: const EdgeInsets.symmetric(vertical: 25),
@@ -62,6 +73,7 @@ class _ClinicLocationScreenState extends State<ClinicLocationScreen> {
                   spacing: 10,
                   runSpacing: 10,
                   children: clinics.map((clinic) {
+
                     return GestureDetector(
                       onTap: () {
                         print("clinic.clinicId.toString() ${clinic.clinicId}");

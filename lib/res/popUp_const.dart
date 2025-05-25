@@ -1,3 +1,4 @@
+import 'package:aim_swasthya/generated/assets.dart';
 import 'package:aim_swasthya/res/color_const.dart';
 import 'package:aim_swasthya/res/size_const.dart';
 import 'package:aim_swasthya/res/text_const.dart' show TextConst;
@@ -5,6 +6,7 @@ import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/by_animation/mic_bg_animation.dart';
 import '../view_model/user/user_view_model.dart';
 import '../view_model/user/voice_search_view_model.dart';
 
@@ -33,7 +35,7 @@ class ActionOverlay extends StatelessWidget {
       this.yesLabel,
       this.noLabel});
   @override
-  Widget build(BuildContext context ) {
+  Widget build(BuildContext context) {
     return Dialog(
       elevation: 5,
       surfaceTintColor: AppColor.black,
@@ -144,6 +146,122 @@ class ActionOverlay extends StatelessWidget {
     );
   }
 }
+//
+// class VoiceSearchDialog extends StatefulWidget {
+//   const VoiceSearchDialog({super.key});
+//
+//   @override
+//   State<VoiceSearchDialog> createState() => _VoiceSearchDialogState();
+// }
+//
+// class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
+//           .clearInput();
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final voiceSearchCon = Provider.of<VoiceSymptomSearchViewModel>(context);
+//
+//     return Dialog(
+//       elevation: 3,
+//       backgroundColor: Colors.grey[400],
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+//       child: Container(
+//         height: Sizes.screenHeight / 3.5,
+//         padding: EdgeInsets.only(top: Sizes.screenHeight * 0.02),
+//         width: Sizes.screenWidth,
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(30),
+//           color: const Color(0xffF9F9F9),
+//         ),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             // Mic button / animation
+//             GestureDetector(
+//               onTap: () async {
+//                 if (voiceSearchCon.isListening) {
+//                   voiceSearchCon.stopListening();
+//                 } else {
+//                   voiceSearchCon
+//                       .initSpeech(
+//                     context,
+//                   )
+//                       .then((data) {
+//                     if (data == true) {
+//                       voiceSearchCon.isListening
+//                           ? voiceSearchCon.stopListening()
+//                           : voiceSearchCon.startListening(singleSearch: true);
+//                       Navigator.pop(context);
+//                     }
+//                   });
+//                 }
+//
+//                 // if (!voiceSearchCon.isListening) {
+//                 //   bool initialized = await voiceSearchCon.initSpeech(context);
+//                 //   if (initialized) {
+//                 //     voiceSearchCon.startListening(
+//                 //       singleSearch: true,
+//                 //       onComplete: () {
+//                 //         voiceSearchCon.setSearchedValAndPerformSearch();
+//                 //         Navigator.pop(context);
+//                 //       },
+//                 //     );
+//                 //   }
+//                 // } else {
+//                 //   voiceSearchCon.stopListening();
+//                 // }
+//               },
+//               child: Container(
+//                 height: Sizes.screenHeight * 0.15,
+//                 width: Sizes.screenHeight * 0.15,
+//                 alignment: Alignment.center,
+//                 child: voiceSearchCon.isListening
+//                     ? const SecMicAnimation() // animated widget
+//                     : Image.asset(Assets.assetsMicc), // static mic image
+//               ),
+//             ),
+//
+//             Sizes.spaceHeight25,
+//
+//             // Live text update
+//             TextConst(
+//               voiceSearchCon.singleSearchWord.isEmpty
+//                   ? ''
+//                   : voiceSearchCon.singleSearchWord,
+//               textAlign: TextAlign.center,
+//               size: Sizes.fontSizeFourPFive,
+//               fontWeight: FontWeight.w400,
+//             ),
+//
+//             Sizes.spaceHeight10,
+//
+//             TextConst(
+//               "Use your voice to search for a doctor or speciality.",
+//               size: Sizes.fontSizeFour,
+//               fontWeight: FontWeight.w400,
+//             ),
+//             Sizes.spaceHeight5,
+//
+//             TextConst(
+//               "Just tap the mic and speak.",
+//               size: Sizes.fontSizeFour,
+//               fontWeight: FontWeight.w500,
+//               color: AppColor.blue,
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 
 class VoiceSearchDialog extends StatefulWidget {
   const VoiceSearchDialog({
@@ -166,122 +284,262 @@ class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
 
   @override
   Widget build(BuildContext context) {
+
     final voiceSearchCon = Provider.of<VoiceSymptomSearchViewModel>(context);
+
     return Dialog(
       elevation: 3,
       backgroundColor: Colors.grey[400],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: Container(
-        height: Sizes.screenHeight / 5,
-        padding: EdgeInsets.only(
-          top: Sizes.screenHeight * 0.02,
-        ),
+        height: Sizes.screenHeight / 3.5,
+        padding: EdgeInsets.only(top: Sizes.screenHeight * 0.02),
         width: Sizes.screenWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: const Color(0xffF9F9F9),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextConst(
-              'Voice Search',
-              size: Sizes.fontSizeSix,
-              fontWeight: FontWeight.w500,
+            // Mic button
+            GestureDetector(
+              onTap: () async {
+                if (voiceSearchCon.isListening) {
+                  voiceSearchCon.stopListening();
+                } else {
+                  voiceSearchCon
+                      .initSpeech(
+                    context,
+                  )
+                      .then((data) {
+                    if (data == true) {
+                      voiceSearchCon.isListening
+                          ? voiceSearchCon.stopListening()
+                          : voiceSearchCon.startListening(singleSearch: true);
+                      Navigator.pop(context);
+                    }
+                  });
+                }
+                // if (voiceSearchCon.isListening) {
+                //   voiceSearchCon.stopListening();
+                // } else {
+                //   bool initialized = await voiceSearchCon.initSpeech(context);
+                //   if (initialized) {
+                //     voiceSearchCon.startListening(
+                //       singleSearch: true,
+                //       onResult: () {
+                //         // Close dialog and proceed after getting result
+                //         voiceSearchCon.setSearchedValAndPerformSearch();
+                //         Navigator.pop(context);
+                //       },
+                //     );
+                //   }
+                // }
+              },
+              child:
+              Container(
+                height: Sizes.screenHeight * 0.15,
+                width: Sizes.screenHeight * 0.15,
+                decoration:  BoxDecoration(
+                ),
+                alignment: Alignment.center,
+                child: voiceSearchCon.isListening
+                // ? const MicAnimation()
+                    ? const SecMicAnimation()
+                    : Image(
+                  image: const AssetImage(Assets.assetsMicc),
+                  // height: Sizes.screenWidth * 0.25,
+                ),
+              ),
+              // Image(
+              //   image: const AssetImage(Assets.assetsMicc),
+              //   height: Sizes.screenWidth * 0.25,
+              // ),
             ),
-            Icon(
-              voiceSearchCon.isListening ? Icons.mic : Icons.mic_none,
-              size: Sizes.screenHeight * 0.05,
-              color: voiceSearchCon.isListening ? Colors.red : Colors.black54,
-            ),
+
+            Sizes.spaceHeight25,
+
+            // Display recognized text
             TextConst(
               voiceSearchCon.singleSearchWord.isEmpty
-                  ? 'Say something...'
+                  ? ''
                   : voiceSearchCon.singleSearchWord,
               textAlign: TextAlign.center,
               size: Sizes.fontSizeFourPFive,
               fontWeight: FontWeight.w400,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: () {
-                    if (voiceSearchCon.singleSearchWord.isEmpty) {
-                      Navigator.pop(context);
-                    } else {
-                      voiceSearchCon.setSearchedValAndPerformSearch();
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Container(
-                    height: Sizes.screenHeight * 0.055,
-                    width: Sizes.screenWidth / 2.6,
-                    decoration: const BoxDecoration(
-                      borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(30)),
-                      border: Border(
-                        top: BorderSide(color: Color(0xffEBEBEB)),
-                      ),
-                    ),
-                    child: Center(
-                      child: TextConst(
-                        voiceSearchCon.singleSearchWord.isEmpty
-                            ? "Cancel"
-                            : "Search",
-                        size: Sizes.fontSizeFourPFive,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.lightBlue,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: Sizes.screenHeight * 0.055,
-                  width: 1,
-                  color: const Color(0xffEBEBEB),
-                ),
-                InkWell(
-                  onTap: () {
-                    if (voiceSearchCon.isListening) {
-                      voiceSearchCon.stopListening();
-                    } else {
-                      voiceSearchCon.initSpeech(context,).then((data) {
-                        if (data == true) {
-                          voiceSearchCon.isListening
-                              ? voiceSearchCon.stopListening()
-                              : voiceSearchCon.startListening(singleSearch: true);
-                        }
-                      });
-                    }
-                  },
-                  child: Container(
-                    height: Sizes.screenHeight * 0.055,
-                    width: Sizes.screenWidth / 2.6,
-                    decoration: const BoxDecoration(
-                      borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(30)),
-                      border: Border(
-                        top: BorderSide(color: Color(0xffEBEBEB)),
-                      ),
-                    ),
-                    child: Center(
-                      child: TextConst(
-                        voiceSearchCon.isListening
-                            ? "Stop Listening"
-                            : "Start Listening",
-                        size: Sizes.fontSizeFourPFive,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.lightBlue,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+
+            Sizes.spaceHeight10,
+
+            TextConst(
+              "Use your voice to search for a doctor or speciality.",
+              size: Sizes.fontSizeFour,
+              fontWeight: FontWeight.w400,
+            ),
+            Sizes.spaceHeight5,
+
+            TextConst(
+              "Just tap the mic and speak.",
+              size: Sizes.fontSizeFour,
+              fontWeight: FontWeight.w500,
+              color: AppColor.blue,
             ),
           ],
         ),
       ),
     );
   }
+
+
+  // Widget build(BuildContext context) {
+  //   final voiceSearchCon = Provider.of<VoiceSymptomSearchViewModel>(context);
+  //   return Dialog(
+  //     elevation: 3,
+  //     backgroundColor: Colors.grey[400],
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+  //     child: Container(
+  //       height: Sizes.screenHeight / 3.5,
+  //       padding: EdgeInsets.only(
+  //         top: Sizes.screenHeight * 0.02,
+  //
+  //       ),
+  //       width: Sizes.screenWidth*1,
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(30),
+  //         color: const Color(0xffF9F9F9),),
+  //       child: Column(
+  //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           // TextConst(
+  //           //   'Voice Search',
+  //           //   size: Sizes.fontSizeSix,
+  //           //   fontWeight: FontWeight.w500,
+  //           // ),
+  //           GestureDetector(
+  //             onTap: (){
+  //               if (voiceSearchCon.isListening) {
+  //                 voiceSearchCon.stopListening();
+  //               } else {
+  //                 voiceSearchCon.initSpeech(context,).then((data) {
+  //                   if (data == true) {
+  //                     voiceSearchCon.isListening
+  //                         ? voiceSearchCon.stopListening()
+  //                         : voiceSearchCon.startListening(singleSearch: true);
+  //                   }
+  //                 });
+  //               }
+  //             },
+  //             child: Image(
+  //               image: const AssetImage(Assets.assetsMicc),
+  //               height: Sizes.screenWidth * 0.25,
+  //             ),
+  //           ),
+  //           Sizes.spaceHeight25,
+  //           // Icon(
+  //           //   voiceSearchCon.isListening ? Icons.mic : Icons.mic_none,
+  //           //   size: Sizes.screenHeight * 0.05,
+  //           //   color: voiceSearchCon.isListening ? Colors.red : Colors.black54,
+  //           // ),
+  //           TextConst(
+  //             voiceSearchCon.singleSearchWord.isEmpty
+  //                 ? ''
+  //                 : voiceSearchCon.singleSearchWord,
+  //             textAlign: TextAlign.center,
+  //             size: Sizes.fontSizeFourPFive,
+  //             fontWeight: FontWeight.w400,
+  //           ),
+  //           Sizes.spaceHeight10,
+  //           TextConst(
+  //             "Use your voice to search for a doctor or speciality.",
+  //             size: Sizes.fontSizeFour,
+  //             fontWeight: FontWeight.w400,
+  //           ),
+  //           Sizes.spaceHeight5,
+  //           TextConst("Just tap the mic and speak.",size: Sizes.fontSizeFour,
+  //             fontWeight: FontWeight.w500,
+  //             color: AppColor.blue,),
+  //
+  //           // Row(
+  //           //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //           //   children: [
+  //           //     InkWell(
+  //           //       onTap: () {
+  //           //         if (voiceSearchCon.singleSearchWord.isEmpty) {
+  //           //           Navigator.pop(context);
+  //           //         } else {
+  //           //           voiceSearchCon.setSearchedValAndPerformSearch();
+  //           //           Navigator.pop(context);
+  //           //         }
+  //           //       },
+  //           //       child: Container(
+  //           //         height: Sizes.screenHeight * 0.055,
+  //           //         width: Sizes.screenWidth / 2.6,
+  //           //         decoration: const BoxDecoration(
+  //           //           borderRadius:
+  //           //               BorderRadius.only(bottomRight: Radius.circular(30)),
+  //           //           border: Border(
+  //           //             top: BorderSide(color: Color(0xffEBEBEB)),
+  //           //           ),
+  //           //         ),
+  //           //         child: Center(
+  //           //           child: TextConst(
+  //           //             voiceSearchCon.singleSearchWord.isEmpty
+  //           //                 ? "Cancel"
+  //           //                 : "Search",
+  //           //             size: Sizes.fontSizeFourPFive,
+  //           //             fontWeight: FontWeight.w400,
+  //           //             color: AppColor.lightBlue,
+  //           //           ),
+  //           //         ),
+  //           //       ),
+  //           //     ),
+  //           //     Container(
+  //           //       height: Sizes.screenHeight * 0.055,
+  //           //       width: 1,
+  //           //       color: const Color(0xffEBEBEB),
+  //           //     ),
+  //           //     InkWell(
+  //           //       onTap: () {
+  //           //         if (voiceSearchCon.isListening) {
+  //           //           voiceSearchCon.stopListening();
+  //           //         } else {
+  //           //           voiceSearchCon.initSpeech(context,).then((data) {
+  //           //             if (data == true) {
+  //           //               voiceSearchCon.isListening
+  //           //                   ? voiceSearchCon.stopListening()
+  //           //                   : voiceSearchCon.startListening(singleSearch: true);
+  //           //             }
+  //           //           });
+  //           //         }
+  //           //       },
+  //           //       child: Container(
+  //           //         height: Sizes.screenHeight * 0.055,
+  //           //         width: Sizes.screenWidth / 2.6,
+  //           //         decoration: const BoxDecoration(
+  //           //           borderRadius:
+  //           //               BorderRadius.only(bottomRight: Radius.circular(30)),
+  //           //           border: Border(
+  //           //             top: BorderSide(color: Color(0xffEBEBEB)),
+  //           //           ),
+  //           //         ),
+  //           //         child: Center(
+  //           //           child: TextConst(
+  //           //             voiceSearchCon.isListening
+  //           //                 ? "Stop Listening"
+  //           //                 : "Start Listening",
+  //           //             size: Sizes.fontSizeFourPFive,
+  //           //             fontWeight: FontWeight.w400,
+  //           //             color: AppColor.lightBlue,
+  //           //           ),
+  //           //         ),
+  //           //       ),
+  //           //     ),
+  //           //   ],
+  //           // ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

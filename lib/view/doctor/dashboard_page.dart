@@ -255,12 +255,16 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
                             fontWeight: FontWeight.w500,
                             color: AppColor.white,
                           ),
-                          TextConst(
-                            '${docHomeCon.data!.doctors![0].qualification ?? ''} '
-                            '(${docHomeCon.data!.doctors![0].specializationName ?? "MBBS, MD (Cardiology)"})',
-                            size: Sizes.fontSizeFivePFive,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.white,
+                          SizedBox(
+                            width: Sizes.screenWidth * 0.55,
+                            child: TextConst(
+                              overflow: TextOverflow.ellipsis,
+                              '${docHomeCon.data!.doctors![0].qualification ?? ''} '
+                              '(${docHomeCon.data!.doctors![0].specializationName ?? "MBBS, MD (Cardiology)"})',
+                              size: Sizes.fontSizeFivePFive,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.white,
+                            ),
                           ),
                           Sizes.spaceHeight10,
                           Row(

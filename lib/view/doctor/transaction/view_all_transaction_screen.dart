@@ -51,7 +51,15 @@ class _ViewAllTransactionScreenState extends State<ViewAllTransactionScreen> {
                 _buildSection("Yesterday", "yesterday"),
                 _buildSection("History", "history"),
               ] else
-                const Center(child: NoDataMessages()),
+                 Center(child: Container(
+                   alignment: Alignment.bottomCenter,
+                   height: Sizes.screenHeight*0.5,
+                  child: const NoDataMessages(
+                    message: "No transactions found",
+                    title:
+                    "You haven't recived any transactions yet",
+                  ),
+                )),
             ],
           ),
         ),
