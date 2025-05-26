@@ -56,15 +56,17 @@ class NoDataMessages extends StatelessWidget {
   final String? message;
   final String? title;
   final double? height;
-  const NoDataMessages({super.key, this.message, this.title, this.height});
+  final dynamic image;
+  const NoDataMessages(
+      {super.key, this.message, this.title, this.height, this.image});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
           horizontal: Sizes.screenWidth * 0.04,
-          vertical: Sizes.screenHeight * 0.04),
-      height:height?? Sizes.screenHeight * 0.3,
+          vertical: Sizes.screenHeight * 0.05),
+      height: height ?? Sizes.screenHeight * 0.35,
       width: Sizes.screenWidth * 0.87,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
@@ -74,10 +76,12 @@ class NoDataMessages extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset("assets/info.png",
-              height: Sizes.screenHeight * 0.03,
-              width: Sizes.screenHeight * 0.03),
+          image ??
+              Image.asset("assets/info.png",
+                  height: Sizes.screenHeight * 0.03,
+                  width: Sizes.screenHeight * 0.03),
           Sizes.spaceHeight5,
+          Sizes.spaceHeight3,
           TextConst(
             message ?? "No Appointment yet",
             size: Sizes.fontSizeFive,
@@ -86,6 +90,8 @@ class NoDataMessages extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
           Sizes.spaceHeight5,
+          // Sizes.spaceHeight3,
+
           SizedBox(
             width: Sizes.screenWidth * 0.6,
             child: Center(
@@ -112,7 +118,14 @@ class NoMessage extends StatelessWidget {
   final Color? titleColor;
   final Color? imageColor;
 
-  const NoMessage({super.key, this.message, this.title, this.color, this.titleColor, this.imageColor,});
+  const NoMessage({
+    super.key,
+    this.message,
+    this.title,
+    this.color,
+    this.titleColor,
+    this.imageColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -121,16 +134,19 @@ class NoMessage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Sizes.spaceHeight20,
-        Image.asset("assets/groupInfo.png",
-            height: Sizes.screenHeight * 0.08,
-            width: Sizes.screenHeight * 0.08,color:imageColor?? AppColor.lightBlue,),
+        Image.asset(
+          "assets/groupInfo.png",
+          height: Sizes.screenHeight * 0.08,
+          width: Sizes.screenHeight * 0.08,
+          color: imageColor ?? AppColor.lightBlue,
+        ),
         Sizes.spaceHeight15,
         TextConst(
           message ?? "No Appointment yet",
           size: Sizes.fontSizeSix,
           // size: 14,
           fontWeight: FontWeight.w500,
-          color:color?? AppColor.black,
+          color: color ?? AppColor.black,
         ),
         Sizes.spaceHeight5,
         SizedBox(
@@ -143,7 +159,7 @@ class NoMessage extends StatelessWidget {
               // size: 10,
               size: Sizes.fontSizeFour,
               fontWeight: FontWeight.w400,
-              color:titleColor?? AppColor.black,
+              color: titleColor ?? AppColor.black,
             ),
           ),
         ),

@@ -73,13 +73,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ...allList.map((n) => _notificationTile(n)),
                           ],
                           if (notifications.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 32.0),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32.0),
                               child: Center(
-                                  child: NoDataMessages(
-                                message: "No notification found",
+                                  child: NoDataMessages(image:
+                                    Image.asset(Assets.iconsNotification,
+                                        height: Sizes.screenHeight * 0.03,
+                                        width: Sizes.screenHeight * 0.03),
+                                    // image: AssetImage(Assets.iconsNotification,),
+                                message: "All quiet here",
                                 title:
-                                    "You haven't recived any notification yet",
+                                    "You’ll receive updates here when\nsomething needs your attention",
                               )),
                             ),
                         ],

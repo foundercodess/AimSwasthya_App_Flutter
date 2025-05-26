@@ -24,6 +24,13 @@ class RoutesName {
   static const mobileLoginScreen = "/mobileLoginScreen";
   static const otpScreen = "/otpScreen";
   static const signUpScreen = "/signUpScreen";
+  static const userDeleteAccountScreen = "/userDeleteAccountScreen";
+  static const wellnesslibraryScreen = "/wellnesslibraryScreen";
+  static const userNotificationScreen = "/userNotificationScreen";
+  static const yourProfileScreen = "/yourProfileScreen";
+
+
+
 
   static const scheduleScreen = "/scheduleScreen";
   static const userDocProfilePage = "/UserDocProfilePage";

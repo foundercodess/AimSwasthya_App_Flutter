@@ -11,6 +11,7 @@ class Assets {
   static const String assetsClinicLocation = 'assets/clinic_location.png';
   static const String assetsGooglePayConfig = 'assets/google_pay_config.json';
   static const String assetsGroupInfo = 'assets/groupInfo.png';
+  static const String assetsHealthYoga = 'assets/health_yoga.png';
   static const String assetsIconsArrowDown = 'assets/icons/arrow_down.png';
   static const String assetsInfo = 'assets/info.png';
   static const String assetsLoading = 'assets/loading.gif';
@@ -21,6 +22,7 @@ class Assets {
   static const String assetsMicc = 'assets/micc.png';
   static const String assetsNoDataFound = 'assets/no_data_found.jpg';
   static const String assetsNoService = 'assets/no_service.png';
+  static const String assetsYourProfile = 'assets/your_profile.png';
   static const String iconsAppointmens = 'assets/icons/appointmens.png';
   static const String iconsArrowBack = 'assets/icons/arrowBack.png';
   static const String iconsArrowDown = 'assets/icons/arrowDown.png';
@@ -47,6 +49,7 @@ class Assets {
   static const String iconsMapUser = 'assets/icons/map_user.png';
   static const String iconsMdiClock = 'assets/icons/mdiClock.png';
   static const String iconsNausea = 'assets/icons/Nausea.png';
+  static const String iconsNotification = 'assets/icons/notification.png';
   static const String iconsPaytmIcon = 'assets/icons/paytmIcon.png';
   static const String iconsPaytmImage = 'assets/icons/paytmImage.png';
   static const String iconsPhonepeIcon = 'assets/icons/phonepeIcon.png';
@@ -114,9 +117,11 @@ class Assets {
   static const String logoNoData = 'assets/logo/no_data.png';
   static const String logoOnboadingAppLogo = 'assets/logo/onboading_app_logo.png';
   static const String logoProfileAppLogo = 'assets/logo/profile_app_logo.png';
+  static const String logoProfileLogo = 'assets/logo/profile_logo.png';
   static const String logoRupayLogo = 'assets/logo/rupay_logo.png';
   static const String logoSathiLogo = 'assets/logo/sathi_logo.png';
   static const String logoSwasthyaSaathi = 'assets/logo/swasthya_saathi.png';
   static const String uiBgIntroBg = 'assets/ui_bg/intro_bg.png';
+  static const String uiBgYoga = 'assets/ui_bg/yoga.png';
 
 }

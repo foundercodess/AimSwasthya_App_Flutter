@@ -14,6 +14,8 @@ import 'package:aim_swasthya/view/doctor/schedule/schedule_hours_screen.dart';
 import 'package:aim_swasthya/view/doctor/schedule/schedule_screen.dart';
 import 'package:aim_swasthya/view/doctor/test_project.dart';
 import 'package:aim_swasthya/view/doctor/transaction/view_all_transaction_screen.dart';
+import 'package:aim_swasthya/view/user/add_screens/wellness_library_screen.dart';
+import 'package:aim_swasthya/view/user/add_screens/your_profile_screen.dart';
 import 'package:aim_swasthya/view/user/appointments/view_appointment.dart';
 import 'package:aim_swasthya/view/user/auth/register/register_screen.dart';
 import 'package:aim_swasthya/view/user/auth/register/sign_up_screen.dart';
@@ -35,6 +37,7 @@ import 'package:aim_swasthya/view/user/doctors/show_doc/speaker.dart';
 import 'package:aim_swasthya/view/user/doctors/show_doctors_screen.dart';
 import 'package:aim_swasthya/view/user/drawer/med_reports/medical_reports_screen.dart';
 import 'package:aim_swasthya/view/user/drawer/my_doctors/my_doctors_screen.dart';
+import 'package:aim_swasthya/view/user/drawer/user_delete_account.dart';
 import 'package:aim_swasthya/view/user/secound_nav_bar.dart';
 import 'package:aim_swasthya/view/user/symptoms/all_symptoms_screen.dart';
 import 'package:aim_swasthya/view/user/user_home_screen.dart';
@@ -43,6 +46,7 @@ import 'package:flutter/material.dart';
 import '../../view/doctor/medical_reports/medical_reports_screen.dart';
 import '../../view/doctor/schedule/clinic_location_screen.dart';
 import '../../view/user/drawer/med_reports/uploaded_on.dart';
+import '../../view/user/drawer/user_notification_screen.dart';
 
 class Routers {
   static WidgetBuilder generateRoute(String routeName) {
@@ -102,6 +106,17 @@ class Routers {
         return (context) => const OtpScreen();
       case RoutesName.signUpScreen:
         return (context) => const SignUpScreen();
+      case RoutesName.userDeleteAccountScreen:
+        return (context) => const UserDeleteAccountScreen();
+      case RoutesName.wellnesslibraryScreen:
+        return (context) => const WellnesslibraryScreen();
+      case RoutesName.userNotificationScreen:
+        return (context) => const UserNotificationScreen();
+        case RoutesName.yourProfileScreen:
+        return (context) => const YourProfileScreen();
+
+
+
 
       case RoutesName.scheduleScreen:
         return (context) => const ScheduleScreen();
@@ -128,16 +143,16 @@ class Routers {
         return (context) => const UploadedOn();
       case RoutesName.aboutUsScreen:
         return (context) => const AboutUsScreen();
-        case RoutesName.clinicLocationScreen:
+      case RoutesName.clinicLocationScreen:
         return (context) => const ClinicLocationScreen();
-        case RoutesName.fullScreenMapPage:
-        return (context) =>  FullScreenMapPage();
-        case RoutesName.docMedicalReportsScreen:
-        return (context) =>  const DocMedicalReportsScreen();
-        case RoutesName.notificationScreen:
-        return (context) =>  const NotificationScreen();
-        case RoutesName.deleteAccountScreen:
-        return (context) =>  const DeleteAccountScreen();
+      case RoutesName.fullScreenMapPage:
+        return (context) => FullScreenMapPage();
+      case RoutesName.docMedicalReportsScreen:
+        return (context) => const DocMedicalReportsScreen();
+      case RoutesName.notificationScreen:
+        return (context) => const NotificationScreen();
+      case RoutesName.deleteAccountScreen:
+        return (context) => const DeleteAccountScreen();
 
       default:
         return (context) => const Scaffold(

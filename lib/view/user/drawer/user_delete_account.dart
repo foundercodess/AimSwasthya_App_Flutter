@@ -2,22 +2,22 @@ import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
-import 'package:aim_swasthya/view_model/doctor/delete_account_view_model.dart';
+import 'package:aim_swasthya/view/user/secound_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class DeleteAccountScreen extends StatefulWidget {
-  const DeleteAccountScreen({super.key});
+class UserDeleteAccountScreen extends StatefulWidget {
+  const UserDeleteAccountScreen({super.key});
 
   @override
-  State<DeleteAccountScreen> createState() => _DeleteAccountScreenState();
+  State<UserDeleteAccountScreen> createState() =>
+      _UserDeleteAccountScreenState();
 }
 
-class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
+class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
   @override
   Widget build(BuildContext context) {
-    final deleteAco = Provider.of<DeleteAccountViewModel>(context);
+    // final deleteAco = Provider.of<DeleteAccountViewModel>(context);
 
     return Scaffold(
       body: Column(
@@ -26,7 +26,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
           const AppbarConst(title: 'Delete account'),
           Sizes.spaceHeight35,
           Sizes.spaceHeight35,
-          Sizes.spaceHeight15,
+          Sizes.spaceHeight35,
           Container(
             margin: EdgeInsets.only(
                 left: Sizes.screenWidth * 0.05,
@@ -53,88 +53,26 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 Center(
                     child: TextConst(
                   textAlign: TextAlign.center,
+
                   "Are you sure you want to delete\n your account?",
                   size: Sizes.fontSizeFivePFive,
+                  // size: 14,
                   fontWeight: FontWeight.w500,
                 )),
                 Sizes.spaceHeight25,
                 const Text.rich(
+                  textAlign: TextAlign.center,
                   TextSpan(
                     children: [
                       TextSpan(
-                          text: "You're about to delete your ",
+                          text: "Deleting your account will ",
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Poppins-Bold',
                           )),
                       TextSpan(
-                        text: "AIMSwasthya Doctor Account",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                          fontFamily: 'Poppins-Bold',
-                        ),
-                      ),
-                      TextSpan(text: "."),
-                    ],
-                  ),
-                ),
-                Sizes.spaceHeight3,
-                TextConst(
-                  "This action is permanent and cannot be undone.",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight20,
-                const Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "For security and compliance reasons, ",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                          fontFamily: 'Poppins-Bold',
-                        ),
-                      ),
-                      TextSpan(
-                          text: "your account will result in:",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins-Bold',
-                          )),
-                      TextSpan(text: "."),
-                    ],
-                  ),
-                ),
-                Sizes.spaceHeight20,
-                TextConst(
-                  "  . Removal of your profile from the doctor directory",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight5,
-                TextConst(
-                  "  . Permanent loss of consultation history and patient\n   interactions",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight5,
-                TextConst(
-                  "  . Inability to access earnings or settlement records after\n   deletion",
-                  size: Sizes.fontSizeFour,
-                  fontWeight: FontWeight.w400,
-                ),
-                Sizes.spaceHeight20,
-                const Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Deleting ",
+                        text: "permanently ",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -144,16 +82,37 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                       ),
                       TextSpan(
                           text:
-                              "certain transactional data may be retained in accordance with medical and legal regulations.",
+                              "remove all your personal data, including your medical history, symptom records, and any ongoing consultations. This action cannot be",
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Poppins-Bold',
                           )),
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: " undone.",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              fontFamily: 'Poppins-Bold',
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
+                Sizes.spaceHeight25,
+                TextConst(
+                  textAlign: TextAlign.center,
+                  "If you're facing any issues or need assistance, please reach out to our support team before proceeding",
+                  size: Sizes.fontSizeFour,
+                  fontWeight: FontWeight.w400,
+                ),
                 Sizes.spaceHeight20,
+                Sizes.spaceHeight30,
                 ButtonConst(
                   onTap: () {
                     showCupertinoDialog(
@@ -164,7 +123,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             subtext:
                                 "Are you sure you want to delete\n your appointment?",
                             onTap: () {
-                              deleteAco.deleteAccountApi(context);
+                              // deleteAco.deleteAccountApi(context);
                             },
                           );
                         });
@@ -177,6 +136,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
             ),
           )
         ],
+      ),
+      bottomNavigationBar: Container(
+        height: 90,
+        width: Sizes.screenWidth,
+        color: AppColor.white,
+        child: const CommenBottomNevBar(),
       ),
     );
   }

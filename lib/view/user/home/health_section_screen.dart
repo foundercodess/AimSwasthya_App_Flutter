@@ -105,22 +105,8 @@ class _HealthSectionScreenState extends State<HealthSectionScreen> {
                                         width: Sizes.screenWidth * 0.25,
                                         fit: BoxFit.fill,
                                       ),
-                            // Image.network(
-                            //   doctor.imageUrl != null && doctor.imageUrl!.isNotEmpty
-                            //       ? doctor.imageUrl!
-                            //       : "assets/images/doctorImg.jpg",
-                            //   height: Sizes.screenHeight * 0.13,
-                            //   width: double.infinity,
-                            //   fit: BoxFit.fill,
-                            // )
+
                           ),
-                          // decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(8),
-                          //     image:
-                          //     DecorationImage(
-                          //         image: AssetImage(Assets.logoDoctor),
-                          //         fit: BoxFit.cover)),
-                          // child: Image.asset(Assets.logoDoctor,fit: BoxFit.cover,),
                         ),
                         Sizes.spaceHeight5,
                         Sizes.spaceHeight3,

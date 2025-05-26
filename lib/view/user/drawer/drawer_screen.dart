@@ -117,6 +117,21 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, RoutesName.userDeleteAccountScreen);
+                        // Navigator.pushNamed(context, RoutesName.wellnesslibraryScreen);
+
+                      },
+                      child: TextConst(
+                        "Delete Account",
+                        size: Sizes.fontSizeFive,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.white,
+                      ),
+                    ),
+                    Sizes.spaceHeight10,
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, RoutesName.aboutUsScreen);
