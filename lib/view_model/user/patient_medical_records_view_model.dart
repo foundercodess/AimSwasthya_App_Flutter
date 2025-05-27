@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:aim_swasthya/model/user/patient_medical_records_model.dart';
 import 'package:aim_swasthya/repo/user/patient_medical_records_repo.dart';
-import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/foundation.dart';
 

@@ -3,8 +3,10 @@ import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/popUp_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/view/user/secound_nav_bar.dart';
+import 'package:aim_swasthya/view_model/user/user_delete_account_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserDeleteAccountScreen extends StatefulWidget {
   const UserDeleteAccountScreen({super.key});
@@ -17,7 +19,7 @@ class UserDeleteAccountScreen extends StatefulWidget {
 class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
   @override
   Widget build(BuildContext context) {
-    // final deleteAco = Provider.of<DeleteAccountViewModel>(context);
+    final deletePro = Provider.of<UserDeleteAccountViewModel>(context);
 
     return Scaffold(
       body: Column(
@@ -123,7 +125,7 @@ class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
                             subtext:
                                 "Are you sure you want to delete\n your appointment?",
                             onTap: () {
-                              // deleteAco.deleteAccountApi(context);
+                              deletePro.userDeleteAccountApi(context);
                             },
                           );
                         });

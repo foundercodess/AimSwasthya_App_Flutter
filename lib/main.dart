@@ -33,6 +33,7 @@ import 'package:aim_swasthya/view_model/user/patient_appointment_view_model.dart
 import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_medical_records_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_pref_doc_view_model.dart';
+import 'package:aim_swasthya/view_model/user/patient_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/user/services/payment_con.dart';
 import 'package:aim_swasthya/view_model/user/slot_schedule_view_model.dart';
 import 'package:aim_swasthya/view_model/user/tc_pp_view_model.dart';
@@ -40,6 +41,7 @@ import 'package:aim_swasthya/view_model/user/update_appointment_view_model.dart'
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:aim_swasthya/utils/routes/routes.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
+import 'package:aim_swasthya/view_model/user/user_delete_account_view_model.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:aim_swasthya/view_model/user/voice_search_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -102,6 +104,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => VoiceSymptomSearchViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpdateAppointmentViewModel()),
         ChangeNotifierProvider(create: (ctx) => CancelAppointmentViewModel()),
+        ChangeNotifierProvider(create: (ctx) => UserDeleteAccountViewModel()),
+        ChangeNotifierProvider(create: (ctx) => UserPatientProfileViewModel()),
 
         // doctor view models
         ChangeNotifierProvider(create: (ctx) => DoctorAuthViewModel()),

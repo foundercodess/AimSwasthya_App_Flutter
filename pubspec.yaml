@@ -65,6 +65,8 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/ui_bg/
+    - assets/all_Images/solar_calendar.png
+    - assets/all_Images/
 
 
   fonts:

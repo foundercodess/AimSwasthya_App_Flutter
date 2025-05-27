@@ -31,6 +31,8 @@ class PatientApiUrl {
   static const String updateAppointmentDetails =
       "${baseUrl}updateAppointmentDetails";
   static const String tcApiUrl = "https://uat.max11.org/api/get/settings/";
+  static const String userDeleteProfile = "${baseUrl}deleteProfilePatient";
+  static const String getPatientProfile = "${baseUrl}getPatientProfile";
 }
 
 class DoctorApiUrl {

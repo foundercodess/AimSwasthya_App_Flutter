@@ -15,7 +15,7 @@ import 'package:aim_swasthya/view/doctor/schedule/schedule_screen.dart';
 import 'package:aim_swasthya/view/doctor/test_project.dart';
 import 'package:aim_swasthya/view/doctor/transaction/view_all_transaction_screen.dart';
 import 'package:aim_swasthya/view/user/add_screens/wellness_library_screen.dart';
-import 'package:aim_swasthya/view/user/add_screens/your_profile_screen.dart';
+import 'package:aim_swasthya/view/user/drawer/your_profile_screen.dart';
 import 'package:aim_swasthya/view/user/appointments/view_appointment.dart';
 import 'package:aim_swasthya/view/user/auth/register/register_screen.dart';
 import 'package:aim_swasthya/view/user/auth/register/sign_up_screen.dart';

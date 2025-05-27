@@ -108,6 +108,44 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   Navigator.pushNamed(context, RoutesName.myDoctorsScreen);
                 },
               ),
+              Sizes.spaceHeight5,
+              ListTile(
+                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .04),
+                leading: const Image(
+                  image: AssetImage(Assets.iconsProfileIcon),
+                  color: AppColor.white,
+                  height: 20,
+                ),
+                title: TextConst(
+                  "Your Profile",
+                  size: Sizes.fontSizeFive,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.white,
+                ),
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, RoutesName.yourProfileScreen);
+                },
+              ),
+              Sizes.spaceHeight5,
+              ListTile(
+                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .04),
+                leading: const Image(
+                  image: AssetImage(Assets.iconsMyWellness),
+                  color: AppColor.white,
+                  height: 20,
+                ),
+                title: TextConst(
+                  "My Wellness Library",
+                  size: Sizes.fontSizeFive,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.white,
+                ),
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, RoutesName.wellnesslibraryScreen);
+                },
+              ),
               const Spacer(),
               Padding(
                 padding: EdgeInsets.only(

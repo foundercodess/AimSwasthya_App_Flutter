@@ -3,6 +3,9 @@ class Assets {
   Assets._();
 
   static const String aimSwasthyaAppFlutterAssetsNoDataFound = 'assets/no_data_found.png';
+  static const String allImagesAddProfile = 'assets/all_Images/add_profile.png';
+  static const String allImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';
+  static const String assetsAllImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';
   static const String assetsAnimation2mic = 'assets/animation_2mic.png';
   static const String assetsAnimation3mic = 'assets/animation_3mic.png';
   static const String assetsAnimation4mic = 'assets/animation_4mic.png';
@@ -48,6 +51,7 @@ class Assets {
   static const String iconsMap = 'assets/icons/map.png';
   static const String iconsMapUser = 'assets/icons/map_user.png';
   static const String iconsMdiClock = 'assets/icons/mdiClock.png';
+  static const String iconsMyWellness = 'assets/icons/my_wellness.png';
   static const String iconsNausea = 'assets/icons/Nausea.png';
   static const String iconsNotification = 'assets/icons/notification.png';
   static const String iconsPaytmIcon = 'assets/icons/paytmIcon.png';

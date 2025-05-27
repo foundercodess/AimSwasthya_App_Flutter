@@ -284,10 +284,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   const Spacer(),
                   GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, RoutesName.userNotificationScreen);
                         // Navigator.pushNamed(
-                        //     context, RoutesName.yourProfileScreen);
+                        //     context, RoutesName.userNotificationScreen);
+                        Navigator.pushNamed(
+                            context, RoutesName.yourProfileScreen);
                       },
                       child: Image(
                         image: const AssetImage(Assets.iconsWellIcon),

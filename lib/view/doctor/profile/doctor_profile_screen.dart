@@ -166,7 +166,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               ),
                             );
                           }).toList(),
-                          onChanged: docProfileCon.isEditMode
+                          onChanged:
+                          docProfileCon.isEditMode
                               ? (String? gender) {
                                   if (gender != null) {
                                     setState(() {
