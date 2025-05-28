@@ -500,12 +500,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                 }
               }
             },
-            // onTap: () async {
-            //   Navigator.pop(context);
-            //  final img= await _imagePickerHelper.pickImageFromCamera(context, isProfileSelection: true);
-            //  print("xfile: ${img!.path}");
-            //  Provider.of<DoctorAuthViewModel>(context).profileImage;
-            // },
           ),
           ListTile(
             leading: const Icon(Icons.photo_library),

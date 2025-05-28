@@ -59,7 +59,8 @@ class DoctorProfileViewModel extends ChangeNotifier {
   }
 
   Future<bool> updateDoctorProfileApi(
-    BuildContext context, {
+    BuildContext context,
+      {
     required String name,
     required String gender,
     required String email,

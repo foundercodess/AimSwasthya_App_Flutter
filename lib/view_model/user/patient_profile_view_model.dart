@@ -1,8 +1,15 @@
 import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_profile_model.dart';
 import 'package:aim_swasthya/repo/user/patient_profile_repo.dart';
+import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../../res/custom_loder.dart' show LoaderOverlay;
+import 'get_image_url_view_model.dart';
 
 class UserPatientProfileViewModel extends ChangeNotifier {
   final _userPatientProfileRepo = UserPatientAppointmentRepo();
@@ -10,6 +17,22 @@ class UserPatientProfileViewModel extends ChangeNotifier {
   bool _loading = false;
   bool get loading => _loading;
 
+  bool _isEditMode = false;
+  bool get isEditMode => _isEditMode;
+
+  void setEditMode(bool value) {
+    _isEditMode = value;
+    notifyListeners();
+  }
+
+  XFile? _profileImage;
+  XFile? get profileImage => _profileImage;
+  setProfileImage(XFile? image) async {
+    _profileImage = image;
+    notifyListeners();
+    // final entityType=
+    // await addImageApi('doctor', image!.name,);
+  }
   UserPatientProfileModel? _userPatientProfileModel;
   UserPatientProfileModel? get userPatientProfileModel =>
       _userPatientProfileModel;
@@ -24,7 +47,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> userPatientProfileApi() async {
+  Future<void> userPatientProfileApi( BuildContext context, {bool isLoad = true}) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     print("ghjkjlk: $userId");
@@ -42,4 +65,107 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       }
     });
   }
+
+
+
+  Future<bool> updatePatientProfileApi(
+      BuildContext context,
+      {
+        required String name,
+        required String gender,
+        required String phone,
+        required String email,
+        required String dob,
+        required String height,
+        required String weight,
+        required String bloodGroup,
+        required String allergies,
+        required String currentMed,
+        required String chronicIll,
+        required String lifestyleHab,
+
+      }) async {
+    try {
+      final userId = await UserViewModel().getUser();
+      Map data = {
+        "patient_id": "$userId",
+        "name": name,
+        "gender": gender,
+        "phone_number": phone,
+        "email": email,
+        "date_of_birth": dob,
+        "height": "170",
+        "weight": "65",
+        "blood_group": "B-",
+        "allergies": "",
+        "current_medications": "Metformin",
+        "chronic_illnesses": "Diabetes",
+        "lifestyle_habbits": "Non-smoker"
+      };
+      debugPrint("bodyff: ${jsonEncode(data)}");
+      final response = await _userPatientProfileRepo.updatePatientProfileApi(data);
+      if (response['status'] == true) {
+        await userPatientProfileApi(context, isLoad: false);
+        Utils.show(response['message'], context);
+        return true;
+      } else {
+        Utils.show(response['message'] ?? "Update failed", context);
+        return false;
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('error: $error');
+      }
+      Utils.show("Something went wrong", context);
+      return false;
+    }
+  }
+
+  String? getImageType(String fileName) {
+
+    if (fileName.endsWith('.png')) {
+      return 'png';
+    } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+      return 'jpg';
+    } else {
+      return 'png';
+    }
+  }
+
+  Future<void> addImageApi(dynamic entityType, dynamic imageName,
+      dynamic imagePath, dynamic fileTypeName, BuildContext context) async {
+    setLoading(true);
+    final userId = await UserViewModel().getUser();
+    final fileType = getImageType(imageName);
+    Map data = {
+      "entity_id": userId,
+      "entity_type": entityType,
+      "image_name":
+      "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
+      "file_type": fileTypeName
+    };
+    print("xfghjk" + jsonEncode(data));
+    _userPatientProfileRepo.addImageUrlApi(data).then((value) {
+      print(value);
+      Utils.show(value['message'], context);
+      if (value['status'] == true) {
+        Provider.of<GetImageUrlViewModel>(context, listen: false)
+            .uploadFile(context,
+            filePath: imagePath,
+            // filePath: value['image_url']);
+            fileName: value['image_url']);
+        Utils.show(value['message'], context);
+      }
+    }).onError((error, stackTrace) {
+
+      LoaderOverlay().hide();
+      setLoading(false);
+      notifyListeners();
+      if (kDebugMode) {
+        print('error: $error');
+      }
+    });
+  }
+
+
 }
