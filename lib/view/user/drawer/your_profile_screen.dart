@@ -5,6 +5,7 @@ import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/view/user/secound_nav_bar.dart';
 import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
+import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_profile_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +101,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       extendBody: true,
       primary: false,
@@ -284,7 +286,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
       child: Column(
         children: [
           Sizes.spaceHeight30,
-
           CustomTextField(
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
@@ -382,6 +383,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   }
 
   Widget addMemberSec() {
+    final memberCon = Provider.of<PatientHomeViewModel>(context);
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.04),
       padding: EdgeInsets.symmetric(
@@ -681,6 +684,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   }
 
   Widget addMemberBottom() {
+    final memberCon = Provider.of<PatientHomeViewModel>(context);
+    final vm = Provider.of<PatientHomeViewModel>(context);
     return Container(
       padding: EdgeInsets.symmetric(
           horizontal: Sizes.screenWidth * 0.04,
@@ -689,8 +694,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Image.asset(Assets.allImagesAddProfile),
-          Image.asset(Assets.assetsYourProfile),
+          Image.asset(Assets.allImagesAddProfile,height: Sizes.screenWidth*0.28,),
           Sizes.spaceHeight15,
           TextConst(
             "Add family members",
@@ -706,86 +710,66 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             fontWeight: FontWeight.w400,
           )),
           Sizes.spaceHeight15,
-          // Row(
-          //   children: List.generate(steps.length + 1, (index) {
-          //     if (index < steps.length) {
-          //       return Row(
-          //         children: [
-          //           Container(
-          //             width: 60,
-          //             height: 60,
-          //             decoration: const BoxDecoration(
-          //               shape: BoxShape.circle,
-          //               color: Colors.blue,
-          //             ),
-          //             child: Center(
-          //               child: Text(
-          //                 '${steps[index]}',
-          //                 style: TextStyle(
-          //                   color: Colors.white,
-          //                   fontSize: 18,
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //           const SizedBox(width: 20),
-          //         ],
-          //       );
-          //     } else {
-          //       // "+" Button
-          //       return DottedBorder(
-          //         borderType: BorderType.Circle,
-          //         color: Colors.blue,
-          //         strokeWidth: 1.5,
-          //         dashPattern: [4, 3],
-          //         padding: const EdgeInsets.all(4),
-          //         child: IconButton(
-          //           onPressed: addStep,
-          //           icon: const Icon(
-          //             Icons.add,
-          //             color: Colors.blue,
-          //             size: 35,
-          //           ),
-          //         ),
-          //       );
-          //     }
-          //   }),
-          // ),
-          Row(
-            children: [
-              Container(
-                width: Sizes.screenHeight * 0.075,
-                height: Sizes.screenHeight * 0.075,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: AppColor.blue),
-                child: Center(
-                  child: TextConst(
-                    "1",
-                    size: Sizes.fontSizeFour,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.white,
-                  ),
-                ),
-              ),
-              Sizes.spaceWidth20,
-              DottedBorder(
-                borderType: BorderType.Circle,
-                color: AppColor.blue,
-                strokeWidth: 1.5,
-                dashPattern: const [4, 3],
-                padding: EdgeInsets.symmetric(
-                    horizontal: Sizes.screenWidth * 0.012,
-                    vertical: Sizes.screenHeight * 0.02),
-                child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(
+                memberCon.patientHomeModel?.data?.familyMembers?.length ??
+                    0 + 1,
+                (index) {
+                  final familyMembers =
+                      memberCon.patientHomeModel?.data?.familyMembers ?? [];
+                  if (index < familyMembers.length) {
+                    return Row(
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            memberCon.setSelectedMemberIndex;
+                          },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColor.blue,
+                            ),
+                            child: Center(
+                              child: TextConst(
+                                '${index + 1}',
+                                size: Sizes.fontSizeFour,
+                                fontWeight: FontWeight.w400,
+                                color: AppColor.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
+                    );
+                  } else {
+                    return DottedBorder(
+                      borderType: BorderType.Circle,
                       color: AppColor.blue,
-                      size: 35,
-                    )),
-              )
-            ],
+                      strokeWidth: 1.5,
+                      dashPattern: const [4, 3],
+                      padding: const EdgeInsets.all(4),
+                      child: IconButton(
+                        onPressed: () {
+                          // Add member action
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.blue,
+                          size: 35,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
+
           Sizes.spaceHeight10,
           const Divider(
             color: AppColor.grey,
@@ -804,7 +788,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                       fillColor: AppColor.grey,
                       hintText: "Name",
                       hintColor: const Color(0xffC3C3C3),
-                      controller: _nameController,
+                      controller: vm.nameController,
                       keyboardType: TextInputType.name,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
@@ -820,18 +804,16 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                       fillColor: AppColor.grey,
                       hintText: "Age",
                       hintColor: const Color(0xffC3C3C3),
-                      controller: _ageController,
+                      controller: vm.ageController,
                       keyboardType: TextInputType.number,
                       cursorColor: AppColor.textGrayColor,
                       maxLength: 10,
                       suffixIcon: IconButton(
                           onPressed: () {},
-                          // icon: Image.asset(Assets.allImagesSolarCalendar,scale: 3,)),
                           icon: Image.asset(
-                            Assets.iconsNotification,
-                            scale: 3,
+                            Assets.allImagesSolarCalendar,
+                            scale: 2,
                           )),
-                      // enabled: false,
                     ),
                     Sizes.spaceHeight10,
                     CustomTextField(
@@ -840,7 +822,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                       fillColor: AppColor.grey,
                       hintText: "Gender",
                       hintColor: const Color(0xffC3C3C3),
-                      controller: _genderController,
+                      controller: vm.genderController,
                       keyboardType: TextInputType.name,
                       cursorColor: AppColor.textGrayColor,
                       // enabled: false,
@@ -852,7 +834,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                       fillColor: AppColor.grey,
                       hintText: "Height",
                       hintColor: const Color(0xffC3C3C3),
-                      controller: _heightController,
+                      controller: vm.heightController,
                       keyboardType: TextInputType.number,
                       cursorColor: AppColor.textGrayColor,
                       // enabled: false,
@@ -864,7 +846,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                       fillColor: AppColor.grey,
                       hintText: "Weight",
                       hintColor: const Color(0xffC3C3C3),
-                      controller: _weightController,
+                      controller: vm.weightController,
                       keyboardType: TextInputType.number,
                       cursorColor: AppColor.textGrayColor,
                       // enabled: false,
@@ -935,4 +917,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
       ),
     );
   }
+
+
+
 }

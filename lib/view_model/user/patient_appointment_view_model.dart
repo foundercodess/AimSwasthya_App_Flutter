@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 
 class PatientAppointmentViewModel extends ChangeNotifier {
   final _patientAppointmentRepo = PatientAppointmentRepo();
-  final _mapCon = MapController();
   bool _loading = false;
   bool get loading => _loading;
 

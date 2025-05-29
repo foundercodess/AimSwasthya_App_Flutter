@@ -38,6 +38,7 @@ import 'package:aim_swasthya/view_model/user/services/payment_con.dart';
 import 'package:aim_swasthya/view_model/user/slot_schedule_view_model.dart';
 import 'package:aim_swasthya/view_model/user/tc_pp_view_model.dart';
 import 'package:aim_swasthya/view_model/user/update_appointment_view_model.dart';
+import 'package:aim_swasthya/view_model/user/upsert_family_member_view_model.dart';
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:aim_swasthya/utils/routes/routes.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
@@ -106,6 +107,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => CancelAppointmentViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserDeleteAccountViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserPatientProfileViewModel()),
+        ChangeNotifierProvider(create: (ctx) => UpsertFamilyMemberViewModel()),
 
         // doctor view models
         ChangeNotifierProvider(create: (ctx) => DoctorAuthViewModel()),

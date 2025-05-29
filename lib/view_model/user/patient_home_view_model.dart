@@ -16,12 +16,15 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   final _mapCon = MapController();
   bool _loading = false;
+
   bool get loading => _loading;
 
   GetLocationModel? _locationData;
+
   GetLocationModel? get locationData => _locationData;
 
   List<Locations> _searchedLocationData = [];
+
   List<Locations> get searchedLocationData => _searchedLocationData;
 
   void filterQueryBasedLocation(String query) {
@@ -44,9 +47,11 @@ class PatientHomeViewModel extends ChangeNotifier {
   // getUserCurrentLocation
 
   Locations? _selectedLocationData;
+
   Locations? get selectedLocationData => _selectedLocationData;
 
   bool _userSearchingOutOfLocation = false;
+
   bool get userSearchingOutOfLocation => _userSearchingOutOfLocation;
 
   Future<void> checkUserSearchingOutOfStation(LatLng location) async {
@@ -70,12 +75,24 @@ class PatientHomeViewModel extends ChangeNotifier {
   }
 
   bool _noServicesArea = false;
+
   bool get noServicesArea => _noServicesArea;
 
   setNoServicesData(bool value) {
     _noServicesArea = value;
     notifyListeners();
   }
+
+
+  int? _selectedMemberIndex;
+  int? get selectedMemberIndex => _selectedMemberIndex;
+
+  setSelectedMemberIndex(int value) {
+    _selectedMemberIndex = value;
+    fillControllersWithFirstMember();
+    notifyListeners();
+  }
+
 
   setLocationData(GetLocationModel value, BuildContext context) {
     _locationData = value;
@@ -124,7 +141,9 @@ class PatientHomeViewModel extends ChangeNotifier {
   }
 
   PatientHomeModel? _patientHomeModel;
+
   PatientHomeModel? get patientHomeModel => _patientHomeModel;
+
 
   setPatientHomeData(PatientHomeModel value) {
     _patientHomeModel = value;
@@ -133,6 +152,8 @@ class PatientHomeViewModel extends ChangeNotifier {
       ImageDownloader()
           .downloadAndSaveDoctorImage(data.imageUrl!, data.doctorId);
     }
+
+    fillControllersWithFirstMember();
     notifyListeners();
   }
 
@@ -152,9 +173,11 @@ class PatientHomeViewModel extends ChangeNotifier {
 
     final userId = await UserViewModel().getUser();
     Map data = {
+      // "lat": "28.6014",
+      // "lon": "77.4460",
       "lat": latitude,
       "lon": longitude,
-      "patient_id": userId,
+      "patient_id": "172",
       "location_id": _selectedLocationData == null
           ? ""
           : _selectedLocationData!.locationId ?? "",
@@ -169,5 +192,55 @@ class PatientHomeViewModel extends ChangeNotifier {
         print('error: $error');
       }
     });
+  }
+
+
+
+
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+
+  void fillControllersWithFirstMember() {
+    final familyList = patientHomeModel?.data?.familyMembers;
+
+    if (familyList != null && familyList.isNotEmpty) {
+      final first = familyList[0];
+
+      nameController.text = first.name ?? '';
+      ageController.text = _calculateAgeFromDob(first.dateOfBirth);
+      genderController.text = first.gender ?? '';
+      heightController.text = first.height ?? '';
+      weightController.text = first.weight ?? '';
+
+      notifyListeners();
+    }
+  }
+
+  String _calculateAgeFromDob(String? dob) {
+    if (dob == null || dob.isEmpty) return '';
+    final birthDate = DateTime.tryParse(dob);
+    if (birthDate == null) return '';
+    final now = DateTime.now();
+    int age = now.year - birthDate.year;
+    if (now.month < birthDate.month ||
+        (now.month == birthDate.month && now.day < birthDate.day)) {
+      age--;
+    }
+    return age.toString();
+  }
+
+  // Dispose controllers
+  @override
+  void dispose() {
+    nameController.dispose();
+    ageController.dispose();
+    genderController.dispose();
+    heightController.dispose();
+    weightController.dispose();
+    super.dispose();
   }
 }

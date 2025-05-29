@@ -1,4 +1,3 @@
-
 class PatientHomeModel {
   bool? status;
   Data? data;
@@ -27,18 +26,21 @@ class Data {
   List<SymptomsDetails>? symptomsDetails;
   List<Specializations>? specializations;
   List<Healthtips>? healthtips;
+  List<FamilyMembers>? familyMembers;
 
   Data(
       {this.patient,
-        this.appointments,
-        this.doctors,
-        this.symptomsDetails,
-        this.specializations,
-        this.healthtips});
+      this.appointments,
+      this.doctors,
+      this.symptomsDetails,
+      this.specializations,
+      this.healthtips,
+      this.familyMembers
+      });
 
   Data.fromJson(Map<String, dynamic> json) {
     patient =
-    json['patient'] != null ? Patient.fromJson(json['patient']) : null;
+        json['patient'] != null ? Patient.fromJson(json['patient']) : null;
     if (json['appointments'] != null) {
       appointments = <Appointments>[];
       json['appointments'].forEach((v) {
@@ -69,6 +71,12 @@ class Data {
         healthtips!.add(Healthtips.fromJson(v));
       });
     }
+    if (json['family_members'] != null) {
+      familyMembers = <FamilyMembers>[];
+      json['family_members'].forEach((v) {
+        familyMembers!.add(FamilyMembers.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +101,10 @@ class Data {
     if (healthtips != null) {
       data['healthtips'] = healthtips!.map((v) => v.toJson()).toList();
     }
+    if (familyMembers != null) {
+      data['family_members'] =
+          familyMembers!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -110,14 +122,14 @@ class Patient {
 
   Patient(
       {this.patientId,
-        this.patientName,
-        this.phoneNumber,
-        this.email,
-        this.height,
-        this.weight,
-        this.gender,
-        this.latitude,
-        this.longitude});
+      this.patientName,
+      this.phoneNumber,
+      this.email,
+      this.height,
+      this.weight,
+      this.gender,
+      this.latitude,
+      this.longitude});
 
   Patient.fromJson(Map<String, dynamic> json) {
     patientId = json['patient_id'];
@@ -164,19 +176,19 @@ class Appointments {
 
   Appointments(
       {this.appointmentId,
-        this.patientId,
-        this.doctorId,
-        this.doctorName,
-        this.qualification,
-        this.specializationId,
-        this.specializationName,
-        this.imageUrl,
-        this.bookingDate,
-        this.hour24Format,
-        this.averageRating,
-        this.experience,
-        this.reviewCount,
-        this.signedImageUrl});
+      this.patientId,
+      this.doctorId,
+      this.doctorName,
+      this.qualification,
+      this.specializationId,
+      this.specializationName,
+      this.imageUrl,
+      this.bookingDate,
+      this.hour24Format,
+      this.averageRating,
+      this.experience,
+      this.reviewCount,
+      this.signedImageUrl});
 
   Appointments.fromJson(Map<String, dynamic> json) {
     appointmentId = json['appointment_id'];
@@ -242,33 +254,33 @@ class Doctors {
   dynamic clinic_id;
   dynamic signedImageUrl;
 
-  Doctors(
-      {this.doctorId,
-        this.doctorName,
-        this.qualification,
-        this.doctorLatitude,
-        this.doctorLongitude,
-        this.email,
-        this.imageUrl,
-        this.experience,
-        this.phoneNumber,
-        this.gender,
-        this.smcNumber,
-        this.averageRating,
-        this.topRated,
-        this.consultationFeeType,
-        this.consultationFee,
-        this.locationId,
-        this.locationName,
-        this.locationLatitude,
-        this.locationLongitude,
-        this.distanceInKm,
-        this.specializationId,
-        this.specializationName,
-        this.sortNumber,
-        this.clinic_id,
-        this.signedImageUrl,
-      });
+  Doctors({
+    this.doctorId,
+    this.doctorName,
+    this.qualification,
+    this.doctorLatitude,
+    this.doctorLongitude,
+    this.email,
+    this.imageUrl,
+    this.experience,
+    this.phoneNumber,
+    this.gender,
+    this.smcNumber,
+    this.averageRating,
+    this.topRated,
+    this.consultationFeeType,
+    this.consultationFee,
+    this.locationId,
+    this.locationName,
+    this.locationLatitude,
+    this.locationLongitude,
+    this.distanceInKm,
+    this.specializationId,
+    this.specializationName,
+    this.sortNumber,
+    this.clinic_id,
+    this.signedImageUrl,
+  });
 
   Doctors.fromJson(Map<String, dynamic> json) {
     doctorId = json['doctor_id'];
@@ -338,10 +350,10 @@ class SymptomsDetails {
 
   SymptomsDetails(
       {this.symptomCategoryId,
-        this.categoryName,
-        this.categoryDescription,
-        this.categorySortNumber,
-        this.symptom});
+      this.categoryName,
+      this.categoryDescription,
+      this.categorySortNumber,
+      this.symptom});
 
   SymptomsDetails.fromJson(Map<String, dynamic> json) {
     symptomCategoryId = json['symptom_category_id'];
@@ -377,9 +389,9 @@ class Symptom {
 
   Symptom(
       {this.symptomId,
-        this.symptomName,
-        this.symptomDescription,
-        this.symptomSortNumber});
+      this.symptomName,
+      this.symptomDescription,
+      this.symptomSortNumber});
 
   Symptom.fromJson(Map<String, dynamic> json) {
     symptomId = json['symptom_id'];
@@ -409,12 +421,12 @@ class Specializations {
 
   Specializations(
       {this.specializationId,
-        this.specializationName,
-        this.sortNumber,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.sortNo});
+      this.specializationName,
+      this.sortNumber,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.sortNo});
 
   Specializations.fromJson(Map<String, dynamic> json) {
     specializationId = json['specialization_id'];
@@ -451,13 +463,13 @@ class Healthtips {
 
   Healthtips(
       {this.healthTipId,
-        this.title,
-        this.description,
-        this.urlImage,
-        this.urlArticle,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt});
+      this.title,
+      this.description,
+      this.urlImage,
+      this.urlArticle,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
 
   Healthtips.fromJson(Map<String, dynamic> json) {
     healthTipId = json['health_tip_id'];
@@ -477,6 +489,71 @@ class Healthtips {
     data['description'] = description;
     data['url_image'] = urlImage;
     data['url_article'] = urlArticle;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['deleted_at'] = deletedAt;
+    return data;
+  }
+}
+
+class FamilyMembers {
+  int? familyMemberId;
+  int? patientId;
+  String? name;
+  String? gender;
+  String? email;
+  String? phoneNumber;
+  String? dateOfBirth;
+  String? height;
+  String? weight;
+  String? relation;
+  String? createdAt;
+  String? updatedAt;
+  dynamic deletedAt;
+
+  FamilyMembers(
+      {this.familyMemberId,
+      this.patientId,
+      this.name,
+      this.gender,
+      this.email,
+      this.phoneNumber,
+      this.dateOfBirth,
+      this.height,
+      this.weight,
+      this.relation,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt});
+
+  FamilyMembers.fromJson(Map<String, dynamic> json) {
+    familyMemberId = json['family_member_id'];
+    patientId = json['patient_id'];
+    name = json['name'];
+    gender = json['gender'];
+    email = json['email'];
+    phoneNumber = json['phone_number'];
+    dateOfBirth = json['date_of_birth'];
+    height = json['height'];
+    weight = json['weight'];
+    relation = json['relation'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    deletedAt = json['deleted_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['family_member_id'] = familyMemberId;
+    data['patient_id'] = patientId;
+    data['name'] = name;
+    data['gender'] = gender;
+    data['email'] = email;
+    data['phone_number'] = phoneNumber;
+    data['date_of_birth'] = dateOfBirth;
+    data['height'] = height;
+    data['weight'] = weight;
+    data['relation'] = relation;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     data['deleted_at'] = deletedAt;

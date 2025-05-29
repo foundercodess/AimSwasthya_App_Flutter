@@ -34,6 +34,7 @@ class PatientApiUrl {
   static const String userDeleteProfile = "${baseUrl}deleteProfilePatient";
   static const String getPatientProfile = "${baseUrl}getPatientProfile";
   static const String updatePatientProfile = "${baseUrl}updatePatientProfile";
+  static const String upsertFamilyMember = "${baseUrl}upsertFamilyMember";
 }
 
 class DoctorApiUrl {
