@@ -40,20 +40,31 @@ class _DrawerScreenState extends State<DrawerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: Sizes.screenHeight * 0.06),
-              if(homeCon.patientHomeModel !=null && homeCon.patientHomeModel!.data !=null)
-              ListTile(
-                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036),
-                leading: const Image(
-                  image: AssetImage(Assets.iconsProfileIcon),
-                  width: 25,
+              if (homeCon.patientHomeModel != null &&
+                  homeCon.patientHomeModel!.data != null)
+                ListTile(
+                  contentPadding: EdgeInsets.only(
+                      left: Sizes.screenWidth * .036,
+                      right: Sizes.screenWidth * .036),
+                  leading: const Image(
+                    image: AssetImage(Assets.iconsProfileIcon),
+                    width: 25,
+                  ),
+                  title: TextConst(
+                    homeCon.patientHomeModel!.data!.patient!.patientName ?? "",
+                    size: Sizes.fontSizeSix,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.white,
+                  ),
+                  trailing: IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, RoutesName.yourProfileScreen);
+                      },
+                      icon: const Icon(
+                        Icons.edit,
+                        color: AppColor.lightBlue,size: 20,
+                      )),
                 ),
-                title: TextConst(
-                  homeCon.patientHomeModel!.data!.patient!.patientName ?? "",
-                  size: Sizes.fontSizeSix,
-                  fontWeight: FontWeight.w600,
-                  color: AppColor.white,
-                ),
-              ),
               Sizes.spaceHeight15,
               ListTile(
                 contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .04),
@@ -112,25 +123,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
               ListTile(
                 contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .04),
                 leading: const Image(
-                  image: AssetImage(Assets.iconsProfileIcon),
-                  color: AppColor.white,
-                  height: 20,
-                ),
-                title: TextConst(
-                  "Your Profile",
-                  size: Sizes.fontSizeFive,
-                  fontWeight: FontWeight.w500,
-                  color: AppColor.white,
-                ),
-                onTap: () {
-                  Navigator.pushNamed(
-                      context, RoutesName.yourProfileScreen);
-                },
-              ),
-              Sizes.spaceHeight5,
-              ListTile(
-                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .04),
-                leading: const Image(
                   image: AssetImage(Assets.iconsMyWellness),
                   color: AppColor.white,
                   height: 20,
@@ -155,12 +147,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, RoutesName.userDeleteAccountScreen);
+                        Navigator.pushNamed(
+                            context, RoutesName.userDeleteAccountScreen);
                         // Navigator.pushNamed(context, RoutesName.wellnesslibraryScreen);
-
                       },
                       child: TextConst(
                         "Delete Account",

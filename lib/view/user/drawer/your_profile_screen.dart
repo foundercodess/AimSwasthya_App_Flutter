@@ -82,7 +82,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     final patProfileCon =
         Provider.of<UserPatientProfileViewModel>(context, listen: false);
     final profileData = patProfileCon.userPatientProfileModel?.data!;
-            if (_nameController.text.isEmpty) {
+    if (_nameController.text.isEmpty) {
       _nameController.text = profileData![0].name ?? '';
     }
     if (_genderController.text.isEmpty) {
@@ -344,7 +344,41 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].bloodGroup?.isNotEmpty == true
+            hintText: yourProfile.userPatientProfileModel?.data?[0].height
+                        ?.isNotEmpty ==
+                    true
+                ? yourProfile.userPatientProfileModel!.data![0].height!
+                : "Height",
+            controller: _heightController,
+            cursorColor: AppColor.textGrayColor,
+            keyboardType: TextInputType.number,
+            enabled: yourProfile.isEditMode,
+
+          ),
+          Sizes.spaceHeight10,
+          CustomTextField(
+            contentPadding:
+                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
+            fillColor: AppColor.grey,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].weight
+                        ?.isNotEmpty ==
+                    true
+                ? yourProfile.userPatientProfileModel!.data![0].weight!
+                : "Weight",
+            controller: _weightController,
+            cursorColor: AppColor.textGrayColor,
+            keyboardType: TextInputType.number,
+            enabled: yourProfile.isEditMode,
+
+          ),
+          Sizes.spaceHeight10,
+          CustomTextField(
+            contentPadding:
+                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
+            fillColor: AppColor.grey,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].bloodGroup
+                        ?.isNotEmpty ==
+                    true
                 ? yourProfile.userPatientProfileModel!.data![0].bloodGroup!
                 : "Blood Group",
             controller: _bloodController,
@@ -360,7 +394,9 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].allergies?.isNotEmpty == true
+            hintText: yourProfile.userPatientProfileModel?.data?[0].allergies
+                        ?.isNotEmpty ==
+                    true
                 ? yourProfile.userPatientProfileModel!.data![0].allergies!
                 : "Allergies",
             controller: _allergyController,
@@ -373,8 +409,11 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].currentMedications?.isNotEmpty == true
-                ? yourProfile.userPatientProfileModel!.data![0].currentMedications!
+            hintText: yourProfile.userPatientProfileModel?.data?[0]
+                        .currentMedications?.isNotEmpty ==
+                    true
+                ? yourProfile
+                    .userPatientProfileModel!.data![0].currentMedications!
                 : "Current Medications",
             controller: _currMedController,
             cursorColor: AppColor.textGrayColor,
@@ -386,8 +425,11 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].chronicIllnesses?.isNotEmpty == true
-                ? yourProfile.userPatientProfileModel!.data![0].chronicIllnesses!
+            hintText: yourProfile.userPatientProfileModel?.data?[0]
+                        .chronicIllnesses?.isNotEmpty ==
+                    true
+                ? yourProfile
+                    .userPatientProfileModel!.data![0].chronicIllnesses!
                 : "Chronic Illnesses",
             controller: _chronicController,
             cursorColor: AppColor.textGrayColor,
@@ -399,8 +441,11 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].lifestyleHabbits?.isNotEmpty == true
-                ? yourProfile.userPatientProfileModel!.data![0].lifestyleHabbits!
+            hintText: yourProfile.userPatientProfileModel?.data?[0]
+                        .lifestyleHabbits?.isNotEmpty ==
+                    true
+                ? yourProfile
+                    .userPatientProfileModel!.data![0].lifestyleHabbits!
                 : "Lifestyle Habits",
             controller: _lifeStyleController,
             cursorColor: AppColor.textGrayColor,
@@ -810,7 +855,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
       final birthDate = DateTime.parse(dob);
       final today = DateTime.now();
       int age = today.year - birthDate.year;
-      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+      if (today.month < birthDate.month ||
+          (today.month == birthDate.month && today.day < birthDate.day)) {
         age--;
       }
       return age.toString();

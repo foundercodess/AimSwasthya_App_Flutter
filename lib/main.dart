@@ -29,6 +29,7 @@ import 'package:aim_swasthya/view_model/user/doctor_avl_appointment_view_model.d
 import 'package:aim_swasthya/view_model/user/doctor_details_view_model.dart';
 import 'package:aim_swasthya/view_model/user/doctor_specialisation_view_model.dart';
 import 'package:aim_swasthya/view_model/user/get_image_url_view_model.dart';
+import 'package:aim_swasthya/view_model/user/get_wellness_library_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_appointment_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_medical_records_view_model.dart';
@@ -39,6 +40,7 @@ import 'package:aim_swasthya/view_model/user/slot_schedule_view_model.dart';
 import 'package:aim_swasthya/view_model/user/tc_pp_view_model.dart';
 import 'package:aim_swasthya/view_model/user/update_appointment_view_model.dart';
 import 'package:aim_swasthya/view_model/user/upsert_family_member_view_model.dart';
+import 'package:aim_swasthya/view_model/user/upsert_wellness_library_view_model.dart';
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:aim_swasthya/utils/routes/routes.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
@@ -108,6 +110,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => UserDeleteAccountViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserPatientProfileViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpsertFamilyMemberViewModel()),
+        ChangeNotifierProvider(create: (ctx) => UpsertWellnessLibraryViewModel()),
+        ChangeNotifierProvider(create: (ctx) => GetWellnessLibraryViewModel()),
+
 
         // doctor view models
         ChangeNotifierProvider(create: (ctx) => DoctorAuthViewModel()),

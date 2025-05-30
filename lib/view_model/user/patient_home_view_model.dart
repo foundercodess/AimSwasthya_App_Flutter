@@ -90,7 +90,8 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   setSelectedMemberIndex(int value) {
     _selectedMemberIndex = value;
-    fillControllersWithFirstMember();
+    // fillControllersWithFirstMember();
+    fillControllersWithSelectedMember();
     notifyListeners();
   }
 
@@ -156,7 +157,8 @@ class PatientHomeViewModel extends ChangeNotifier {
           .downloadAndSaveDoctorImage(data.imageUrl!, data.doctorId);
     }
 
-    fillControllersWithFirstMember();
+    // fillControllersWithFirstMember();
+    fillControllersWithSelectedMember();
     notifyListeners();
   }
 
@@ -207,17 +209,36 @@ class PatientHomeViewModel extends ChangeNotifier {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
 
-  void fillControllersWithFirstMember() {
+  // void fillControllersWithFirstMember() {
+  //   final familyList = patientHomeModel?.data?.familyMembers;
+  //
+  //   if (familyList != null && familyList.isNotEmpty) {
+  //     final first = familyList[0];
+  //
+  //     nameController.text = first.name ?? '';
+  //     ageController.text = calculateAgeFromDob(first.dateOfBirth);
+  //     genderController.text = first.gender ?? '';
+  //     heightController.text = first.height ?? '';
+  //     weightController.text = first.weight ?? '';
+  //
+  //     notifyListeners();
+  //   }
+  // }
+  void fillControllersWithSelectedMember() {
     final familyList = patientHomeModel?.data?.familyMembers;
 
-    if (familyList != null && familyList.isNotEmpty) {
-      final first = familyList[0];
+    if (familyList != null &&
+        familyList.isNotEmpty &&
+        _selectedMemberIndex != null &&
+        _selectedMemberIndex! < familyList.length) {
 
-      nameController.text = first.name ?? '';
-      ageController.text = calculateAgeFromDob(first.dateOfBirth);
-      genderController.text = first.gender ?? '';
-      heightController.text = first.height ?? '';
-      weightController.text = first.weight ?? '';
+      final selected = familyList[_selectedMemberIndex!];
+
+      nameController.text = selected.name ?? '';
+      ageController.text = calculateAgeFromDob(selected.dateOfBirth);
+      genderController.text = selected.gender ?? '';
+      heightController.text = selected.height ?? '';
+      weightController.text = selected.weight ?? '';
 
       notifyListeners();
     }
