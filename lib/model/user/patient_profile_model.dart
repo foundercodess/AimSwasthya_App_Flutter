@@ -1,3 +1,4 @@
+// model/user/patient_profile_model.dart
 class UserPatientProfileModel {
   bool? status;
   String? message;
@@ -33,6 +34,8 @@ class Data {
   String? phoneNumber;
   dynamic email;
   String? dateOfBirth;
+  String? height;
+  String? weight;
   String? bloodGroup;
   String? allergies;
   String? currentMedications;
@@ -45,6 +48,8 @@ class Data {
         this.phoneNumber,
         this.email,
         this.dateOfBirth,
+        this.height,
+        this.weight,
         this.bloodGroup,
         this.allergies,
         this.currentMedications,
@@ -57,6 +62,8 @@ class Data {
     phoneNumber = json['phone_number'];
     email = json['email'];
     dateOfBirth = json['date_of_birth'];
+    height = json['height'];
+    weight = json['weight'];
     bloodGroup = json['blood_group'];
     allergies = json['allergies'];
     currentMedications = json['current_medications'];
@@ -71,6 +78,8 @@ class Data {
     data['phone_number'] = phoneNumber;
     data['email'] = email;
     data['date_of_birth'] = dateOfBirth;
+    data['height'] = height;
+    data['weight'] = weight;
     data['blood_group'] = bloodGroup;
     data['allergies'] = allergies;
     data['current_medications'] = currentMedications;

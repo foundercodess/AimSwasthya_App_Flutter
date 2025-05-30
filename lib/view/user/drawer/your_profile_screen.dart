@@ -1,10 +1,10 @@
+// view/user/drawer/your_profile_screen.dart
 import 'dart:io';
 
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
-import 'package:aim_swasthya/utils/load_data.dart';
+import 'package:aim_swasthya/view/user/drawer/add_member_overlay.dart';
 import 'package:aim_swasthya/view/user/secound_nav_bar.dart';
-import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_profile_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -55,6 +55,23 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     super.initState();
   }
 
+  String formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '';
+    try {
+      // Try parsing the date in dd-MM-yyyy format
+      final parts = dateStr.split('-');
+      if (parts.length == 3) {
+        final day = parts[0];
+        final month = parts[1];
+        final year = parts[2];
+        return '$year-$month-$day';
+      }
+      return dateStr;
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   void _toggleEditMode() {
     final patProfileCon =
         Provider.of<UserPatientProfileViewModel>(context, listen: false);
@@ -64,6 +81,44 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   void _saveProfile() async {
     final patProfileCon =
         Provider.of<UserPatientProfileViewModel>(context, listen: false);
+    final profileData = patProfileCon.userPatientProfileModel?.data!;
+            if (_nameController.text.isEmpty) {
+      _nameController.text = profileData![0].name ?? '';
+    }
+    if (_genderController.text.isEmpty) {
+      _genderController.text = profileData![0].gender ?? '';
+    }
+    if (_numberEmailController.text.isEmpty) {
+      _numberEmailController.text = profileData![0].phoneNumber ?? '';
+    }
+    if (_emailController.text.isEmpty) {
+      _emailController.text = profileData![0].email ?? '';
+    }
+    if (_dobController.text.isEmpty) {
+      _dobController.text = formatDate(profileData![0].dateOfBirth);
+      // _dobController.text = profileData![0].dateOfBirth ?? '';
+    }
+    if (_heightController.text.isEmpty) {
+      _heightController.text = profileData![0].height ?? '';
+    }
+    if (_weightController.text.isEmpty) {
+      _weightController.text = profileData![0].weight ?? '';
+    }
+    if (_bloodController.text.isEmpty) {
+      _bloodController.text = profileData![0].bloodGroup ?? '';
+    }
+    if (_allergyController.text.isEmpty) {
+      _allergyController.text = profileData![0].allergies ?? '';
+    }
+    if (_currMedController.text.isEmpty) {
+      _currMedController.text = profileData![0].currentMedications ?? '';
+    }
+    if (_chronicController.text.isEmpty) {
+      _chronicController.text = profileData![0].chronicIllnesses ?? '';
+    }
+    if (_lifeStyleController.text.isEmpty) {
+      _lifeStyleController.text = profileData![0].lifestyleHabbits ?? '';
+    }
     final success = await patProfileCon.updatePatientProfileApi(
       context,
       name: _nameController.text,
@@ -101,7 +156,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       extendBody: true,
       primary: false,
@@ -290,14 +344,15 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText:
-                yourProfile.userPatientProfileModel!.data![0].name ?? "Name",
-            controller: _nameController,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].bloodGroup?.isNotEmpty == true
+                ? yourProfile.userPatientProfileModel!.data![0].bloodGroup!
+                : "Blood Group",
+            controller: _bloodController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.text,
             enabled: yourProfile.isEditMode,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9+-]')),
             ],
           ),
           Sizes.spaceHeight10,
@@ -305,11 +360,12 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText:
-                yourProfile.userPatientProfileModel!.data![0].name ?? "Name",
-            controller: _nameController,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].allergies?.isNotEmpty == true
+                ? yourProfile.userPatientProfileModel!.data![0].allergies!
+                : "Allergies",
+            controller: _allergyController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.text,
             enabled: yourProfile.isEditMode,
           ),
           Sizes.spaceHeight10,
@@ -317,12 +373,12 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText:
-                yourProfile.userPatientProfileModel!.data![0].bloodGroup ??
-                    "BloodGroup",
-            controller: _nameController,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].currentMedications?.isNotEmpty == true
+                ? yourProfile.userPatientProfileModel!.data![0].currentMedications!
+                : "Current Medications",
+            controller: _currMedController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.text,
             enabled: yourProfile.isEditMode,
           ),
           Sizes.spaceHeight10,
@@ -330,11 +386,12 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel!.data![0].allergies ??
-                "Allergies",
-            controller: _nameController,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].chronicIllnesses?.isNotEmpty == true
+                ? yourProfile.userPatientProfileModel!.data![0].chronicIllnesses!
+                : "Chronic Illnesses",
+            controller: _chronicController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.text,
             enabled: yourProfile.isEditMode,
           ),
           Sizes.spaceHeight10,
@@ -342,41 +399,29 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile
-                    .userPatientProfileModel!.data![0].currentMedications ??
-                "Current Medications",
-            controller: _nameController,
+            hintText: yourProfile.userPatientProfileModel?.data?[0].lifestyleHabbits?.isNotEmpty == true
+                ? yourProfile.userPatientProfileModel!.data![0].lifestyleHabbits!
+                : "Lifestyle Habits",
+            controller: _lifeStyleController,
             cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.text,
             enabled: yourProfile.isEditMode,
           ),
-          Sizes.spaceHeight10,
-          CustomTextField(
-            contentPadding:
-                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-            fillColor: AppColor.grey,
-            hintText: yourProfile
-                    .userPatientProfileModel!.data![0].chronicIllnesses ??
-                "Chronic Illnesses",
-            controller: _nameController,
-            cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
-            enabled: yourProfile.isEditMode,
-          ),
-          Sizes.spaceHeight10,
-          CustomTextField(
-            contentPadding:
-                const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-            fillColor: AppColor.grey,
-            hintText: yourProfile
-                    .userPatientProfileModel!.data![0].lifestyleHabbits ??
-                "Lifestyle Habits",
-            controller: _nameController,
-            cursorColor: AppColor.textGrayColor,
-            keyboardType: TextInputType.name,
-            enabled: yourProfile.isEditMode,
-          ),
-          Sizes.spaceHeight10,
+          Sizes.spaceHeight30,
+          yourProfile.isEditMode
+              ? ButtonConst(
+                  title: "Save",
+                  onTap: _saveProfile,
+                  color: AppColor.blue,
+                  width: Sizes.screenWidth * 0.66,
+                )
+              : ButtonConst(
+                  title: "Edit Profile",
+                  onTap: _toggleEditMode,
+                  color: AppColor.blue,
+                  width: Sizes.screenWidth * 0.66,
+                ),
+          Sizes.spaceHeight30,
         ],
       ),
     );
@@ -429,7 +474,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                 ),
                 isScrollControlled: true,
                 builder: (BuildContext context) {
-                  return addMemberBottom();
+                  return const AddMemberOverlay();
                 },
               );
             },
@@ -547,12 +592,33 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     );
   }
 
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _ageController.text = calculateAgeFromDOB(_dobController.text);
+      });
+    }
+  }
+
   Widget personalDetails() {
     final yourProfile = Provider.of<UserPatientProfileViewModel>(context);
     final profileData = yourProfile.userPatientProfileModel?.data;
     if (profileData == null || profileData.isEmpty) {
       return const SizedBox();
     }
+
+    // Format the date when displaying
+    if (_dobController.text.isEmpty && profileData[0].dateOfBirth != null) {
+      _dobController.text = formatDate(profileData[0].dateOfBirth);
+    }
+
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.04),
         child: Column(
@@ -620,9 +686,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                           }
                         }
                       : null,
-                  // onChanged: (String? gender) {
-                  //   _selectGender(gender!);
-                  // },
                 ),
               ),
             ),
@@ -652,19 +715,27 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
               enabled: false,
             ),
             Sizes.spaceHeight10,
-            CustomTextField(
-              contentPadding:
-                  const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-              fillColor: AppColor.grey,
-              hintText: DateFormat('yyyy-MM-dd').format(DateTime.parse(
-                  yourProfile.userPatientProfileModel!.data![0].dateOfBirth
-                      .toString())),
-              controller: _dobController,
-              cursorColor: AppColor.textGrayColor,
-              enabled: yourProfile.isEditMode,
+            GestureDetector(
+              onTap: yourProfile.isEditMode ? () => selectDate(context) : null,
+              child: CustomTextField(
+                contentPadding:
+                    const EdgeInsets.only(top: 18, bottom: 20, left: 10),
+                fillColor: AppColor.grey,
+                hintText: yourProfile
+                    .userPatientProfileModel!.data![0].dateOfBirth
+                    .toString(),
+                controller: _dobController,
+                cursorColor: AppColor.textGrayColor,
+                enabled: false,
+                suffixIcon: yourProfile.isEditMode
+                    ? IconButton(
+                        icon: const Icon(Icons.calendar_today),
+                        onPressed: () => selectDate(context),
+                      )
+                    : null,
+              ),
             ),
             Sizes.spaceHeight30,
-            Sizes.spaceHeight10,
             yourProfile.isEditMode
                 ? ButtonConst(
                     title: "Save",
@@ -681,190 +752,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             Sizes.spaceHeight30,
           ],
         ));
-  }
-
-  Widget addMemberBottom() {
-    final memberCon = Provider.of<PatientHomeViewModel>(context);
-    final vm = Provider.of<PatientHomeViewModel>(context);
-    return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: Sizes.screenWidth * 0.04,
-          vertical: Sizes.screenHeight * 0.03),
-      width: Sizes.screenWidth,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(Assets.allImagesAddProfile,height: Sizes.screenWidth*0.28,),
-          Sizes.spaceHeight15,
-          TextConst(
-            "Add family members",
-            size: Sizes.fontSizeNine,
-            fontWeight: FontWeight.w600,
-          ),
-          Sizes.spaceHeight10,
-          Center(
-              child: TextConst(
-            textAlign: TextAlign.center,
-            "Get personalized doctor recommendations for\nupto 4 family members",
-            size: Sizes.fontSizeFour,
-            fontWeight: FontWeight.w400,
-          )),
-          Sizes.spaceHeight15,
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(
-                memberCon.patientHomeModel?.data?.familyMembers?.length ??
-                    0 + 1,
-                (index) {
-                  final familyMembers =
-                      memberCon.patientHomeModel?.data?.familyMembers ?? [];
-                  if (index < familyMembers.length) {
-                    return Row(
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            memberCon.setSelectedMemberIndex;
-                          },
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColor.blue,
-                            ),
-                            child: Center(
-                              child: TextConst(
-                                '${index + 1}',
-                                size: Sizes.fontSizeFour,
-                                fontWeight: FontWeight.w400,
-                                color: AppColor.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                      ],
-                    );
-                  } else {
-                    return DottedBorder(
-                      borderType: BorderType.Circle,
-                      color: AppColor.blue,
-                      strokeWidth: 1.5,
-                      dashPattern: const [4, 3],
-                      padding: const EdgeInsets.all(4),
-                      child: IconButton(
-                        onPressed: () {
-                          // Add member action
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.blue,
-                          size: 35,
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
-          ),
-
-          Sizes.spaceHeight10,
-          const Divider(
-            color: AppColor.grey,
-          ),
-          Sizes.spaceHeight15,
-          SizedBox(
-            height: Sizes.screenHeight * 0.26,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      height: Sizes.screenHeight * 0.06,
-                      borderSide: const BorderSide(color: Color(0xffE5E5E5)),
-                      fillColor: AppColor.grey,
-                      hintText: "Name",
-                      hintColor: const Color(0xffC3C3C3),
-                      controller: vm.nameController,
-                      keyboardType: TextInputType.name,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'[a-zA-Z\s]')),
-                      ],
-                      cursorColor: AppColor.textGrayColor,
-                      // enabled: false,
-                    ),
-                    Sizes.spaceHeight10,
-                    CustomTextField(
-                      height: Sizes.screenHeight * 0.06,
-                      borderSide: const BorderSide(color: Color(0xffE5E5E5)),
-                      fillColor: AppColor.grey,
-                      hintText: "Age",
-                      hintColor: const Color(0xffC3C3C3),
-                      controller: vm.ageController,
-                      keyboardType: TextInputType.number,
-                      cursorColor: AppColor.textGrayColor,
-                      maxLength: 10,
-                      suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            Assets.allImagesSolarCalendar,
-                            scale: 2,
-                          )),
-                    ),
-                    Sizes.spaceHeight10,
-                    CustomTextField(
-                      height: Sizes.screenHeight * 0.06,
-                      borderSide: const BorderSide(color: Color(0xffE5E5E5)),
-                      fillColor: AppColor.grey,
-                      hintText: "Gender",
-                      hintColor: const Color(0xffC3C3C3),
-                      controller: vm.genderController,
-                      keyboardType: TextInputType.name,
-                      cursorColor: AppColor.textGrayColor,
-                      // enabled: false,
-                    ),
-                    Sizes.spaceHeight10,
-                    CustomTextField(
-                      height: Sizes.screenHeight * 0.06,
-                      borderSide: const BorderSide(color: Color(0xffE5E5E5)),
-                      fillColor: AppColor.grey,
-                      hintText: "Height",
-                      hintColor: const Color(0xffC3C3C3),
-                      controller: vm.heightController,
-                      keyboardType: TextInputType.number,
-                      cursorColor: AppColor.textGrayColor,
-                      // enabled: false,
-                    ),
-                    Sizes.spaceHeight10,
-                    CustomTextField(
-                      height: Sizes.screenHeight * 0.06,
-                      borderSide: const BorderSide(color: Color(0xffE5E5E5)),
-                      fillColor: AppColor.grey,
-                      hintText: "Weight",
-                      hintColor: const Color(0xffC3C3C3),
-                      controller: vm.weightController,
-                      keyboardType: TextInputType.number,
-                      cursorColor: AppColor.textGrayColor,
-                      // enabled: false,
-                    ),
-                    Sizes.spaceHeight30,
-                    ButtonConst(
-                      title: "Save",
-                      onTap: () {},
-                      color: AppColor.blue,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
@@ -918,6 +805,17 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     );
   }
 
-
-
+  String calculateAgeFromDOB(String dob) {
+    try {
+      final birthDate = DateTime.parse(dob);
+      final today = DateTime.now();
+      int age = today.year - birthDate.year;
+      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+        age--;
+      }
+      return age.toString();
+    } catch (e) {
+      return '';
+    }
+  }
 }

@@ -135,11 +135,11 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
     final docHomeCon =
         Provider.of<DoctorHomeViewModel>(context).doctorHomeModel;
     return docHomeCon != null && docHomeCon.data!.doctors!.isNotEmpty
-        ? Container(
+        ? Container( 
             // padding: EdgeInsets.only(top: Sizes.screenHeight * 0.015),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top / 1.3,
-      ),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top / 1.3,
+            ),
             width: Sizes.screenWidth,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(

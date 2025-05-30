@@ -1,3 +1,4 @@
+// view_model/user/patient_profile_view_model.dart
 import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_profile_model.dart';
 import 'package:aim_swasthya/repo/user/patient_profile_repo.dart';
@@ -33,6 +34,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     // final entityType=
     // await addImageApi('doctor', image!.name,);
   }
+
   UserPatientProfileModel? _userPatientProfileModel;
   UserPatientProfileModel? get userPatientProfileModel =>
       _userPatientProfileModel;
@@ -47,7 +49,8 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> userPatientProfileApi( BuildContext context, {bool isLoad = true}) async {
+  Future<void> userPatientProfileApi(BuildContext context,
+      {bool isLoad = true}) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     print("ghjkjlk: $userId");
@@ -58,6 +61,8 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     _userPatientProfileRepo.userPatientProfileApi(data).then((value) {
       if (value.status == true) {
         setUserPatientProfileData(value);
+      } else {
+        setUserPatientProfileData(value);
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {
@@ -66,26 +71,59 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     });
   }
 
-
-
   Future<bool> updatePatientProfileApi(
-      BuildContext context,
-      {
-        required String name,
-        required String gender,
-        required String phone,
-        required String email,
-        required String dob,
-        required String height,
-        required String weight,
-        required String bloodGroup,
-        required String allergies,
-        required String currentMed,
-        required String chronicIll,
-        required String lifestyleHab,
-
-      }) async {
+    BuildContext context, {
+    required String name,
+    required String gender,
+    required String phone,
+    required String email,
+    required String dob,
+    required String height,
+    required String weight,
+    required String bloodGroup,
+    required String allergies,
+    required String currentMed,
+    required String chronicIll,
+    required String lifestyleHab,
+  }) async {
     try {
+      // Validate inputs
+      // if (name.isEmpty) {
+      //   Utils.show("Name cannot be empty", context);
+      //   return false;
+      // }
+
+      // if (gender.isEmpty) {
+      //   Utils.show("Please select a gender", context);
+      //   return false;
+      // }
+
+      // if (phone.isEmpty || !RegExp(r'^\d{10}$').hasMatch(phone)) {
+      //   Utils.show("Please enter a valid 10-digit phone number", context);
+      //   return false;
+      // }
+
+      // if (email.isNotEmpty &&
+      //     !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      //   Utils.show("Please enter a valid email address", context);
+      //   return false;
+      // }
+
+      // if (dob.isEmpty) {
+      //   Utils.show("Date of birth cannot be empty", context);
+      //   return false;
+      // }
+
+      // if (height.isNotEmpty && !RegExp(r'^\d+$').hasMatch(height)) {
+      //   Utils.show("Height must be a number", context);
+      //   return false;
+      // }
+
+      // if (weight.isNotEmpty && !RegExp(r'^\d+$').hasMatch(weight)) {
+      //   Utils.show("Weight must be a number", context);
+      //   return false;
+      // }
+
       final userId = await UserViewModel().getUser();
       Map data = {
         "patient_id": "$userId",
@@ -94,16 +132,19 @@ class UserPatientProfileViewModel extends ChangeNotifier {
         "phone_number": phone,
         "email": email,
         "date_of_birth": dob,
-        "height": "170",
-        "weight": "65",
-        "blood_group": "B-",
-        "allergies": "",
-        "current_medications": "Metformin",
-        "chronic_illnesses": "Diabetes",
-        "lifestyle_habbits": "Non-smoker"
+        "height": height,
+        "weight": weight,
+        "blood_group": bloodGroup,
+        "allergies": allergies,
+        "current_medications": currentMed,
+        "chronic_illnesses": chronicIll,
+        "lifestyle_habbits": lifestyleHab
       };
+
       debugPrint("bodyff: ${jsonEncode(data)}");
-      final response = await _userPatientProfileRepo.updatePatientProfileApi(data);
+      final response =
+          await _userPatientProfileRepo.updatePatientProfileApi(data);
+
       if (response['status'] == true) {
         await userPatientProfileApi(context, isLoad: false);
         Utils.show(response['message'], context);
@@ -116,13 +157,12 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       if (kDebugMode) {
         print('error: $error');
       }
-      Utils.show("Something went wrong", context);
+      Utils.show("Something went wrong. Please try again.", context);
       return false;
     }
   }
 
   String? getImageType(String fileName) {
-
     if (fileName.endsWith('.png')) {
       return 'png';
     } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
@@ -141,7 +181,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       "entity_id": userId,
       "entity_type": entityType,
       "image_name":
-      "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
+          "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
       "file_type": fileTypeName
     };
     print("xfghjk" + jsonEncode(data));
@@ -151,13 +191,12 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       if (value['status'] == true) {
         Provider.of<GetImageUrlViewModel>(context, listen: false)
             .uploadFile(context,
-            filePath: imagePath,
-            // filePath: value['image_url']);
-            fileName: value['image_url']);
+                filePath: imagePath,
+                // filePath: value['image_url']);
+                fileName: value['image_url']);
         Utils.show(value['message'], context);
       }
     }).onError((error, stackTrace) {
-
       LoaderOverlay().hide();
       setLoading(false);
       notifyListeners();
@@ -166,6 +205,4 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       }
     });
   }
-
-
 }

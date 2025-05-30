@@ -59,8 +59,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
       specializationId: _speController.text,
       practiceStartYear: _expController.text,
     );
-
-    if (success) {
+  
+    if (success) {  
       setState(() {
         _nameController.clear();
         _genderController.clear();
@@ -166,8 +166,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               ),
                             );
                           }).toList(),
-                          onChanged:
-                          docProfileCon.isEditMode
+                          onChanged: docProfileCon.isEditMode
                               ? (String? gender) {
                                   if (gender != null) {
                                     setState(() {
@@ -500,6 +499,12 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                 }
               }
             },
+            // onTap: () async {
+            //   Navigator.pop(context);
+            //  final img= await _imagePickerHelper.pickImageFromCamera(context, isProfileSelection: true);
+            //  print("xfile: ${img!.path}");
+            //  Provider.of<DoctorAuthViewModel>(context).profileImage;
+            // },
           ),
           ListTile(
             leading: const Icon(Icons.photo_library),
@@ -546,12 +551,10 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
           showImageBottomSheet(true);
         },
         child: Container(
-          // padding: EdgeInsets.only(right: 5),
           width: Sizes.screenWidth,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: AppColor.textfieldGrayColor.withOpacity(0.5)
-          ),
+              color: AppColor.textfieldGrayColor.withOpacity(0.5)),
           child: Row(
             children: [
               Container(
@@ -571,7 +574,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             : const AssetImage(Assets.logoDoctor),
                         fit: BoxFit.fitHeight)),
               ),
-              Sizes.spaceWidth10,
+              Sizes.spaceWidth15,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -584,26 +587,18 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                     fontWeight: FontWeight.w400,
                   ),
                   Sizes.spaceHeight5,
-                  SizedBox(  width: Sizes.screenWidth*0.55,
-
-                    child: TextConst(
-                      overflow: TextOverflow.ellipsis,
-                      docProfileCon
-                              .doctorProfileModel!.data!.doctors![0].doctorName ??
-                          "",
-                      size: Sizes.fontSizeSix * 1.06,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  TextConst(
+                    docProfileCon
+                            .doctorProfileModel!.data!.doctors![0].doctorName ??
+                        "",
+                    size: Sizes.fontSizeSix * 1.06,
+                    fontWeight: FontWeight.w500,
                   ),
                   Sizes.spaceHeight3,
-                  SizedBox(
-                    width: Sizes.screenWidth*0.55,
-                    child: TextConst(
-                      overflow: TextOverflow.ellipsis,
-                      "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
-                      size: Sizes.fontSizeFive * 1.08,
-                      fontWeight: FontWeight.w400,
-                    ),
+                  TextConst(
+                    "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
+                    size: Sizes.fontSizeFive * 1.08,
+                    fontWeight: FontWeight.w400,
                   ),
                 ],
               ),

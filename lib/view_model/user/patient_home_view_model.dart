@@ -1,3 +1,4 @@
+// view_model/user/patient_home_view_model.dart
 import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_home_model.dart';
 import 'package:aim_swasthya/repo/user/patient_home_repo.dart';
@@ -147,7 +148,9 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   setPatientHomeData(PatientHomeModel value) {
     _patientHomeModel = value;
+    setSelectedMemberIndex(-1);
     if (value.data!.doctors == []) return;
+    setSelectedMemberIndex(0);
     for (var data in value.data!.doctors!) {
       ImageDownloader()
           .downloadAndSaveDoctorImage(data.imageUrl!, data.doctorId);
@@ -177,12 +180,12 @@ class PatientHomeViewModel extends ChangeNotifier {
       // "lon": "77.4460",
       "lat": latitude,
       "lon": longitude,
-      "patient_id": "172",
+      "patient_id": userId,
       "location_id": _selectedLocationData == null
           ? ""
           : _selectedLocationData!.locationId ?? "",
     };
-    print("ansjn${jsonEncode(data)}");
+    debugPrint("ansjn${jsonEncode(data)}");
     _patientHomeRepo.patientHomeApi(data).then((value) {
       if (value.status == true) {
         setPatientHomeData(value);
@@ -211,7 +214,7 @@ class PatientHomeViewModel extends ChangeNotifier {
       final first = familyList[0];
 
       nameController.text = first.name ?? '';
-      ageController.text = _calculateAgeFromDob(first.dateOfBirth);
+      ageController.text = calculateAgeFromDob(first.dateOfBirth);
       genderController.text = first.gender ?? '';
       heightController.text = first.height ?? '';
       weightController.text = first.weight ?? '';
@@ -220,7 +223,7 @@ class PatientHomeViewModel extends ChangeNotifier {
     }
   }
 
-  String _calculateAgeFromDob(String? dob) {
+  String calculateAgeFromDob(String? dob) {
     if (dob == null || dob.isEmpty) return '';
     final birthDate = DateTime.tryParse(dob);
     if (birthDate == null) return '';
