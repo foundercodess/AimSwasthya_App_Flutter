@@ -1,11 +1,9 @@
 // view/user/drawer/your_profile_screen.dart
 import 'dart:io';
-
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/view/user/drawer/add_member_overlay.dart';
 import 'package:aim_swasthya/view/user/secound_nav_bar.dart';
-import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_profile_view_model.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -40,12 +38,11 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   final TextEditingController _lifeStyleController = TextEditingController();
 
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
-  void _selectGender(String gender) {
-    setState(() {
-      _genderController.text = gender;
-    });
-  }
-
+  // void _selectGender(String gender) {
+  //   setState(() {
+  //     _genderController.text = gender;
+  //   });
+  // }
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -96,7 +93,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     }
     if (_dobController.text.isEmpty) {
       _dobController.text = formatDate(profileData![0].dateOfBirth);
-      // _dobController.text = profileData![0].dateOfBirth ?? '';
     }
     if (_heightController.text.isEmpty) {
       _heightController.text = profileData![0].height ?? '';
@@ -344,8 +340,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].height
-                        ?.isNotEmpty ==
+            hintText: yourProfile
+                        .userPatientProfileModel?.data?[0].height?.isNotEmpty ==
                     true
                 ? yourProfile.userPatientProfileModel!.data![0].height!
                 : "Height",
@@ -353,15 +349,14 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             cursorColor: AppColor.textGrayColor,
             keyboardType: TextInputType.number,
             enabled: yourProfile.isEditMode,
-
           ),
           Sizes.spaceHeight10,
           CustomTextField(
             contentPadding:
                 const EdgeInsets.only(top: 18, bottom: 20, left: 10),
             fillColor: AppColor.grey,
-            hintText: yourProfile.userPatientProfileModel?.data?[0].weight
-                        ?.isNotEmpty ==
+            hintText: yourProfile
+                        .userPatientProfileModel?.data?[0].weight?.isNotEmpty ==
                     true
                 ? yourProfile.userPatientProfileModel!.data![0].weight!
                 : "Weight",
@@ -369,7 +364,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
             cursorColor: AppColor.textGrayColor,
             keyboardType: TextInputType.number,
             enabled: yourProfile.isEditMode,
-
           ),
           Sizes.spaceHeight10,
           CustomTextField(
@@ -473,8 +467,6 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   }
 
   Widget addMemberSec() {
-    final memberCon = Provider.of<PatientHomeViewModel>(context);
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.04),
       padding: EdgeInsets.symmetric(
@@ -536,103 +528,105 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     return Column(
       children: [
         Consumer<UserPatientProfileViewModel>(
-            builder: (context, viewModel, child) {
-          return DottedBorder(
-            borderType: BorderType.Circle,
-            color: AppColor.lightBlue,
-            strokeWidth: 1,
-            dashPattern: const [4, 3],
-            padding: EdgeInsets.symmetric(
-                horizontal: Sizes.screenWidth * 0.05,
-                vertical: Sizes.screenHeight * 0.02),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: Sizes.screenWidth * 0.05,
-                  vertical: Sizes.screenHeight * 0.02),
-              child: Column(
-                children: [
-                  Sizes.spaceHeight5,
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        elevation: 10,
-                        isScrollControlled: true,
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(16.0)),
-                        ),
-                        backgroundColor: AppColor.white,
-                        builder: (BuildContext context) {
-                          return showImageBottomSheet(true);
-                        },
-                      );
-                    },
-                    child: viewModel.profileImage != null
-                        ? Stack(
-                            children: [
+          builder: (context, viewModel, child) {
+            final image = viewModel.userPatientProfileModel?.data?[0];
+            final hasImage = viewModel.profileImage != null ||
+                (image?.signedImageUrl != null && image!.signedImageUrl!.isNotEmpty);
+            return GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  elevation: 10,
+                  isScrollControlled: true,
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+                  ),
+                  backgroundColor: AppColor.white,
+                  builder: (BuildContext context) {
+                    return showImageBottomSheet(true);
+                  },
+                );
+              },
+              child: DottedBorder(
+                borderType: BorderType.Circle,
+                color: AppColor.lightBlue,
+                strokeWidth: 1,
+                dashPattern: const [4, 3],
+                child: Container(
+                  width: Sizes.screenHeight * 0.15,
+                  height: Sizes.screenHeight * 0.15,
+                  alignment: Alignment.center,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (viewModel.profileImage != null)
+                            ClipOval(
+                              child: Image.file(
+                                File(viewModel.profileImage!.path),
+                                width: Sizes.screenHeight * 0.13,
+                                height: Sizes.screenHeight * 0.13,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          else if (image?.signedImageUrl != null &&
+                              image!.signedImageUrl!.isNotEmpty)
+                            ClipOval(
+                              child: Image.network(
+                                image.signedImageUrl!,
+                                width: Sizes.screenHeight * 0.13,
+                                height: Sizes.screenHeight * 0.13,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          else ...[
                               Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
+                                width: Sizes.screenHeight * 0.06,
+                                height: Sizes.screenHeight * 0.06,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xffDFEDFF),
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: FileImage(
-                                      File(viewModel.profileImage!.path),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.add,
+                                  color: AppColor.blue,
+                                  size: 35,
                                 ),
                               ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: const BoxDecoration(
-                                    color: AppColor.blue,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: AppColor.whiteColor,
-                                    size: 20,
-                                  ),
-                                ),
+                              Sizes.spaceHeight5,
+                              TextConst(
+                                "Add a profile photo",
+                                size: Sizes.fontSizeThree,
+                                fontWeight: FontWeight.w400,
+                                color: AppColor.textfieldGrayColor,
                               ),
                             ],
-                          )
-                        : Center(
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 40,
-                              width: 40,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffDFEDFF),
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: AppColor.blue,
-                                size: 35,
-                              ),
+                        ],
+                      ),
+
+                      if (hasImage)
+                        const Positioned(
+                          bottom: 20,
+                          right: 5,
+                          child: CircleAvatar(
+                            radius: 12,
+                            backgroundColor: AppColor.blue,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: AppColor.whiteColor,
+                              size: 16,
                             ),
                           ),
+                        ),
+                    ],
                   ),
-                  if (viewModel.profileImage == null) ...[
-                    Sizes.spaceHeight10,
-                    TextConst(
-                      "Add a profile photo",
-                      size: Sizes.fontSizeThree,
-                      fontWeight: FontWeight.w400,
-                      color: AppColor.textfieldGrayColor,
-                    ),
-                  ],
-                ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ],
     );
   }

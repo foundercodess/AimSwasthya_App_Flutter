@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_profile_model.dart';
 import 'package:aim_swasthya/repo/user/patient_profile_repo.dart';
 import 'package:aim_swasthya/utils/utils.dart';
+import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -31,8 +32,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
   setProfileImage(XFile? image) async {
     _profileImage = image;
     notifyListeners();
-    // final entityType=
-    // await addImageApi('doctor', image!.name,);
+
   }
 
   UserPatientProfileModel? _userPatientProfileModel;
@@ -53,11 +53,10 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       {bool isLoad = true}) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    print("ghjkjlk: $userId");
     Map data = {
       "patient_id": "$userId",
+      // "patient_id": 20,
     };
-    print(jsonEncode(data));
     _userPatientProfileRepo.userPatientProfileApi(data).then((value) {
       if (value.status == true) {
         setUserPatientProfileData(value);
@@ -87,46 +86,11 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     required String lifestyleHab,
   }) async {
     try {
-      // Validate inputs
-      // if (name.isEmpty) {
-      //   Utils.show("Name cannot be empty", context);
-      //   return false;
-      // }
-
-      // if (gender.isEmpty) {
-      //   Utils.show("Please select a gender", context);
-      //   return false;
-      // }
-
-      // if (phone.isEmpty || !RegExp(r'^\d{10}$').hasMatch(phone)) {
-      //   Utils.show("Please enter a valid 10-digit phone number", context);
-      //   return false;
-      // }
-
-      // if (email.isNotEmpty &&
-      //     !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      //   Utils.show("Please enter a valid email address", context);
-      //   return false;
-      // }
-
-      // if (dob.isEmpty) {
-      //   Utils.show("Date of birth cannot be empty", context);
-      //   return false;
-      // }
-
-      // if (height.isNotEmpty && !RegExp(r'^\d+$').hasMatch(height)) {
-      //   Utils.show("Height must be a number", context);
-      //   return false;
-      // }
-
-      // if (weight.isNotEmpty && !RegExp(r'^\d+$').hasMatch(weight)) {
-      //   Utils.show("Weight must be a number", context);
-      //   return false;
-      // }
 
       final userId = await UserViewModel().getUser();
       Map data = {
         "patient_id": "$userId",
+        // "patient_id": 172,
         "name": name,
         "gender": gender,
         "phone_number": phone,
@@ -140,13 +104,13 @@ class UserPatientProfileViewModel extends ChangeNotifier {
         "chronic_illnesses": chronicIll,
         "lifestyle_habbits": lifestyleHab
       };
-
       debugPrint("bodyff: ${jsonEncode(data)}");
       final response =
           await _userPatientProfileRepo.updatePatientProfileApi(data);
-
       if (response['status'] == true) {
         await userPatientProfileApi(context, isLoad: false);
+        Provider.of<PatientHomeViewModel>(context, listen: false)
+            .patientHomeApi();
         Utils.show(response['message'], context);
         return true;
       } else {

@@ -28,7 +28,8 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
   Future<void> _saveFamilyMember(BuildContext context) async {
     final memberCon = Provider.of<PatientHomeViewModel>(context, listen: false);
     final vm = Provider.of<PatientHomeViewModel>(context, listen: false);
-    final upsertVM = Provider.of<UpsertFamilyMemberViewModel>(context, listen: false);
+    final upsertVM =
+        Provider.of<UpsertFamilyMemberViewModel>(context, listen: false);
 
     // Validate required fields
     if (vm.nameController.text.isEmpty ||
@@ -41,11 +42,19 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
     }
 
     // Get family member ID if updating existing member
+    // String? familyMemberId;
+    // if (memberCon.selectedMemberIndex != -1) {
+    //   familyMemberId = memberCon.patientHomeModel?.data?.familyMembers?[memberCon.selectedMemberIndex!].familyMemberId?.toString();
+    // }
     String? familyMemberId;
-    if (memberCon.selectedMemberIndex != -1) {
-      familyMemberId = memberCon.patientHomeModel?.data?.familyMembers?[memberCon.selectedMemberIndex!].familyMemberId?.toString();
-    }
+    final members = memberCon.patientHomeModel?.data?.familyMembers;
 
+    if (memberCon.selectedMemberIndex != -1 &&
+        members != null &&
+        members.length > memberCon.selectedMemberIndex!) {
+      familyMemberId =
+          members[memberCon.selectedMemberIndex!].familyMemberId?.toString();
+    }
     // Call API to save/update family member
     await upsertVM.upsertFamilyMemberApi(
       context,
@@ -68,10 +77,10 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       vm.heightController.clear();
       vm.weightController.clear();
       memberCon.setSelectedMemberIndex(-1);
-      
+
       // Refresh family members list
       await memberCon.patientHomeApi();
-      
+
       // Close bottom sheet
       if (context.mounted) {
         Navigator.pop(context);
@@ -86,10 +95,12 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
     final upsertVM = Provider.of<UpsertFamilyMemberViewModel>(context);
 
     return SingleChildScrollView(
-    child: 
-     Container(
-      padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom ,top: Sizes.screenHeight * 0.03,left: Sizes.screenWidth * 0.05,right: Sizes.screenWidth * 0.05),
+        child: Container(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          top: Sizes.screenHeight * 0.03,
+          left: Sizes.screenWidth * 0.05,
+          right: Sizes.screenWidth * 0.05),
       // padding: EdgeInsets.symmetric(
       //     horizontal: Sizes.screenWidth * 0.04,
       //     vertical: Sizes.screenHeight * 0.03),
@@ -153,7 +164,9 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                   ),
                 ),
                 // Show add button only if less than 4 members
-                if ((memberCon.patientHomeModel?.data?.familyMembers?.length ?? 0) < 4)
+                if ((memberCon.patientHomeModel?.data?.familyMembers?.length ??
+                        0) <
+                    4)
                   DottedBorder(
                     borderType: BorderType.Circle,
                     color: AppColor.blue,
@@ -200,7 +213,8 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                       controller: vm.nameController,
                       keyboardType: TextInputType.name,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z\s]')),
                       ],
                       cursorColor: AppColor.textGrayColor,
                     ),
@@ -225,8 +239,10 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                           );
                           if (picked != null) {
                             setState(() {
-                              _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
-                              vm.ageController.text = vm.calculateAgeFromDob(_dobController.text);
+                              _dobController.text =
+                                  DateFormat('yyyy-MM-dd').format(picked);
+                              vm.ageController.text =
+                                  vm.calculateAgeFromDob(_dobController.text);
                             });
                           }
                         },
@@ -272,7 +288,9 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                     Sizes.spaceHeight30,
                     ButtonConst(
                       title: upsertVM.loading ? "Saving..." : "Save",
-                      onTap: upsertVM.loading ? () {} : () => _saveFamilyMember(context),
+                      onTap: upsertVM.loading
+                          ? () {}
+                          : () => _saveFamilyMember(context),
                       color: AppColor.blue,
                     )
                   ],
@@ -282,6 +300,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
           ),
         ],
       ),
-    )
-);  }
+    ));
+  }
 }
