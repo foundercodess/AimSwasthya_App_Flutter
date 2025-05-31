@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:aim_swasthya/model/user/upsert_wellness_model.dart';
 import 'package:aim_swasthya/repo/user/upsert_wellness_library_repo.dart';
-import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/foundation.dart';
 
@@ -33,6 +32,10 @@ class UpsertWellnessLibraryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeFromFavorites(value) {
+    _upsertWellnessLibraryModel?.data?.removeAt(value);
+    notifyListeners();
+  }
 
   Future<void> upsertWellnessApi(dynamic healthTipId,context) async {
     final userId = await UserViewModel().getUser();

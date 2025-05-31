@@ -79,7 +79,7 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       memberCon.setSelectedMemberIndex(-1);
 
       // Refresh family members list
-      await memberCon.patientHomeApi();
+      await memberCon.patientHomeApi(context);
 
       // Close bottom sheet
       if (context.mounted) {
@@ -146,8 +146,8 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: memberCon.selectedMemberIndex == index
-                                ? AppColor.blue
-                                : Colors.grey[300],
+                                ? Colors.grey[3-00]
+                                : AppColor.blue,
                           ),
                           child: Center(
                             child: TextConst(

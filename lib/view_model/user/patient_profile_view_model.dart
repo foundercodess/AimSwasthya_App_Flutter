@@ -110,7 +110,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       if (response['status'] == true) {
         await userPatientProfileApi(context, isLoad: false);
         Provider.of<PatientHomeViewModel>(context, listen: false)
-            .patientHomeApi();
+            .patientHomeApi(context);
         Utils.show(response['message'], context);
         return true;
       } else {

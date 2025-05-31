@@ -22,6 +22,8 @@ class _HealthSectionScreenState extends State<HealthSectionScreen> {
   Widget build(BuildContext context) {
     final homeCon = Provider.of<PatientHomeViewModel>(context).patientHomeModel;
     final wellnessCon = Provider.of<UpsertWellnessLibraryViewModel>(context);
+    final model = wellnessCon.upsertWellnessLibraryModel;
+
     if (homeCon == null) {
       return const SizedBox();
     }
@@ -116,17 +118,49 @@ class _HealthSectionScreenState extends State<HealthSectionScreen> {
                                         ],
                                       ),
                                       Sizes.spaceWidth5,
-                                      InkWell(
-                                        onTap: () async {
-                                          final model = wellnessCon
-                                              .upsertWellnessLibraryModel;
-                                          final dataList = model?.data;
 
+                                      // InkWell(
+                                      //   onTap: () async {
+                                      //     final dataList = model?.data;
+                                      //     final favItem = dataList?[index];
+                                      //
+                                      //     if (favItem == null) return;
+                                      //
+                                      //     if (favItem.favouriteFlag == "Y") {
+                                      //       // ✅ Remove from favourite
+                                      //       await wellnessCon.removeFromFavoritesApi(
+                                      //         favItem.healthTipId.toString(),
+                                      //         context,
+                                      //       );
+                                      //       setState(() {
+                                      //         favItem.favouriteFlag = "N"; // Update locally
+                                      //       });
+                                      //     } else {
+                                      //       // ✅ Add to favourite
+                                      //       await wellnessCon.upsertWellnessApi(
+                                      //         favItem.healthTipId.toString(),
+                                      //         context,
+                                      //       );
+                                      //       setState(() {
+                                      //         favItem.favouriteFlag = "Y"; // Update locally
+                                      //       });
+                                      //     }
+                                      //   },
+                                      //   child: Icon(
+                                      //     Icons.favorite,
+                                      //     color: favItem.favouriteFlag == "Y" ? Colors.red : Colors.grey,
+                                      //   ),
+                                      // )
+
+
+                                      InkWell(
+                                        onTap: ()  {
+                                          final dataList = model?.data;
                                           if (dataList == null ||
                                               dataList.isEmpty ||
                                               dataList[0].favouriteFlag !=
                                                   "Y") {
-                                            await wellnessCon.upsertWellnessApi(
+                                             wellnessCon.upsertWellnessApi(
                                                 data.healthTipId.toString(),
                                                 context);
                                             setState(() {
@@ -139,37 +173,15 @@ class _HealthSectionScreenState extends State<HealthSectionScreen> {
                                         },
                                         child: Icon(
                                           Icons.favorite,
-                                          color: (wellnessCon
-                                                          .upsertWellnessLibraryModel
-                                                          ?.data
-                                                          ?.isNotEmpty ??
+                                          color: (model?.data?.isNotEmpty ??
                                                       false) &&
-                                                  wellnessCon
-                                                          .upsertWellnessLibraryModel!
-                                                          .data![0]
+                                                  model!.data![0]
                                                           .favouriteFlag ==
                                                       "Y"
                                               ? Colors.red
                                               : Colors.grey,
                                         ),
                                       ),
-
-                                      // InkWell(
-                                      //   onTap: () async {
-                                      //     if (!wellnessCon.isFavourite) {
-                                      //       wellnessCon.upsertWellnessApi(
-                                      //           healthTip.healthTipId
-                                      //               .toString(),
-                                      //           context);
-                                      //     }
-                                      //   },
-                                      //   child: Icon(
-                                      //     Icons.favorite,
-                                      //     color: wellnessCon.isFavourite
-                                      //         ? Colors.red
-                                      //         : Colors.grey,
-                                      //   ),
-                                      // ),
                                       Sizes.spaceWidth10,
                                       InkWell(
                                         onTap: () {

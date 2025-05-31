@@ -190,7 +190,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         Provider.of<PatientHomeViewModel>(context, listen: false)
-            .patientHomeApi();
+            .patientHomeApi(context);
         Navigator.pushReplacementNamed(context, RoutesName.successSplashScreen);
         // Navigator.pushNamed(context, RoutesName.successSplashScreen);
       }

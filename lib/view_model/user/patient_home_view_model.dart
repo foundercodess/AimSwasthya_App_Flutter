@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_home_model.dart';
 import 'package:aim_swasthya/repo/user/patient_home_repo.dart';
 import 'package:aim_swasthya/view_model/user/services/map_con.dart';
+import 'package:aim_swasthya/view_model/user/upsert_wellness_library_view_model.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import '../../local_db/download_image.dart';
 import '../../model/user/get_location_model.dart';
 import '../../view/user/symptoms/dowenloade_image.dart';
@@ -110,7 +112,7 @@ class PatientHomeViewModel extends ChangeNotifier {
         double.parse(value.patientLocation!.latitude.toString()),
         double.parse(value.patientLocation!.longitude.toString())));
 
-    patientHomeApi();
+    patientHomeApi(context);
     notifyListeners();
   }
 
@@ -131,7 +133,7 @@ class PatientHomeViewModel extends ChangeNotifier {
       setLoading(false);
     }).onError((error, stackTrace) {
       setLoading(false);
-      patientHomeApi();
+      patientHomeApi(context);
       if (kDebugMode) {
         print('error: $error');
       }
@@ -162,7 +164,7 @@ class PatientHomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> patientHomeApi() async {
+  Future<void> patientHomeApi(context) async {
     if (_selectedLocationData == null ||
         (_selectedLocationData!.latitude == null &&
             _selectedLocationData!.longitude == null)) {
@@ -191,6 +193,7 @@ class PatientHomeViewModel extends ChangeNotifier {
     _patientHomeRepo.patientHomeApi(data).then((value) {
       if (value.status == true) {
         setPatientHomeData(value);
+        Provider.of<UpsertWellnessLibraryViewModel>(context).removeFromFavorites(true);
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {

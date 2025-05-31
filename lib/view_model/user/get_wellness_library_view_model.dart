@@ -19,7 +19,8 @@ class GetWellnessLibraryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setPatientWellnessData(GetWellnessLibraryModel value) {
+  void setPatientWellnessData(GetWellnessLibraryModel value) {
+    value.data = value.data?.where((item) => item.favouriteFlag == "Y").toList();
     _getWellnessLibraryModel = value;
     notifyListeners();
   }
@@ -28,6 +29,16 @@ class GetWellnessLibraryViewModel extends ChangeNotifier {
     _getWellnessLibraryModel?.data?.removeAt(index);
     notifyListeners();
   }
+  //
+  // setPatientWellnessData(GetWellnessLibraryModel value) {
+  //   _getWellnessLibraryModel = value;
+  //   notifyListeners();
+  // }
+  //
+  // void removeFromFavorites(int index) {
+  //   _getWellnessLibraryModel?.data?.removeAt(index);
+  //   notifyListeners();
+  // }
 
   Future<void> getPatientWellnessApi(context) async {
     final userId = await UserViewModel().getUser();
@@ -35,7 +46,7 @@ class GetWellnessLibraryViewModel extends ChangeNotifier {
     Map data = {
       "patient_id": userId,
     };
-    print(jsonEncode(data));
+    debugPrint("aslkmd${jsonEncode(data)}");
     _upsertWellnessLibraryRepo.getWellnessLibraryApi(data).then((value) {
       if (value.status == true) {
         setPatientWellnessData(value);
