@@ -43,7 +43,6 @@ import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
 import 'package:aim_swasthya/utils/routes/routes.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/view_model/user/user_delete_account_view_model.dart';
-import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:aim_swasthya/view_model/user/voice_search_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,6 +54,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'view_model/doctor/doc_reg_view_model.dart';
 import 'view_model/doctor/doc_schedule_view_model.dart';
+import 'view_model/user/wellness_library_view_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,6 +108,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => UserDeleteAccountViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserPatientProfileViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpsertFamilyMemberViewModel()),
+        ChangeNotifierProvider(create: (ctx) => WellnessLibraryViewModel()),
 
         // doctor view models
         ChangeNotifierProvider(create: (ctx) => DoctorAuthViewModel()),

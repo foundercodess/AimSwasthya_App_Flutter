@@ -12,6 +12,7 @@ import 'package:aim_swasthya/view/user/user_home_screen.dart';
 import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
 import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
+import 'package:aim_swasthya/view_model/user/wellness_library_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,15 +39,19 @@ class _BottomNevBarState extends State<BottomNevBar> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final makeApiCall = ModalRoute.of(context)?.settings.arguments;
-      if(makeApiCall==true){
+      if (makeApiCall == true) {
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .getLocationApi(context);
+        Provider.of<WellnessLibraryViewModel>(context,listen: false)
+            .getPatientWellnessApi(context);
         await LocalImageHelper.instance.loadImages();
       }
-      Provider.of<VoiceSymptomSearchViewModel>(context,listen: false).clearValues();
+      Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
+          .clearValues();
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     List page = [
@@ -59,7 +64,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
     final bottomCon = Provider.of<BottomNavProvider>(context);
     return WillPopScope(
       onWillPop: () async {
-        if(bottomCon.currentIndex != 0){
+        if (bottomCon.currentIndex != 0) {
           bottomCon.setIndex(0);
           return false;
         }
@@ -68,7 +73,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
             builder: (context) {
               return ActionOverlay(
                 text: "Exit App",
-                subtext:"Do you really want to close the app?",
+                subtext: "Do you really want to close the app?",
                 onTap: () {
                   SystemNavigator.pop();
                 },
@@ -122,7 +127,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
             shadowColor: AppColor.black,
             height: 60 + MediaQuery.of(context).padding.bottom,
             padding: EdgeInsets.only(
-              left: 40, 
+              left: 40,
               right: 40,
               bottom: MediaQuery.of(context).padding.bottom,
             ),

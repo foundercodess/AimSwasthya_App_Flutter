@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_home_model.dart';
 import 'package:aim_swasthya/repo/user/patient_home_repo.dart';
 import 'package:aim_swasthya/view_model/user/services/map_con.dart';
+import 'package:aim_swasthya/view_model/user/wellness_library_view_model.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import '../../local_db/download_image.dart';
 import '../../model/user/get_location_model.dart';
 import '../../view/user/symptoms/dowenloade_image.dart';
@@ -89,7 +91,8 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   setSelectedMemberIndex(int value) {
     _selectedMemberIndex = value;
-    fillControllersWithFirstMember();
+    // fillControllersWithFirstMember();
+    fillControllersWithSelectedMember();
     notifyListeners();
   }
 
@@ -107,7 +110,7 @@ class PatientHomeViewModel extends ChangeNotifier {
         double.parse(value.patientLocation!.latitude.toString()),
         double.parse(value.patientLocation!.longitude.toString())));
 
-    patientHomeApi();
+    patientHomeApi(context);
     notifyListeners();
   }
 
@@ -128,7 +131,7 @@ class PatientHomeViewModel extends ChangeNotifier {
       setLoading(false);
     }).onError((error, stackTrace) {
       setLoading(false);
-      patientHomeApi();
+      patientHomeApi(context);
       if (kDebugMode) {
         print('error: $error');
       }
@@ -152,12 +155,11 @@ class PatientHomeViewModel extends ChangeNotifier {
       ImageDownloader()
           .downloadAndSaveDoctorImage(data.imageUrl!, data.doctorId);
     }
-
-    fillControllersWithFirstMember();
+    fillControllersWithSelectedMember();
     notifyListeners();
   }
 
-  Future<void> patientHomeApi() async {
+  Future<void> patientHomeApi(context) async {
     if (_selectedLocationData == null ||
         (_selectedLocationData!.latitude == null &&
             _selectedLocationData!.longitude == null)) {
@@ -173,8 +175,6 @@ class PatientHomeViewModel extends ChangeNotifier {
 
     final userId = await UserViewModel().getUser();
     Map data = {
-      // "lat": "28.6014",
-      // "lon": "77.4460",
       "lat": latitude,
       "lon": longitude,
       "patient_id": userId,
@@ -186,6 +186,7 @@ class PatientHomeViewModel extends ChangeNotifier {
     _patientHomeRepo.patientHomeApi(data).then((value) {
       if (value.status == true) {
         setPatientHomeData(value);
+        Provider.of<WellnessLibraryViewModel>(context,listen: false).removeFromFavorites(0);
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {
@@ -200,17 +201,36 @@ class PatientHomeViewModel extends ChangeNotifier {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
 
-  void fillControllersWithFirstMember() {
+  // void fillControllersWithFirstMember() {
+  //   final familyList = patientHomeModel?.data?.familyMembers;
+  //
+  //   if (familyList != null && familyList.isNotEmpty) {
+  //     final first = familyList[0];
+  //
+  //     nameController.text = first.name ?? '';
+  //     ageController.text = calculateAgeFromDob(first.dateOfBirth);
+  //     genderController.text = first.gender ?? '';
+  //     heightController.text = first.height ?? '';
+  //     weightController.text = first.weight ?? '';
+  //
+  //     notifyListeners();
+  //   }
+  // }
+  void fillControllersWithSelectedMember() {
     final familyList = patientHomeModel?.data?.familyMembers;
 
-    if (familyList != null && familyList.isNotEmpty) {
-      final first = familyList[0];
+    if (familyList != null &&
+        familyList.isNotEmpty &&
+        _selectedMemberIndex != null &&
+        _selectedMemberIndex! < familyList.length) {
 
-      nameController.text = first.name ?? '';
-      ageController.text = calculateAgeFromDob(first.dateOfBirth);
-      genderController.text = first.gender ?? '';
-      heightController.text = first.height ?? '';
-      weightController.text = first.weight ?? '';
+      final selected = familyList[_selectedMemberIndex!];
+
+      nameController.text = selected.name ?? '';
+      ageController.text = calculateAgeFromDob(selected.dateOfBirth);
+      genderController.text = selected.gender ?? '';
+      heightController.text = selected.height ?? '';
+      weightController.text = selected.weight ?? '';
 
       notifyListeners();
     }

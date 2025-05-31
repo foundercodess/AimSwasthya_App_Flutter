@@ -59,7 +59,7 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
         Provider.of<PatientAppointmentViewModel>(context, listen: false)
             .patientAppointmentApi(context);
         Provider.of<PatientHomeViewModel>(context, listen: false)
-            .patientHomeApi();
+            .patientHomeApi(context);
         Navigator.pop(context);
       }
     }).onError((error, stackTrace) {
