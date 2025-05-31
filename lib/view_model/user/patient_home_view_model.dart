@@ -84,7 +84,6 @@ class PatientHomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   int? _selectedMemberIndex;
   int? get selectedMemberIndex => _selectedMemberIndex;
 
@@ -93,7 +92,6 @@ class PatientHomeViewModel extends ChangeNotifier {
     fillControllersWithFirstMember();
     notifyListeners();
   }
-
 
   setLocationData(GetLocationModel value, BuildContext context) {
     _locationData = value;
@@ -145,7 +143,6 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   PatientHomeModel? get patientHomeModel => _patientHomeModel;
 
-
   setPatientHomeData(PatientHomeModel value) {
     _patientHomeModel = value;
     setSelectedMemberIndex(-1);
@@ -196,10 +193,6 @@ class PatientHomeViewModel extends ChangeNotifier {
       }
     });
   }
-
-
-
-
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
