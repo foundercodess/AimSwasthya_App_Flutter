@@ -144,7 +144,7 @@ class GetImageUrlViewModel extends ChangeNotifier {
       if (response.statusCode == 200) {
         debugPrint('✅ Upload successful!');
         Provider.of<PatientMedicalRecordsViewModel>(context, listen: false)
-            .patientMedRecApi();
+            .patientMedRecApi(context);
       } else {
         debugPrint(
             '❌ Upload failed with status: ${response.statusCode} || Response body: ${response.body}');

@@ -76,7 +76,8 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                     ),
                   if (doctorSpeCon.doctorSpecialisationModel!.data != null &&
                       doctorSpeCon.doctorSpecialisationModel!.data!.doctors!
-                          .isNotEmpty && !homeCon.noServicesArea) ...[
+                          .isNotEmpty &&
+                      !homeCon.noServicesArea) ...[
                     Sizes.spaceHeight30,
                     TextConst(
                       "Top ${doctorSpeCon.selectedSpecialist!.specializationName ?? ""}",
@@ -173,6 +174,8 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                           size: Sizes.fontSizeFive,
                           fontWeight: FontWeight.w500,
                         ),
+                        Sizes.spaceWidth5,
+
                         doctorSpeCon.doctorSpecialisationModel != null &&
                                 doctorSpeCon.doctorSpecialisationModel!.data!
                                     .doctors!.isNotEmpty
@@ -185,13 +188,15 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                                 ),
                                 child: Center(
                                   child: TextConst(
-                                    '${doctorSpeCon.doctorSpecialisationModel!.data!.doctors!.length}',
+                                    doctorSpeCon.doctorSpecialisationModel!
+                                        .data!.doctors!.length
+                                        .toString(),
                                     color: AppColor.white,
                                     size: Sizes.fontSizeTwo,
                                   ),
                                 ),
                               )
-                            : const SizedBox.shrink(),
+                            : const SizedBox(),
                       ],
                     ),
                     Sizes.spaceHeight20,

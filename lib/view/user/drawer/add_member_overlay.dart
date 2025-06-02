@@ -18,12 +18,20 @@ class AddMemberOverlay extends StatefulWidget {
 
 class _AddMemberOverlayState extends State<AddMemberOverlay> {
   final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
 
   @override
   void dispose() {
     _dobController.dispose();
     super.dispose();
   }
+
+  // void _selectGender(String gender) {
+  //   setState(() {
+  //     vm.text = gender;
+  //   });
+  // }
+
 
   Future<void> _saveFamilyMember(BuildContext context) async {
     final memberCon = Provider.of<PatientHomeViewModel>(context, listen: false);
@@ -40,6 +48,7 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       );
       return;
     }
+
 
     // Get family member ID if updating existing member
     // String? familyMemberId;
@@ -87,12 +96,14 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       }
     }
   }
+  final List<String> genderOptions = ['Male', 'Female', 'Other'];
 
   @override
   Widget build(BuildContext context) {
     final memberCon = Provider.of<PatientHomeViewModel>(context);
     final vm = Provider.of<PatientHomeViewModel>(context);
     final upsertVM = Provider.of<UpsertFamilyMemberViewModel>(context);
+
 
     return SingleChildScrollView(
         child: Container(
@@ -146,7 +157,7 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: memberCon.selectedMemberIndex == index
-                                ? Colors.grey[3-00]
+                                ? Colors.grey[300]
                                 : AppColor.blue,
                           ),
                           child: Center(
@@ -253,16 +264,67 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                       ),
                     ),
                     Sizes.spaceHeight10,
-                    CustomTextField(
-                      height: Sizes.screenHeight * 0.06,
-                      borderSide: const BorderSide(color: Color(0xffE5E5E5)),
-                      fillColor: AppColor.grey,
-                      hintText: "Gender",
-                      hintColor: const Color(0xffC3C3C3),
-                      controller: vm.genderController,
-                      keyboardType: TextInputType.name,
-                      cursorColor: AppColor.textGrayColor,
+                    Center(
+                      child: Container(
+                        height: 49,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColor.grey,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Color(0xffE5E5E5)),
+                        ),
+                        padding:
+                        EdgeInsets.symmetric(horizontal: Sizes.screenWidth * 0.03),
+                        child: DropdownButton<String>(
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.grey,
+                            size: 20,
+                          ),
+                          value: genderOptions.contains(vm.genderController.text)
+                              ? vm.genderController.text
+                              : null,
+                          hint: TextConst(
+                            "Gender",
+                            size: Sizes.fontSizeFour,
+                            color: AppColor.textfieldTextColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          underline: const SizedBox(),
+                          isExpanded: true,
+                          items: genderOptions.map((data) {
+                            return DropdownMenuItem<String>(
+                              value: data,
+                              child: TextConst(
+                                data.toString(),
+                                fontWeight: FontWeight.w500,
+                                size: Sizes.fontSizeFive,
+                                color: AppColor.blue,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? newId) {
+                            setState(() {
+                              if (newId != null){
+                                vm.genderController.text = newId;
+
+                              }
+                            });
+                          },
+                        ),
+                      ),
                     ),
+
+                    // CustomTextField(
+                    //   height: Sizes.screenHeight * 0.06,
+                    //   borderSide: const BorderSide(color: Color(0xffE5E5E5)),
+                    //   fillColor: AppColor.grey,
+                    //   hintText: "Gender",
+                    //   hintColor: const Color(0xffC3C3C3),
+                    //   controller: vm.genderController,
+                    //   keyboardType: TextInputType.name,
+                    //   cursorColor: AppColor.textGrayColor,
+                    // ),
                     Sizes.spaceHeight10,
                     CustomTextField(
                       height: Sizes.screenHeight * 0.06,

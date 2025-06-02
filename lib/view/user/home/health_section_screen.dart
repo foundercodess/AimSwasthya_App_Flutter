@@ -57,7 +57,7 @@ class _HealthSectionScreenState extends State<HealthSectionScreen> {
               itemBuilder: (context, index) {
                 final data = tipsToShow[index];
                 bool isAddedToMyWillness = model != null
-                    ? model!.data!.any((e) =>
+                    ? model.data!.any((e) =>
                         e.healthTipId.toString() == data.healthTipId.toString())
                     : false;
                 return Padding(

@@ -81,12 +81,11 @@ class WellnessLibraryViewModel extends ChangeNotifier {
       "health_tip_id": healthTipId,
       "favourite_flag": flag
     };
-    print(jsonEncode(data));
+    debugPrint("jashd${jsonEncode(data)}");
     _upsertWellnessRepo.upsertWellnessApi(data).then((value) {
       if (value.status == true) {
         setUpsertWellnessData(value);
         setFavourite(true);
-        // Refresh wellness library data
         getPatientWellnessApi(context);
       }
       setLoading(false);

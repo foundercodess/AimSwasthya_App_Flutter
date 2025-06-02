@@ -362,11 +362,11 @@ class _ViewAppointmentsScreenState extends State<ViewAppointmentsScreen> {
                           );
                         } else {
                           // Reschedule action
-                          if(!cancelRescheduleAllowed){
+                          if (!cancelRescheduleAllowed) {
                             showInfoOverlay(
                                 title: "Info",
                                 errorMessage:
-                                "Oops! You can’t reschedule appointments less than 1 hour before the scheduled time.");
+                                    "Oops! You can’t reschedule appointments less than 1 hour before the scheduled time.");
                             return;
                           }
                           Provider.of<UpdateAppointmentViewModel>(context,

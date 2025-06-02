@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:async';
 
 import '../info/terms_of_user.dart';
 
@@ -33,8 +32,8 @@ class _OtpScreenState extends State<OtpScreen> {
     final doctorAuthCon = Provider.of<DoctorAuthViewModel>(
       context,
     );
-    print("patient ${patientAuthCon.seconds}");
-    print("doctor: ${doctorAuthCon.seconds}");
+    debugPrint("patient ${patientAuthCon.seconds}");
+    debugPrint("doctor: ${doctorAuthCon.seconds}");
     final navType = authCon.userRole;
     return Scaffold(
       backgroundColor: AppColor.white,

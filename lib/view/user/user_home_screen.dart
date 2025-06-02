@@ -818,7 +818,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                   Sizes.spaceHeight3,
                   SizedBox(
-                    width: Sizes.screenWidth*0.66,
+                    width: Sizes.screenWidth * 0.66,
                     child: TextConst(
                       overflow: TextOverflow.ellipsis,
                       "${appointmentData.qualification} (${appointmentData.specializationName})",

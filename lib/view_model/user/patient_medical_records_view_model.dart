@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:aim_swasthya/model/user/patient_medical_records_model.dart';
 import 'package:aim_swasthya/repo/user/patient_medical_records_repo.dart';
+import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 class PatientMedicalRecordsViewModel extends ChangeNotifier {
   final _patientMedicalRecordsRepo = PatientMedicalRecordsRepo();
@@ -24,18 +26,20 @@ class PatientMedicalRecordsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> patientMedRecApi() async {
+  Future<void> patientMedRecApi(context) async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
     print("ghjkjlk: $userId");
     Map data = {
       "entity_id": "$userId",
-      "entity_type": "patient" ,
+      "entity_type": "patient",
       "file_type": "medical_record"
     };
     print(jsonEncode(data));
     _patientMedicalRecordsRepo.patientMedicalRecordsApi(data).then((value) {
       if (value.status == true) {
+        Provider.of<PatientHomeViewModel>(context, listen: false)
+            .patientHomeApi(context);
         setPatientMedRecData(value);
       }
     }).onError((error, stackTrace) {

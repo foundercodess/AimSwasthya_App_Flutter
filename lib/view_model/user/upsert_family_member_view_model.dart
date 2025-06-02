@@ -1,8 +1,11 @@
 import 'package:aim_swasthya/model/user/upsert_family_member_model.dart';
 import 'package:aim_swasthya/repo/user/upsert_family_member_repo.dart';
+import 'package:aim_swasthya/utils/utils.dart';
+import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 class UpsertFamilyMemberViewModel extends ChangeNotifier {
   final _upsertFamilyMemberRepo = UpsertFamilyMemberRepo();
@@ -52,8 +55,12 @@ class UpsertFamilyMemberViewModel extends ChangeNotifier {
     debugPrint("body: $data");
     _upsertFamilyMemberRepo.upsertFamilyMemberApi(data).then((value) {
       if (value.status == true) {
+        Utils.show("Family member added successfully", context);
         setFamilyMemberData(value);
+        Provider.of<PatientHomeViewModel>(context, listen: false)
+            .patientHomeApi(context);
       }
+
       setLoading(false);
     }).onError((error, stackTrace) {
       if (kDebugMode) {

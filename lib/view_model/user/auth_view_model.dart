@@ -256,7 +256,7 @@ class PatientAuthViewModel extends ChangeNotifier {
       "type": "phone"
     };
     _patientAuthRepo.verifyOtpApi(data).then((value) {
-      // Utils.show(value['message'], context);
+      Utils.show(value['message'], context);
       if (value['success'] == true) {
         LoaderOverlay().hide();
         UserViewModel().saveBeToken(value['accessToken']);
@@ -282,11 +282,6 @@ class PatientAuthViewModel extends ChangeNotifier {
                   },
                 );
               });
-          // Navigator.pushNamed(context, RoutesName.registerScreen);
-          // }
-          // else {
-          //   Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-          // }
           Utils.show(value['message'], context);
         } else {
           LoaderOverlay().hide();

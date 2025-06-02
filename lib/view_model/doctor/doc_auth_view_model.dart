@@ -133,9 +133,9 @@ class DoctorAuthViewModel extends ChangeNotifier {
     LoaderOverlay().show(context);
     setLoading(true);
     Map data = {"phone": phone, "email": email, "type": type};
-    print(jsonEncode(data));
+    debugPrint(jsonEncode(data));
     _doctorAuthRepo.isRegisterDocApi(data).then((value) {
-      print(value);
+      debugPrint(value);
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         _senOtpData = {
@@ -339,11 +339,6 @@ class DoctorAuthViewModel extends ChangeNotifier {
                   },
                 );
               });
-          // if (userRole == 1) {
-          //   Navigator.pushNamed(context, RoutesName.registerScreen);
-          // } else {
-          //   Navigator.pushNamed(context, RoutesName.userRegisterScreen);
-          // }
           Utils.show(value['message'], context);
         } else {
           LoaderOverlay().hide();

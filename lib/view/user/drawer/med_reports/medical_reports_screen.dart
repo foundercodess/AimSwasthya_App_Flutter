@@ -9,6 +9,7 @@ import 'package:aim_swasthya/view_model/user/patient_medical_records_view_model.
 import 'package:aim_swasthya/view_model/user/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../local_db/download_image.dart';
 import '../../../../model/user/patient_medical_records_model.dart';
@@ -31,7 +32,7 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<PatientMedicalRecordsViewModel>(context, listen: false)
-          .patientMedRecApi();
+          .patientMedRecApi(context);
     });
     super.initState();
   }
@@ -122,12 +123,17 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
             height: 45,
           ),
           Sizes.spaceHeight15,
+          TextConst(
+            "Add your latest medical records",
+            size: Sizes.fontSizeFivePFive,
+            fontWeight: FontWeight.w500,
+          ),
           Container(
-            width: Sizes.screenWidth / 1.5,
+            width: Sizes.screenWidth / 1.3,
             alignment: Alignment.center,
             child: TextConst(
               textAlign: TextAlign.center,
-              "Add your latest medical records here Medical records help your doctor for an accurate diagnosis",
+              "Medical records help your doctor for an accurate diagnosis",
               size: Sizes.fontSizeFour,
               fontWeight: FontWeight.w500,
               // size: 10,
@@ -245,9 +251,11 @@ class _MedicalReportsScreenState extends State<MedicalReportsScreen> {
                       itemBuilder: (context, index) {
                         final medRecData = medRecCon.patientMedicalRecordsModel!
                             .data!.medicalRecord![index];
-                        // DateTime date =
-                        //     DateTime.parse(medRecData.createdAt.toString());
-                        String formattedDate = medRecData.createdAt.toString();
+                        DateTime parsedDate = DateFormat("dd-MM-yyyy").parse(
+                            medRecData.createdAt
+                                .toString());
+                        String formattedDate =
+                            DateFormat("dd/MM/yyyy").format(parsedDate);
                         return ListTile(
                           onTap: () async {
                             final userId = await UserViewModel().getUser();

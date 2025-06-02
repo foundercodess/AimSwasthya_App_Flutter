@@ -47,7 +47,6 @@ class DoctorSpecialisationViewModel extends ChangeNotifier {
     setLoading(true);
     Map data = {
       "specialization_id": specId,
-      // "location_id": selectedLocation.locationId,
       "lat": latitude.toStringAsFixed(5),
       "lon": longitude.toStringAsFixed(5),
     };

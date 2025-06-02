@@ -38,11 +38,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   final TextEditingController _lifeStyleController = TextEditingController();
 
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
-  // void _selectGender(String gender) {
-  //   setState(() {
-  //     _genderController.text = gender;
-  //   });
-  // }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -550,11 +546,11 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
               child: DottedBorder(
                 borderType: BorderType.Circle,
                 color: AppColor.lightBlue,
-                strokeWidth: 1,
+                strokeWidth: 1.5,
                 dashPattern: const [4, 3],
                 child: Container(
-                  width: Sizes.screenHeight * 0.15,
-                  height: Sizes.screenHeight * 0.15,
+                  width: Sizes.screenHeight * 0.165,
+                  height: Sizes.screenHeight * 0.165,
                   alignment: Alignment.center,
                   child: Stack(
                     alignment: Alignment.center,
@@ -566,8 +562,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                             ClipOval(
                               child: Image.file(
                                 File(viewModel.profileImage!.path),
-                                width: Sizes.screenHeight * 0.13,
-                                height: Sizes.screenHeight * 0.13,
+                                width: Sizes.screenHeight * 0.15,
+                                height: Sizes.screenHeight * 0.15,
                                 fit: BoxFit.cover,
                               ),
                             )
@@ -576,15 +572,17 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                             ClipOval(
                               child: Image.network(
                                 image.signedImageUrl!,
-                                width: Sizes.screenHeight * 0.13,
-                                height: Sizes.screenHeight * 0.13,
+                                width: Sizes.screenHeight * 0.15,
+                                height: Sizes.screenHeight * 0.15,
                                 fit: BoxFit.cover,
                               ),
                             )
                           else ...[
+                              Sizes.spaceHeight5,
                               Container(
-                                width: Sizes.screenHeight * 0.06,
-                                height: Sizes.screenHeight * 0.06,
+                                alignment: Alignment.center,
+                                width: Sizes.screenHeight * 0.05,
+                                height: Sizes.screenHeight * 0.05,
                                 decoration: const BoxDecoration(
                                   color: Color(0xffDFEDFF),
                                   shape: BoxShape.circle,
@@ -592,16 +590,18 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                                 child: const Icon(
                                   Icons.add,
                                   color: AppColor.blue,
-                                  size: 35,
+                                  size: 32,
                                 ),
                               ),
                               Sizes.spaceHeight5,
+                              // Sizes.spaceHeight3,
                               TextConst(
                                 "Add a profile photo",
                                 size: Sizes.fontSizeThree,
                                 fontWeight: FontWeight.w400,
                                 color: AppColor.textfieldGrayColor,
                               ),
+
                             ],
                         ],
                       ),
@@ -763,7 +763,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                 hintText: yourProfile
                     .userPatientProfileModel!.data![0].dateOfBirth
                     .toString(),
-                controller: _dobController,
+                controller: _ageController,
                 cursorColor: AppColor.textGrayColor,
                 enabled: false,
                 suffixIcon: yourProfile.isEditMode
