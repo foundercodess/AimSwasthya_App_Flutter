@@ -126,6 +126,7 @@ class PatientHomeViewModel extends ChangeNotifier {
       "lon": longitude.toStringAsFixed(5),
       "patient_id": userId
     };
+    debugPrint("anshiak${jsonEncode(data)}");
     _patientHomeRepo.getLocationApi(data).then((value) {
       setLocationData(value, context);
       setLoading(false);
