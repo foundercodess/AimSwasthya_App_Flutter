@@ -1,3 +1,4 @@
+// view/user/doctors/all_specialist_screen.dart
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
@@ -56,7 +57,7 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                               child: NoMessage(
                             message: "No specialists around here, for now...",
                             title:
-                                "We’re working to bring expert care to your area",
+                                "We're working to bring expert care to your area",
                           )),
                           Sizes.spaceHeight15,
                           if (homeCon.noServicesArea)
@@ -108,7 +109,7 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                                     message:
                                         "No specialists around here, for now...",
                                     title:
-                                        "We’re working to bring expert care to your area",
+                                        "We're working to bring expert care to your area",
                                   ));
                                 }
                                 final List<Doctors> topDrSpecialist;
@@ -131,7 +132,7 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                                     message:
                                         "No specialists around here, for now...",
                                     title:
-                                        "We’re working to bring expert care to your area",
+                                        "We're working to bring expert care to your area",
                                   ));
                                 }
                                 return ListView.builder(
@@ -161,7 +162,7 @@ class _AllSpecialistScreenState extends State<AllSpecialistScreen> {
                                 message:
                                     "No specialists around here, for now...",
                                 title:
-                                    "We’re working to bring expert care to your area",
+                                    "We're working to bring expert care to your area",
                               ))),
                     Sizes.spaceHeight20,
                     Row(

@@ -1,3 +1,4 @@
+// model/user/patient_home_model.dart
 class PatientHomeModel {
   bool? status;
   Data? data;
@@ -284,7 +285,7 @@ class Doctors {
 
   Doctors.fromJson(Map<String, dynamic> json) {
     doctorId = json['doctor_id'];
-    doctorName = json['doctor_name'];
+    doctorName = json['doctor_name']??"not avl";
     qualification = json['qualification'];
     doctorLatitude = json['doctor_latitude'];
     doctorLongitude = json['doctor_longitude'];

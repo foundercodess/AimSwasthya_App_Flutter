@@ -32,7 +32,6 @@ class UserPatientProfileViewModel extends ChangeNotifier {
   setProfileImage(XFile? image) async {
     _profileImage = image;
     notifyListeners();
-
   }
 
   UserPatientProfileModel? _userPatientProfileModel;
@@ -86,7 +85,6 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     required String lifestyleHab,
   }) async {
     try {
-
       final userId = await UserViewModel().getUser();
       Map data = {
         "patient_id": "$userId",
@@ -137,7 +135,8 @@ class UserPatientProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> addImageApi(dynamic entityType, dynamic imageName,
-      dynamic imagePath, dynamic fileTypeName, BuildContext context) async {
+      dynamic imagePath, dynamic fileTypeName, BuildContext context,
+      {bool isDirectUpdate = false}) async {
     setLoading(true);
     final userId = await UserViewModel().getUser();
     final fileType = getImageType(imageName);
@@ -148,9 +147,17 @@ class UserPatientProfileViewModel extends ChangeNotifier {
           "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
       "file_type": fileTypeName
     };
-    print("xfghjk" + jsonEncode(data));
+    if (isDirectUpdate) {
+      Provider.of<GetImageUrlViewModel>(context, listen: false)
+          .uploadFile(context,
+              filePath: imagePath,
+              // filePath: value['image_url']);
+              fileName: "patient/$userId/profile.$fileType");
+      return;
+    }
+
     _userPatientProfileRepo.addImageUrlApi(data).then((value) {
-      print(value);
+      debugPrint(value);
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         Provider.of<GetImageUrlViewModel>(context, listen: false)

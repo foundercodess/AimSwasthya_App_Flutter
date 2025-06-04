@@ -86,7 +86,7 @@ class PatientHomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? _selectedMemberIndex;
+  int _selectedMemberIndex = -1;
   int? get selectedMemberIndex => _selectedMemberIndex;
 
   setSelectedMemberIndex(int value) {
@@ -99,6 +99,7 @@ class PatientHomeViewModel extends ChangeNotifier {
   setLocationData(GetLocationModel value, BuildContext context) {
     _locationData = value;
     _selectedLocationData = value.patientLocation!;
+    setNoServicesData(false);
     notifyListeners();
     if ((_locationData == null ||
         locationData!.patientLocation!.name == null)) {
@@ -149,7 +150,7 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   setPatientHomeData(PatientHomeModel value) {
     _patientHomeModel = value;
-    setSelectedMemberIndex(-1);
+    // setSelectedMemberIndex(-1);
     if (value.data!.doctors == []) return;
     setSelectedMemberIndex(0);
     for (var data in value.data!.doctors!) {
@@ -187,11 +188,10 @@ class PatientHomeViewModel extends ChangeNotifier {
     _patientHomeRepo.patientHomeApi(data).then((value) {
       if (value.status == true) {
         setPatientHomeData(value);
-        Provider.of<WellnessLibraryViewModel>(context,listen: false).removeFromFavorites(0);
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {
-        print('error: $error');
+        print('error dffkjnfsjkfkj: $error');
       }
     });
   }
@@ -222,10 +222,9 @@ class PatientHomeViewModel extends ChangeNotifier {
 
     if (familyList != null &&
         familyList.isNotEmpty &&
-        _selectedMemberIndex != null &&
-        _selectedMemberIndex! < familyList.length) {
-
-      final selected = familyList[_selectedMemberIndex!];
+        _selectedMemberIndex < familyList.length &&
+        _selectedMemberIndex != -1) {
+      final selected = familyList[_selectedMemberIndex];
 
       nameController.text = selected.name ?? '';
       ageController.text = calculateAgeFromDob(selected.dateOfBirth);

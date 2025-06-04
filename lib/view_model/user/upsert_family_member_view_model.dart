@@ -1,3 +1,6 @@
+// view_model/user/upsert_family_member_view_model.dart
+import 'dart:convert';
+
 import 'package:aim_swasthya/model/user/upsert_family_member_model.dart';
 import 'package:aim_swasthya/repo/user/upsert_family_member_repo.dart';
 import 'package:aim_swasthya/utils/utils.dart';
@@ -21,10 +24,10 @@ class UpsertFamilyMemberViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setFamilyMemberData(UpsertFamilyMemberModel value) {
-    _upsertFamilyMemberModel = value;
-    notifyListeners();
-  }
+  // setFamilyMemberData(UpsertFamilyMemberModel value) {
+  //   _upsertFamilyMemberModel = value;
+  //   notifyListeners();
+  // }
 
   Future<void> upsertFamilyMemberApi(
     BuildContext context,
@@ -52,11 +55,10 @@ class UpsertFamilyMemberViewModel extends ChangeNotifier {
       "weight": weight,
       "relation": relation
     };
-    debugPrint("body: $data");
+    debugPrint("body: ${jsonEncode(data)}");
     _upsertFamilyMemberRepo.upsertFamilyMemberApi(data).then((value) {
       if (value.status == true) {
-        Utils.show("Family member added successfully", context);
-        setFamilyMemberData(value);
+        Utils.show(value.message!, context);
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .patientHomeApi(context);
       }

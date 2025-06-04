@@ -1,3 +1,4 @@
+// view/user/doctors/search_doctor_screen.dart
 import 'dart:io';
 import 'package:aim_swasthya/model/user/patient_home_model.dart';
 import 'package:aim_swasthya/res/appbar_const.dart';
@@ -58,7 +59,8 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                       title: title,
                     ),
                     if(doctorDetailCon
-                        .filterDoctorDetailsModel!.isEmpty && homeCon.noServicesArea)
+                        .filterDoctorDetailsModel == null || 
+                        (doctorDetailCon.filterDoctorDetailsModel!.isEmpty && homeCon.noServicesArea))
                       SizedBox(
                         height: Sizes.screenHeight/1.3,
                         child: Column(
@@ -69,7 +71,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                   message:
                                   "No specialists around here, for now...",
                                   title:
-                                  "We’re working to bring expert care to your area",
+                                  "We're working to bring expert care to your area",
                                 )),
                             Sizes.spaceHeight15,
                             if(homeCon.noServicesArea)
@@ -88,7 +90,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                         ),
                       ),
                     if (doctorDetailCon
-                        .filterDoctorDetailsModel!.isNotEmpty) ...[
+                        .filterDoctorDetailsModel?.isNotEmpty ?? false) ...[
                       Sizes.spaceHeight10,
                       textFields(),
                       Sizes.spaceHeight30,
@@ -101,13 +103,12 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                       Sizes.spaceHeight25,
-                      homeCon!.patientHomeModel!.data!.doctors!.isEmpty &&
-                                  homeCon.patientHomeModel!.data!.doctors!.isEmpty ||
-                              homeCon.patientHomeModel!.data!.doctors == null
+                      (homeCon.patientHomeModel?.data?.doctors == null || 
+                       homeCon.patientHomeModel!.data!.doctors!.isEmpty)
                           ? const NoMessage(
                               message: "No specialists around here, for now...",
                               title:
-                                  "We’re working to bring expert care to your area",
+                                  "We're working to bring expert care to your area",
                             )
                           // const ImageContainer(
                           //         imagePath: "assets/noDoctorFound.png")
@@ -116,14 +117,14 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                   "sdde: ${voiceSearchCon.searchCon.text}");
                               final List<Specializations> symptomsData;
                               if (voiceSearchCon.searchCon.text.isEmpty) {
-                                symptomsData = homeCon.patientHomeModel!.data!.specializations!;
+                                symptomsData = homeCon.patientHomeModel?.data?.specializations ?? [];
                               } else {
-                                symptomsData = homeCon.patientHomeModel!.data!.specializations!
-                                    .where((e) => e.specializationName!
-                                        .toLowerCase()
-                                        .contains(
-                                            voiceSearchCon.searchCon.text))
-                                    .toList();
+                                symptomsData = homeCon.patientHomeModel?.data?.specializations
+                                    ?.where((e) {
+                                      final name = e.specializationName?.toLowerCase() ?? "";
+                                      return name.contains(voiceSearchCon.searchCon.text.toLowerCase());
+                                    })
+                                    .toList() ?? [];
                               }
                               if (symptomsData.isEmpty) {
                                 return const Center(
@@ -131,7 +132,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                   message:
                                       "No specialists around here, for now...",
                                   title:
-                                      "We’re working to bring expert care to your area",
+                                      "We're working to bring expert care to your area",
                                 ));
                               }
                               return SizedBox(
@@ -242,15 +243,15 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                       Sizes.spaceHeight10,
-                      doctorDetailCon.filterDoctorDetailsModel!.isNotEmpty
+                      doctorDetailCon.filterDoctorDetailsModel?.isNotEmpty ?? false
                           ? Builder(builder: (context) {
                               final topSpecialist = doctorDetailCon
-                                  .filterDoctorDetailsModel!
-                                  .where((e) =>
-                                      double.parse(
-                                          e.averageRating.toString()) >=
-                                      Config.topSpecialistAverageReview)
-                                  .toList();
+                                  .filterDoctorDetailsModel
+                                  ?.where((e) {
+                                    final rating = double.tryParse(e.averageRating?.toString() ?? "0") ?? 0;
+                                    return rating >= Config.topSpecialistAverageReview;
+                                  })
+                                  .toList() ?? [];
                               topSpecialist.sort((a, b) =>
                                   double.parse(b.averageRating.toString())
                                       .compareTo(double.parse(
@@ -261,7 +262,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                   message:
                                       "No specialists around here, for now...",
                                   title:
-                                      "We’re working to bring expert care to your area",
+                                      "We're working to bring expert care to your area",
                                 ));
                               }
                               final List<Doctors> topDrSpecialist;
@@ -285,7 +286,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                   message:
                                       "No specialists around here, for now...",
                                   title:
-                                      "We’re working to bring expert care to your area",
+                                      "We're working to bring expert care to your area",
                                 ));
                               }
                               return SizedBox(
@@ -310,7 +311,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                               child: NoMessage(
                               message: "No specialists around here, for now...",
                               title:
-                                  "We’re working to bring expert care to your area",
+                                  "We're working to bring expert care to your area",
                             )),
                       Sizes.spaceHeight10,
                       Row(
@@ -328,7 +329,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                       Sizes.spaceHeight15,
                       Builder(builder: (context) {
                         if (doctorDetailCon
-                            .filterDoctorDetailsModel!.isNotEmpty) {
+                            .filterDoctorDetailsModel?.isNotEmpty ?? false) {
                           final List<Doctors> nearDrSpecialist;
                           if (voiceSearchCon.searchCon.text.isEmpty) {
                             nearDrSpecialist =
@@ -350,7 +351,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                 child: NoMessage(
                               message: "No specialists around here, for now...",
                               title:
-                                  "We’re working to bring expert care to your area",
+                                  "We're working to bring expert care to your area",
                             ));
                           }
                           return SpecialistsTopScreen(
@@ -360,7 +361,7 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                             child: NoMessage(
                           message: "No specialists around here, for now...",
                           title:
-                              "We’re working to bring expert care to your area",
+                              "We're working to bring expert care to your area",
                         ));
                       }),
                       SizedBox(

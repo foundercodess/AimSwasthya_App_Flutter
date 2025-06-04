@@ -26,11 +26,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
     super.dispose();
   }
 
-  // void _selectGender(String gender) {
-  //   setState(() {
-  //     vm.text = gender;
-  //   });
-  // }
 
 
   Future<void> _saveFamilyMember(BuildContext context) async {
@@ -39,7 +34,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
     final upsertVM =
         Provider.of<UpsertFamilyMemberViewModel>(context, listen: false);
 
-    // Validate required fields
     if (vm.nameController.text.isEmpty ||
         _dobController.text.isEmpty ||
         vm.genderController.text.isEmpty) {
@@ -50,11 +44,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
     }
 
 
-    // Get family member ID if updating existing member
-    // String? familyMemberId;
-    // if (memberCon.selectedMemberIndex != -1) {
-    //   familyMemberId = memberCon.patientHomeModel?.data?.familyMembers?[memberCon.selectedMemberIndex!].familyMemberId?.toString();
-    // }
     String? familyMemberId;
     final members = memberCon.patientHomeModel?.data?.familyMembers;
 
@@ -64,10 +53,9 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       familyMemberId =
           members[memberCon.selectedMemberIndex!].familyMemberId?.toString();
     }
-    // Call API to save/update family member
     await upsertVM.upsertFamilyMemberApi(
       context,
-      familyMemberId, // null for new member, ID for existing member
+      familyMemberId,
       vm.nameController.text,
       vm.genderController.text,
       '', // email (optional)
@@ -75,7 +63,7 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       _dobController.text,
       vm.heightController.text,
       vm.weightController.text,
-      'Family Member', // relation (default)
+      'Family Member', 
     );
 
     if (upsertVM.upsertFamilyMemberModel?.status == true) {
@@ -87,7 +75,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       vm.weightController.clear();
       memberCon.setSelectedMemberIndex(-1);
 
-      // Refresh family members list
       await memberCon.patientHomeApi(context);
 
       // Close bottom sheet
@@ -112,9 +99,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
           top: Sizes.screenHeight * 0.03,
           left: Sizes.screenWidth * 0.05,
           right: Sizes.screenWidth * 0.05),
-      // padding: EdgeInsets.symmetric(
-      //     horizontal: Sizes.screenWidth * 0.04,
-      //     vertical: Sizes.screenHeight * 0.03),
       width: Sizes.screenWidth,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -142,7 +126,6 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                // Show existing family members
                 ...List.generate(
                   memberCon.patientHomeModel?.data?.familyMembers?.length ?? 0,
                   (index) => Row(

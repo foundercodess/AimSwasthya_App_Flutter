@@ -2,7 +2,7 @@
 class Assets {
   Assets._();
 
-  static const String aimSwasthyaAppFlutterAssetsNoDataFound = 'assets/no_data_found.png';
+  static const String aimSwasthyaAppAssetsNoDataFound = 'assets/no_data_found.png';
   static const String allImagesAddProfile = 'assets/all_Images/add_profile.png';
   static const String allImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';
   static const String assetsAllImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';

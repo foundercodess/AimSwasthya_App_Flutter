@@ -46,7 +46,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               color: AppColor.blue,
               onRefresh: () async {
                 Provider.of<PatientHomeViewModel>(context, listen: false)
-                    .getLocationApi(context);
+                    .patientHomeApi(context);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),

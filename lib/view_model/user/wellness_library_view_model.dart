@@ -63,6 +63,7 @@ class WellnessLibraryViewModel extends ChangeNotifier {
       if (value.status == true) {
         setPatientWellnessData(value);
       }
+      setPatientWellnessData(value);
       setLoading(false);
     }).onError((error, stackTrace) {
       if (kDebugMode) {

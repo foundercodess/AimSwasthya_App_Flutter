@@ -763,7 +763,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                 hintText: yourProfile
                     .userPatientProfileModel!.data![0].dateOfBirth
                     .toString(),
-                controller: _ageController,
+                controller: _dobController,
                 cursorColor: AppColor.textGrayColor,
                 enabled: false,
                 suffixIcon: yourProfile.isEditMode
@@ -814,7 +814,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                   Provider.of<UserPatientProfileViewModel>(context,
                           listen: false)
                       .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(), 'profile_photo', context);
+                          img.path.toString(), 'profile_photo', context, isDirectUpdate: true);
+                          
                 }
               }
               Navigator.pop(context);
@@ -834,7 +835,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                     Provider.of<UserPatientProfileViewModel>(context,
                             listen: false)
                         .addImageApi('doctor', img.name.toString(),
-                            img.path.toString(), 'profile_photo', context);
+                            img.path.toString(), 'profile_photo', context, isDirectUpdate: true);
                   }
                 }
                 Navigator.pop(context);

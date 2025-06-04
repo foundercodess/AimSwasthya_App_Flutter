@@ -56,7 +56,7 @@ class _HealthSectionScreenState extends State<HealthSectionScreen> {
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 final data = tipsToShow[index];
-                bool isAddedToMyWillness = model != null
+                bool isAddedToMyWillness = model != null && model.data != null
                     ? model.data!.any((e) =>
                         e.healthTipId.toString() == data.healthTipId.toString())
                     : false;
