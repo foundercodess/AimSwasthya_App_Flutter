@@ -1,3 +1,4 @@
+// local_db/image_db.dart
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,7 +15,7 @@ class DatabaseHelper {
 
 
   static const String tableDoctor = 'doctor';
-  static const String colId = 'id'; // Dynamic ID from API
+  static const String colId = 'id';
   static const String colPhoto = 'photo_path';
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();

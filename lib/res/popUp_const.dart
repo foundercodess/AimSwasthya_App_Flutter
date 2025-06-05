@@ -1,3 +1,4 @@
+// res/popUp_const.dart
 import 'package:aim_swasthya/generated/assets.dart';
 import 'package:aim_swasthya/res/color_const.dart';
 import 'package:aim_swasthya/res/size_const.dart';
@@ -7,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/by_animation/mic_bg_animation.dart';
-import '../view_model/user/user_view_model.dart';
-import '../view_model/user/voice_search_view_model.dart';
+import '../patient_section/p_view_model/user_view_model.dart';
+import '../patient_section/p_view_model/voice_search_view_model.dart';
 
 class ActionOverlay extends StatelessWidget {
   final Color? color;

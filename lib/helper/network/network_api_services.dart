@@ -1,10 +1,11 @@
+// helper/network/network_api_services.dart
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:convert';
 import 'dart:io';
 import 'package:aim_swasthya/helper/app_exception.dart';
 import 'package:aim_swasthya/helper/network/base_api_services.dart';
-import 'package:aim_swasthya/view_model/user/user_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/user_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 

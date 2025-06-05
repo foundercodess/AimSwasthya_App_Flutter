@@ -1,49 +1,48 @@
 // main.dart
 import 'package:aim_swasthya/res/size_const.dart';
 import 'package:aim_swasthya/view/animation_con.dart';
-import 'package:aim_swasthya/view/user/symptoms/dowenloade_image.dart';
-import 'package:aim_swasthya/view/user/user_home_screen.dart';
-import 'package:aim_swasthya/view_model/doctor/add_clinic_doctor_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/all_specialization_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/delete_account_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_auth_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_graph_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_health_report_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_home_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_map_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doc_update_appointment_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/doctor_profile_view_model.dart'
+import 'package:aim_swasthya/patient_section/view/symptoms/dowenloade_image.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/add_clinic_doctor_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/all_specialization_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/delete_account_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doc_auth_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doc_graph_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doc_health_report_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doc_home_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doc_map_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doc_update_appointment_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/doctor_profile_view_model.dart'
     show DoctorProfileViewModel;
-import 'package:aim_swasthya/view_model/doctor/language_change_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/notification_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/patient_profile_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/revenue_doctor_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/schedule_doctor_view_model.dart';
-import 'package:aim_swasthya/view_model/doctor/upser_smc_number_view_model.dart';
-import 'package:aim_swasthya/view_model/user/add_doctor_view_model.dart';
-import 'package:aim_swasthya/view_model/user/add_review_view_model.dart';
-import 'package:aim_swasthya/view_model/user/auth_view_model.dart';
-import 'package:aim_swasthya/view_model/user/bottom_nav_view_model.dart';
-import 'package:aim_swasthya/view_model/user/cancelAppointment_view_model.dart';
-import 'package:aim_swasthya/view_model/user/doctor_avl_appointment_view_model.dart';
-import 'package:aim_swasthya/view_model/user/doctor_details_view_model.dart';
-import 'package:aim_swasthya/view_model/user/doctor_specialisation_view_model.dart';
-import 'package:aim_swasthya/view_model/user/get_image_url_view_model.dart';
-import 'package:aim_swasthya/view_model/user/patient_appointment_view_model.dart';
-import 'package:aim_swasthya/view_model/user/patient_home_view_model.dart';
-import 'package:aim_swasthya/view_model/user/patient_medical_records_view_model.dart';
-import 'package:aim_swasthya/view_model/user/patient_pref_doc_view_model.dart';
-import 'package:aim_swasthya/view_model/user/patient_profile_view_model.dart';
-import 'package:aim_swasthya/view_model/user/services/payment_con.dart';
-import 'package:aim_swasthya/view_model/user/slot_schedule_view_model.dart';
-import 'package:aim_swasthya/view_model/user/tc_pp_view_model.dart';
-import 'package:aim_swasthya/view_model/user/update_appointment_view_model.dart';
-import 'package:aim_swasthya/view_model/user/upsert_family_member_view_model.dart';
-import 'package:aim_swasthya/view_model/user/userRegisterCon.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/language_change_view_model.dart';
+import 'package:aim_swasthya/common/view_model/notification_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/patient_profile_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/revenue_doctor_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/schedule_doctor_view_model.dart';
+import 'package:aim_swasthya/doctor_section/d_view_model/upser_smc_number_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/add_doctor_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/add_review_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/auth_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/bottom_nav_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/cancelAppointment_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/doctor_avl_appointment_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/doctor_details_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/doctor_specialisation_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/get_image_url_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/patient_appointment_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/patient_home_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/patient_medical_records_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/patient_pref_doc_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/patient_profile_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/services/payment_con.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/slot_schedule_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/tc_pp_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/update_appointment_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/upsert_family_member_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/user_role_view_model.dart';
 import 'package:aim_swasthya/utils/routes/routes.dart';
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
-import 'package:aim_swasthya/view_model/user/user_delete_account_view_model.dart';
-import 'package:aim_swasthya/view_model/user/voice_search_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/user_delete_account_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/voice_search_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,9 +51,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
-import 'view_model/doctor/doc_reg_view_model.dart';
-import 'view_model/doctor/doc_schedule_view_model.dart';
-import 'view_model/user/wellness_library_view_model.dart';
+import 'doctor_section/d_view_model/doc_reg_view_model.dart';
+import 'doctor_section/d_view_model/doc_schedule_view_model.dart';
+import 'patient_section/p_view_model/wellness_library_view_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,7 +82,7 @@ class MyApp extends StatelessWidget {
         //patient view models
         ChangeNotifierProvider(create: (ctx) => RegisterViewModel()),
         ChangeNotifierProvider(create: (ctx) => ScheduleViewModel()),
-        ChangeNotifierProvider(create: (ctx) => UserRegisterViewModel()),
+        ChangeNotifierProvider(create: (ctx) => UserRoleViewModel()),
         // ChangeNotifierProvider(create: (ctx) => DocGraphViewModel()),
         ChangeNotifierProvider(create: (ctx) => ChangeLanguageViewModel()),
         ChangeNotifierProvider(create: (ctx) => BottomNavProvider()),
