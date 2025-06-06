@@ -86,16 +86,31 @@ class UserPatientProfileViewModel extends ChangeNotifier {
   }) async {
     try {
       final userId = await UserViewModel().getUser();
+      
+      // Clean height and weight values by removing units and any non-numeric characters
+      String cleanHeight = height
+          .replaceAll(' Cm', '')
+          .replaceAll('cm', '')
+          .replaceAll('CM', '')
+          .replaceAll(RegExp(r'[^0-9.]'), '')
+          .trim();
+      
+      String cleanWeight = weight
+          .replaceAll(' Kg', '')
+          .replaceAll('kg', '')
+          .replaceAll('KG', '')
+          .replaceAll(RegExp(r'[^0-9.]'), '')
+          .trim();
+      
       Map data = {
         "patient_id": "$userId",
-        // "patient_id": 172,
         "name": name,
         "gender": gender,
         "phone_number": phone,
         "email": email,
         "date_of_birth": dob,
-        "height": height,
-        "weight": weight,
+        "height": cleanHeight,
+        "weight": cleanWeight,
         "blood_group": bloodGroup,
         "allergies": allergies,
         "current_medications": currentMed,

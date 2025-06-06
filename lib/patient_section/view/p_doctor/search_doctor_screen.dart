@@ -58,39 +58,38 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                     AppbarConst(
                       title: title,
                     ),
-                    if(doctorDetailCon
-                        .filterDoctorDetailsModel == null || 
-                        (doctorDetailCon.filterDoctorDetailsModel!.isEmpty && homeCon.noServicesArea))
+                    if (doctorDetailCon.filterDoctorDetailsModel == null ||
+                        (doctorDetailCon.filterDoctorDetailsModel!.isEmpty &&
+                            homeCon.noServicesArea))
                       SizedBox(
-                        height: Sizes.screenHeight/1.3,
+                        height: Sizes.screenHeight / 1.3,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Center(
                                 child: NoMessage(
-                                  message:
-                                  "No specialists around here, for now...",
-                                  title:
+                              message: "No specialists around here, for now...",
+                              title:
                                   "We're working to bring expert care to your area",
-                                )),
+                            )),
                             Sizes.spaceHeight15,
-                            if(homeCon.noServicesArea)
+                            if (homeCon.noServicesArea)
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Sizes.screenWidth * 0.04),
                                 child: ButtonConst(
-                                  title:
-                                  'Change Location',
+                                  title: 'Change Location',
                                   onTap: () {
                                     Navigator.pop(context);
                                   },
                                   color: AppColor.btnPurpleColor,
-                                ),)
+                                ),
+                              )
                           ],
                         ),
                       ),
-                    if (doctorDetailCon
-                        .filterDoctorDetailsModel?.isNotEmpty ?? false) ...[
+                    if (doctorDetailCon.filterDoctorDetailsModel?.isNotEmpty ??
+                        false) ...[
                       Sizes.spaceHeight10,
                       textFields(),
                       Sizes.spaceHeight30,
@@ -103,8 +102,8 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                       Sizes.spaceHeight25,
-                      (homeCon.patientHomeModel?.data?.doctors == null || 
-                       homeCon.patientHomeModel!.data!.doctors!.isEmpty)
+                      (homeCon.patientHomeModel?.data?.doctors == null ||
+                              homeCon.patientHomeModel!.data!.doctors!.isEmpty)
                           ? const NoMessage(
                               message: "No specialists around here, for now...",
                               title:
@@ -117,14 +116,21 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                   "sdde: ${voiceSearchCon.searchCon.text}");
                               final List<Specializations> symptomsData;
                               if (voiceSearchCon.searchCon.text.isEmpty) {
-                                symptomsData = homeCon.patientHomeModel?.data?.specializations ?? [];
+                                symptomsData = homeCon.patientHomeModel?.data
+                                        ?.specializations ??
+                                    [];
                               } else {
-                                symptomsData = homeCon.patientHomeModel?.data?.specializations
-                                    ?.where((e) {
-                                      final name = e.specializationName?.toLowerCase() ?? "";
-                                      return name.contains(voiceSearchCon.searchCon.text.toLowerCase());
-                                    })
-                                    .toList() ?? [];
+                                symptomsData = homeCon
+                                        .patientHomeModel?.data?.specializations
+                                        ?.where((e) {
+                                      final name =
+                                          e.specializationName?.toLowerCase() ??
+                                              "";
+                                      return name.contains(voiceSearchCon
+                                          .searchCon.text
+                                          .toLowerCase());
+                                    }).toList() ??
+                                    [];
                               }
                               if (symptomsData.isEmpty) {
                                 return const Center(
@@ -162,7 +168,8 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                                           child: Container(
                                             margin: EdgeInsets.only(
                                                 right: index ==
-                                                        homeCon.patientHomeModel!
+                                                        homeCon
+                                                                .patientHomeModel!
                                                                 .data!
                                                                 .specializations!
                                                                 .length -
@@ -243,15 +250,20 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                       Sizes.spaceHeight10,
-                      doctorDetailCon.filterDoctorDetailsModel?.isNotEmpty ?? false
+                      doctorDetailCon.filterDoctorDetailsModel?.isNotEmpty ??
+                              false
                           ? Builder(builder: (context) {
                               final topSpecialist = doctorDetailCon
-                                  .filterDoctorDetailsModel
-                                  ?.where((e) {
-                                    final rating = double.tryParse(e.averageRating?.toString() ?? "0") ?? 0;
-                                    return rating >= Config.topSpecialistAverageReview;
-                                  })
-                                  .toList() ?? [];
+                                      .filterDoctorDetailsModel
+                                      ?.where((e) {
+                                    final rating = double.tryParse(
+                                            e.averageRating?.toString() ??
+                                                "0") ??
+                                        0;
+                                    return rating >=
+                                        Config.topSpecialistAverageReview;
+                                  }).toList() ??
+                                  [];
                               topSpecialist.sort((a, b) =>
                                   double.parse(b.averageRating.toString())
                                       .compareTo(double.parse(
@@ -329,7 +341,8 @@ class _SearchDoctorScreenState extends State<SearchDoctorScreen> {
                       Sizes.spaceHeight15,
                       Builder(builder: (context) {
                         if (doctorDetailCon
-                            .filterDoctorDetailsModel?.isNotEmpty ?? false) {
+                                .filterDoctorDetailsModel?.isNotEmpty ??
+                            false) {
                           final List<Doctors> nearDrSpecialist;
                           if (voiceSearchCon.searchCon.text.isEmpty) {
                             nearDrSpecialist =

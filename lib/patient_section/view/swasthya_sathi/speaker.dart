@@ -88,7 +88,6 @@ class _DoctorSpeakerScreenState extends State<DoctorSpeakerScreen> {
                       child: Image.asset(
                         Assets.logoAimSwasthaya,
                         fit: BoxFit.contain,
-                        // height: Sizes.screenHeight * 0.025,
                         width: Sizes.screenWidth * 0.26,
                       ),
                     ),

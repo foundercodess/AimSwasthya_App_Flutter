@@ -82,7 +82,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     bool isNewBooking = arguments["isNew"] ?? false;
     final appData = Provider.of<DoctorAvlAppointmentViewModel>(context);
-
     final docAppointmentCon =
         Provider.of<DoctorAvlAppointmentViewModel>(context);
     return Scaffold(
@@ -118,6 +117,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     final arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     bool isNewBooking = arguments["isNew"] ?? false;
+    final clinicId = arguments["clinic_id"];
+    final doctorId = arguments["doctor_id"];
     final docAppointmentCon =
         Provider.of<DoctorAvlAppointmentViewModel>(context);
     final addDoctor = Provider.of<AddDoctorViewModel>(context);
@@ -320,19 +321,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                     : GestureDetector(
                                         onTap: () {
                                           addDoctor.addDoctorApi(
-                                            docAppointmentCon
-                                                .doctorAvlAppointmentModel!
-                                                .data!
-                                                .details![0]
-                                                .doctorId
-                                                .toString(),
+                                            doctorId,
                                             context,
-                                            clinicId: docAppointmentCon
-                                                .doctorAvlAppointmentModel!
-                                                .data!
-                                                .location![0]
-                                                .clinicId
-                                                .toString(),
+                                            clinicId: clinicId,
                                           );
                                         },
                                         child: Align(

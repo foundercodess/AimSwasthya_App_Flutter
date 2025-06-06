@@ -142,7 +142,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        if(navType==1){
+                        if(authCon.userRole==1){
                           User? user =
                           await doctorAuthCon.signInWithGoogle(context);
                         }else{

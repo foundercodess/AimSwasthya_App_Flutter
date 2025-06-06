@@ -232,14 +232,21 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
   // }
   //
 
-  void startListening({bool singleSearch = false}) async {
+
+
+
+  void startListening({bool singleSearch = false, VoidCallback? onSingleResult}) async {
     _isListening = true;
     notifyListeners();
     await _speech.listen(onResult: (result) {
+      if (!result.finalResult) {
+        return;
+      }
       _voiceInput = result.recognizedWords;
       if (_voiceInput.isEmpty) return;
       if (singleSearch) {
         performSingleWordSearch(_voiceInput);
+        onSingleResult?.call();
       } else {
         performSearch(_voiceInput);
       }
@@ -301,7 +308,6 @@ class VoiceSymptomSearchViewModel extends ChangeNotifier {
     _aiSearchData = data;
     notifyListeners();
   }
-
 
   Future<void> aiSearchApi(context, {bool isVoiceSearchReq = true}) async {
     setLoading(true);

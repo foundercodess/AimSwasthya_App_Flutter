@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../local_db/download_image.dart';
 import '../../model/user/get_location_model.dart';
@@ -201,6 +202,7 @@ class PatientHomeViewModel extends ChangeNotifier {
   final TextEditingController genderController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
 
   // void fillControllersWithFirstMember() {
   //   final familyList = patientHomeModel?.data?.familyMembers;
@@ -228,6 +230,8 @@ class PatientHomeViewModel extends ChangeNotifier {
 
       nameController.text = selected.name ?? '';
       ageController.text = calculateAgeFromDob(selected.dateOfBirth);
+      dobController.text = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(selected.dateOfBirth.toString()));
       genderController.text = selected.gender ?? '';
       heightController.text = selected.height ?? '';
       weightController.text = selected.weight ?? '';

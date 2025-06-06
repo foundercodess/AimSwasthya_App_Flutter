@@ -83,8 +83,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> doctorAvlAppointmentApi(
-      dynamic docId, dynamic clinicId, context,
+  Future<void> doctorAvlAppointmentApi(dynamic docId, dynamic clinicId, context,
       {bool clearCon = true}) async {
     if (clearCon) {
       clearSelectedTime();
@@ -117,11 +116,14 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
     _doctorAvlAppointmentRepo.doctorAvlAppointmentApi(data).then((value) {
       if (value.status == true) {
         setDoctorAppointmentData(value);
-      }else{
-        showInfoOverlay(title: "Info", errorMessage: '${value.message}', onTap: (){
-          Navigator.pop(context);
-          Navigator.pop(context);
-        });
+      } else {
+        showInfoOverlay(
+            title: "Info",
+            errorMessage: '${value.message}',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
       }
       setLoading(false);
     }).onError((error, stackTrace) {
@@ -187,17 +189,20 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
     };
     print("hgdgh: $data");
     debugPrint("appointment booking data: ${jsonEncode(data)}");
-    _doctorAvlAppointmentRepo.doctorBookAppointmentApi(data).then((value) async {
+    _doctorAvlAppointmentRepo
+        .doctorBookAppointmentApi(data)
+        .then((value) async {
       debugPrint("$value");
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         // Send appointment booking notification
-        final notificationViewModel = Provider.of<NotificationViewModel>(context, listen: false);
+        final notificationViewModel =
+            Provider.of<NotificationViewModel>(context, listen: false);
         await notificationViewModel.sendAppointmentStatusNotification(
           patientId: userId,
           doctorId: docId,
-          appointmentDate: DateFormat("yyyy-MM-dd")
-              .format(DateTime.parse(selectedDate!.availabilityDate.toString())),
+          appointmentDate: DateFormat("yyyy-MM-dd").format(
+              DateTime.parse(selectedDate!.availabilityDate.toString())),
           appointmentTime: selectedTime!.slotTime!,
           role: 'patient',
           context: context,
@@ -207,7 +212,13 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
 
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .patientHomeApi(context);
-        Navigator.pushReplacementNamed(context, RoutesName.successSplashScreen);
+        // Navigator.pushReplacementNamed(context, RoutesName.successSplashScreen);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RoutesName.successSplashScreen,
+          (Route<dynamic> route) =>
+              route.settings.name == RoutesName.bottomNavBar,
+        );
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {

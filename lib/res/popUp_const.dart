@@ -4,7 +4,9 @@ import 'package:aim_swasthya/res/color_const.dart';
 import 'package:aim_swasthya/res/size_const.dart';
 import 'package:aim_swasthya/res/text_const.dart' show TextConst;
 import 'package:aim_swasthya/utils/routes/routes_name.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/by_animation/mic_bg_animation.dart';
@@ -85,56 +87,61 @@ class ActionOverlay extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: Sizes.screenHeight * 0.055,
-                      width: Sizes.screenWidth * 0.37,
-                      decoration: const BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(bottomLeft: Radius.circular(30)),
-                        border: Border(
-                            right: BorderSide(
-                          color: Color(0xffEBEBEB),
-                        )),
-                      ),
-                      child: Center(
-                        child: TextConst(
-                          noLabel ?? "No",
-                          size: Sizes.fontSizeFourPFive,
-                          fontWeight: FontWeight.w400,
-                          color: AppColor.lightBlue,
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: Sizes.screenHeight * 0.055,
+                        // Removed fixed width
+                        decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.only(bottomLeft: Radius.circular(30)),
+                          border: Border(
+                              right: BorderSide(
+                            color: Color(0xffEBEBEB),
+                          )),
+                        ),
+                        child: Center(
+                          child: TextConst(
+                            noLabel ?? "No",
+                            size: Sizes.fontSizeFourPFive,
+                            fontWeight: FontWeight.w400,
+                            color: AppColor.lightBlue,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: onTap ??
-                        () {
-                          print("smd dm");
-                          UserViewModel().remove();
-                          // Navigator.pushNamed(
-                          //     context, RoutesName.introScreen);
-                          Navigator.pushNamedAndRemoveUntil(context,
-                              RoutesName.introScreen, (context) => false);
-                        },
-                    child: Container(
-                      height: Sizes.screenHeight * 0.055,
-                      width: Sizes.screenWidth * 0.34,
-                      decoration: const BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(bottomRight: Radius.circular(30)),
-                      ),
-                      child: Center(
-                        child: textConst ??
-                            TextConst(
-                              yesLabel ?? "Yes",
-                              size: Sizes.fontSizeFourPFive,
-                              fontWeight: FontWeight.w400,
-                              color: AppColor.lightBlue,
-                            ),
+                  Container(
+                    height: Sizes.screenHeight * 0.055,
+                    width: 1,
+                    color: const Color(0xffEBEBEB),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: onTap ??
+                          () {
+                            UserViewModel().remove();
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                RoutesName.introScreen, (context) => false);
+                          },
+                      child: Container(
+                        height: Sizes.screenHeight * 0.055,
+                        decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.only(bottomRight: Radius.circular(30)),
+                        ),
+                        child: Center(
+                          child: textConst ??
+                              TextConst(
+                                yesLabel ?? "Yes",
+                                size: Sizes.fontSizeFourPFive,
+                                fontWeight: FontWeight.w400,
+                                color: AppColor.lightBlue,
+                              ),
+                        ),
                       ),
                     ),
                   ),
@@ -263,7 +270,6 @@ class ActionOverlay extends StatelessWidget {
 //   }
 // }
 
-
 class VoiceSearchDialog extends StatefulWidget {
   const VoiceSearchDialog({
     super.key,
@@ -285,7 +291,6 @@ class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
 
   @override
   Widget build(BuildContext context) {
-
     final voiceSearchCon = Provider.of<VoiceSymptomSearchViewModel>(context);
 
     return Dialog(
@@ -293,8 +298,8 @@ class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
       backgroundColor: Colors.grey[400],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: Container(
-        height: Sizes.screenHeight / 3.5,
-        padding: EdgeInsets.only(top: Sizes.screenHeight * 0.02),
+        padding: EdgeInsets.only(
+            top: Sizes.screenHeight * 0.02, bottom: Sizes.screenHeight * 0.02),
         width: Sizes.screenWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
@@ -302,74 +307,128 @@ class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Mic button
             GestureDetector(
               onTap: () async {
-                if (voiceSearchCon.isListening) {
-                  voiceSearchCon.stopListening();
-                } else {
-                  voiceSearchCon
-                      .initSpeech(
-                    context,
-                  )
-                      .then((data) {
+                var status = await Permission.microphone.status;
+
+                if (status.isGranted) {
+                  voiceSearchCon.initSpeech(context).then((data) {
                     if (data == true) {
                       voiceSearchCon.isListening
                           ? voiceSearchCon.stopListening()
-                          : voiceSearchCon.startListening(singleSearch: true);
-                      Navigator.pop(context);
+                          : voiceSearchCon.startListening(
+                              singleSearch: true,
+                              onSingleResult: () {
+                                Future.delayed(Duration(seconds: 2), () {
+                                  Navigator.pop(context);
+                                  voiceSearchCon
+                                      .setSearchedValAndPerformSearch();
+                                });
+                              },
+                            );
                     }
                   });
+                } else {
+                  showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        return ActionOverlay(
+                          height: Sizes.screenHeight / 5.2,
+                          padding: EdgeInsets.only(
+                              left: Sizes.screenWidth * 0.03,
+                              right: Sizes.screenWidth * 0.05,
+                              top: Sizes.screenHeight * 0.02),
+                          text: "Mic Permission Required",
+                          yesLabel: "Allow",
+                          noLabel: "Deny",
+                          subtext:
+                              "We use your microphone so you can speak your symptoms instead of typing — making it faster and easier for you!",
+                          onTap: () {
+                            Navigator.pop(context);
+                            voiceSearchCon.initSpeech(context).then((_) {
+                              voiceSearchCon.isListening
+                                  ? voiceSearchCon.stopListening()
+                                  : voiceSearchCon.startListening(
+                                      singleSearch: true,
+                                      onSingleResult: () {
+                                        Future.delayed(Duration(seconds: 2),
+                                            () {
+                                          Navigator.pop(context);
+                                          voiceSearchCon
+                                              .setSearchedValAndPerformSearch();
+                                        });
+                                      },
+                                    );
+                            });
+                          },
+                        );
+                      });
                 }
-                // if (voiceSearchCon.isListening) {
-                //   voiceSearchCon.stopListening();
-                // } else {
-                //   bool initialized = await voiceSearchCon.initSpeech(context);
-                //   if (initialized) {
-                //     voiceSearchCon.startListening(
-                //       singleSearch: true,
-                //       onResult: () {
-                //         // Close dialog and proceed after getting result
-                //         voiceSearchCon.setSearchedValAndPerformSearch();
-                //         Navigator.pop(context);
-                //       },
-                //     );
-                //   }
-                // }
               },
-              child:
-              Container(
+
+              // onTap: () async {
+              //   // if (voiceSearchCon.isListening) {
+              //   //   voiceSearchCon.stopListening();
+              //   // } else {
+              //   //   voiceSearchCon
+              //   //       .initSpeech(
+              //   //     context,
+              //   //   )
+              //   //       .then((data) {
+              //   //     if (data == true) {
+              //   //       voiceSearchCon.isListening
+              //   //           ? voiceSearchCon.stopListening()
+              //   //           : voiceSearchCon.startListening(singleSearch: true);
+              //   //       // Navigator.pop(context);
+              //   //     }
+              //   //   });
+              //   // }
+              //   if (voiceSearchCon.isListening) {
+              //     voiceSearchCon.stopListening();
+              //   } else {
+              //     bool initialized = await voiceSearchCon.initSpeech(context);
+              //     if (initialized) {
+              //       voiceSearchCon.startListening(
+              //         singleSearch: true,
+              //         onResult: () {
+              //           // Close dialog and proceed after getting result
+              //           voiceSearchCon.setSearchedValAndPerformSearch();
+              //           Navigator.pop(context);
+              //         },
+              //       );
+              //     }
+              //   }
+              // },
+
+              child: Container(
                 height: Sizes.screenHeight * 0.15,
                 width: Sizes.screenHeight * 0.15,
-                decoration:  BoxDecoration(
-                ),
                 alignment: Alignment.center,
                 child: voiceSearchCon.isListening
-                // ? const MicAnimation()
                     ? const SecMicAnimation()
-                    : Image(
-                  image: const AssetImage(Assets.assetsMicc),
-                  // height: Sizes.screenWidth * 0.25,
-                ),
+                    : const Image(
+                        image: AssetImage(Assets.assetsMicc),
+                        // height: Sizes.screenWidth * 0.25,
+                      ),
               ),
-              // Image(
-              //   image: const AssetImage(Assets.assetsMicc),
-              //   height: Sizes.screenWidth * 0.25,
-              // ),
             ),
 
-            Sizes.spaceHeight25,
-
+            // Sizes.spaceHeight25,
             // Display recognized text
-            TextConst(
-              voiceSearchCon.singleSearchWord.isEmpty
-                  ? ''
-                  : voiceSearchCon.singleSearchWord,
-              textAlign: TextAlign.center,
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w400,
-            ),
+            if (voiceSearchCon.singleSearchWord.isNotEmpty) ...[
+              Sizes.spaceHeight10,
+              TextConst(
+                voiceSearchCon.singleSearchWord.isEmpty
+                    ? ''
+                    : voiceSearchCon.singleSearchWord,
+                textAlign: TextAlign.center,
+                size: Sizes.fontSizeFourPFive,
+                fontWeight: FontWeight.w400,
+              ),
+            ],
 
             Sizes.spaceHeight10,
 
@@ -391,7 +450,6 @@ class _VoiceSearchDialogState extends State<VoiceSearchDialog> {
       ),
     );
   }
-
 
   // Widget build(BuildContext context) {
   //   final voiceSearchCon = Provider.of<VoiceSymptomSearchViewModel>(context);

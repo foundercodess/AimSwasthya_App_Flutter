@@ -18,25 +18,26 @@ class AddMemberOverlay extends StatefulWidget {
 }
 
 class _AddMemberOverlayState extends State<AddMemberOverlay> {
-  final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+  // final TextEditingController _dobController = TextEditingController();
+  // final TextEditingController _ageController = TextEditingController();
 
-  @override
-  void dispose() {
-    _dobController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _dobController.dispose();
+  //   super.dispose();
+  // }
 
 
 
   Future<void> _saveFamilyMember(BuildContext context) async {
+    print("fdsgfdf");
     // final memberCon = Provider.of<PatientHomeViewModel>(context, listen: false);
     final vm = Provider.of<PatientHomeViewModel>(context, listen: false);
     final upsertVM =
         Provider.of<UpsertFamilyMemberViewModel>(context, listen: false);
 
     if (vm.nameController.text.isEmpty ||
-        _dobController.text.isEmpty ||
+        vm.dobController.text.isEmpty ||
         vm.genderController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill all required fields')),
@@ -61,16 +62,15 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
       vm.genderController.text,
       '', // email (optional)
       '', // phone (optional)
-      _dobController.text,
+      vm.dobController.text,
       vm.heightController.text,
       vm.weightController.text,
       'Family Member', 
     );
 
     if (upsertVM.upsertFamilyMemberModel?.status == true) {
-      // Clear form and refresh data
       vm.nameController.clear();
-      _dobController.clear();
+      vm.dobController.clear();
       vm.genderController.clear();
       vm.heightController.clear();
       vm.weightController.clear();
@@ -220,7 +220,7 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                       fillColor: AppColor.grey,
                       hintText: "Date of Birth",
                       hintColor: const Color(0xffC3C3C3),
-                      controller: _dobController,
+                      controller: vm.dobController,
                       enabled: true,
                       cursorColor: AppColor.textGrayColor,
                       suffixIcon: IconButton(
@@ -234,10 +234,10 @@ class _AddMemberOverlayState extends State<AddMemberOverlay> {
                           );
                           if (picked != null) {
                             setState(() {
-                              _dobController.text =
+                              vm.dobController .text =
                                   DateFormat('yyyy-MM-dd').format(picked);
                               vm.ageController.text =
-                                  vm.calculateAgeFromDob(_dobController.text);
+                                  vm.calculateAgeFromDob(vm.dobController.text);
                             });
                           }
                         },

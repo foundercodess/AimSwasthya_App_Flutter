@@ -32,8 +32,8 @@ class PatientPrefDocViewModel extends ChangeNotifier {
     final locationData =
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .selectedLocationData;
-    double latitude = double.parse(locationData!.latitude.toString());
-    double longitude = double.parse(locationData.longitude.toString());
+    double latitude = double.tryParse(locationData!.latitude.toString())??0.0;
+    double longitude = double.tryParse(locationData.longitude.toString())??0.0;
     Map data = {
       "patient_id": userId,
     };
