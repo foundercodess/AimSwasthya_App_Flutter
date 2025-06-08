@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../p_view_model/patient_profile_view_model.dart';
 import '../../p_view_model/voice_search_view_model.dart';
 import '../../p_view_model/user_role_view_model.dart';
 
@@ -47,6 +48,7 @@ class _BottomNevBarState extends State<BottomNevBar> {
         Provider.of<WellnessLibraryViewModel>(context,listen: false)
             .getPatientWellnessApi(context);
         await LocalImageHelper.instance.loadImages();
+        Provider.of<UserPatientProfileViewModel>(context,listen: false).userPatientProfileApi(context);
          Provider.of<NotificationViewModel>(context, listen: false)
           .fetchNotifications(
         type: 'patient',

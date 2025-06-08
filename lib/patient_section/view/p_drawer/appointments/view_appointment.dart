@@ -374,6 +374,10 @@ class _ViewAppointmentsScreenState extends State<ViewAppointmentsScreen> {
                                   listen: false)
                               .setRescheduleAppointmentID(
                                   appointmentData.appointmentId.toString());
+                          Provider.of<UpdateAppointmentViewModel>(context,
+                                  listen: false)
+                              .setRescheduleAppointmentData(appointmentData);
+
                           Navigator.pushNamed(
                             context,
                             RoutesName.doctorProfileScreen,

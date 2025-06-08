@@ -76,7 +76,10 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
     } else {
       setSelectedDate(null);
     }
-
+    if (value.data!.clinics!.isNotEmpty){
+      _payableAmountAfterDiscount= double.tryParse(value.data!.clinics![0].fee.toString())??0.0;
+    }
+    _selectedClinicId='';
     // if (value.data!.location!.isNotEmpty) {
     //   final location = value.data!.location![0];
     //   _payableAmountAfterDiscount = double.parse(location.fee.toString());
@@ -169,6 +172,10 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       dynamic paymentRes,
       String payMode,
       int paymentStatus) async {
+    final bookingDate = DateFormat("yyyy-MM-dd").format(
+      DateFormat("dd-MM-yyyy").parse(selectedDate!.availabilityDate.toString()),
+    );
+
     final symptoms =
         Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
             .symptomsData;
@@ -179,8 +186,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       "patient_id": userId,
       "doctor_id": docId,
       "clinic_id": clinicId,
-      "booking_date": DateFormat("yyyy-MM-dd")
-          .format(DateTime.parse(selectedDate!.availabilityDate.toString())),
+      "booking_date": bookingDate,
       "time_id": selectedTime!.timeId,
       "amount": payableAmountAfterDiscount,
       "payment_status": getPaymentStatus(paymentStatus),
@@ -202,8 +208,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
         await notificationViewModel.sendAppointmentStatusNotification(
           patientId: userId,
           doctorId: docId,
-          appointmentDate: DateFormat("yyyy-MM-dd").format(
-              DateTime.parse(selectedDate!.availabilityDate.toString())),
+          appointmentDate: bookingDate,
           appointmentTime: selectedTime!.slotTime!,
           role: 'patient',
           context: context,

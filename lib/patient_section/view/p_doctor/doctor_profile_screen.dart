@@ -1,6 +1,7 @@
 // patient_section/view/p_doctor/doctor_profile_screen.dart
 import 'dart:ui';
 import 'package:aim_swasthya/patient_section/p_view_model/add_review_view_model.dart';
+import 'package:aim_swasthya/patient_section/p_view_model/update_appointment_view_model.dart';
 import 'package:aim_swasthya/patient_section/view/p_doctor/select_change_clinic_overlay.dart';
 import 'package:aim_swasthya/utils/const_config.dart';
 import 'package:aim_swasthya/utils/google_map/view_static_location.dart';
@@ -16,6 +17,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../res/appbar_const.dart';
+import '../../../res/popUp_const.dart';
+import '../../p_view_model/cancelAppointment_view_model.dart';
 import '../../p_view_model/user_view_model.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
@@ -29,6 +32,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   final scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
   bool viewAllSlots = false;
+  bool isAppointmentReschedule = false;
   @override
   void initState() {
     super.initState();
@@ -43,10 +47,28 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         docDCon.setConfirmDialog(false);
         bool isNewBooking = arguments["isNew"] ?? false;
         setState(() {
-          // isReschedule = !isNewBooking;
+          isAppointmentReschedule = !isNewBooking;
         });
       }
     });
+  }
+
+  bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+    // Combine date and time
+    String dateTimeString = "$bookingDate $hour24Format";
+
+    // Parse using the correct format
+    DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
+    DateTime bookingDateTime = format.parse(dateTimeString);
+
+    // Get current time
+    DateTime now = DateTime.now();
+
+    // Calculate difference
+    Duration difference = bookingDateTime.difference(now);
+
+    // Return true if more than 1 hour away
+    return difference.inMinutes > 60;
   }
 
   void _scrollToTop() {
@@ -84,19 +106,27 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppbarConst(
-                title: "Appointment",
+              AppbarConst(
+                title: isAppointmentReschedule
+                    ? "Reschedule appointment"
+                    : "Appointment",
               ),
               Sizes.spaceHeight15,
-              docPersonalDetail(),
+              isAppointmentReschedule
+                  ? resDocPersonalDetail()
+                  : docPersonalDetail(),
               Sizes.spaceHeight15,
               selectedClinic(),
+              if (!isAppointmentReschedule) ...[
+                Sizes.spaceHeight25,
+                clinicDetails(),
+              ],
               Sizes.spaceHeight25,
-              clinicDetails(),
-              Sizes.spaceHeight25,
-              slotsTiming(),
-              Sizes.spaceHeight35,
-              reviewsSection()
+              slotsSection(),
+              if (!isAppointmentReschedule) ...[
+                Sizes.spaceHeight35,
+                reviewsSection()
+              ],
             ],
           ),
         ),
@@ -416,7 +446,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     });
   }
 
-  Widget slotsTiming() {
+  Widget slotsSection() {
+    final uAVM =
+        Provider.of<UpdateAppointmentViewModel>(context, listen: false);
+
     return Consumer<DoctorAvlAppointmentViewModel>(builder: (context, dAVM, _) {
       if (dAVM.doctorAvlAppointmentModel == null ||
           dAVM.doctorAvlAppointmentModel!.data == null ||
@@ -424,7 +457,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           dAVM.doctorAvlAppointmentModel!.data!.slots!.isEmpty) {
         return const Center(
           child: NoDataMessages(
-            // title: "No available slots for this doctor at the moment.",
             message: "No slots found for the doctor",
           ),
         );
@@ -564,13 +596,26 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           dateWiseTimingGrid(),
           Sizes.spaceHeight30,
           AppBtn(
-            title: "Book your appointment",
+            title: isAppointmentReschedule
+                ? "Reschedule"
+                : "Book your appointment",
             onTap: () async {
               if (dAVM.selectedTime == null) {
                 Utils.show("Please select time slot to proceed", context);
                 return;
               }
-              print("dsdsddds");
+              if (isAppointmentReschedule) {
+                uAVM.updateAppointmentApi(context,
+                    docId: dAVM
+                        .doctorAvlAppointmentModel!.data!.details![0].doctorId,
+                    clinicId: dAVM
+                        .doctorAvlAppointmentModel!.data!.slots![0].clinicId,
+                    bookingDate: dAVM.selectedDate!.availabilityDate,
+                    timeId: dAVM.selectedTime!.timeId!,
+                    appId: uAVM.rescheduleAppointmentData!.appointmentId
+                        .toString());
+                return;
+              }
               final userId = await UserViewModel().getUser();
               final currentDate = DateTime.timestamp();
               dAVM.setRequestData({
@@ -677,8 +722,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     border: (dAVM.selectedTime != null &&
-                                dAVM.selectedTime!.timeId==
-                            appdata.timeId)
+                            dAVM.selectedTime!.timeId == appdata.timeId)
                         ? Border.all(color: AppColor.blue)
                         : null,
                     borderRadius: BorderRadius.circular(6),
@@ -944,6 +988,212 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 ],
               ),
             )
+          ],
+        ),
+      );
+    });
+  }
+
+  /// reschedule appointment cases:
+
+  Widget appointmentDateTimeWithStatus() {
+    return Consumer<UpdateAppointmentViewModel>(builder: (context, uAVM, _) {
+      final appointmentData = uAVM.rescheduleAppointmentData!;
+      DateTime dateTime =
+          DateFormat('dd-MM-yyyy').parse(appointmentData.bookingDate!);
+      final formattedDate = DateFormat('d MMMM').format(dateTime);
+      return SizedBox(
+        width: Sizes.screenWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              alignment: Alignment.center,
+              width: Sizes.screenWidth / 2.4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColor.blue,
+              ),
+              child: TextConst(
+                appointmentData.status == 'scheduled'
+                    ? "Appointment Reschedule"
+                    : appointmentData.status,
+                color: AppColor.white,
+                size: Sizes.fontSizeFour,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Row(
+              children: [
+                Image.asset(Assets.iconsCalander,
+                    color: Colors.grey, width: Sizes.screenWidth * 0.05),
+                Sizes.spaceWidth5,
+                TextConst(formattedDate,
+                    size: Sizes.fontSizeFive, fontWeight: FontWeight.w500),
+                Sizes.spaceWidth10,
+                const Icon(Icons.watch_later_outlined,
+                    color: Colors.grey, size: 20),
+                Sizes.spaceWidth5,
+                TextConst(appointmentData.hour24Format!,
+                    size: Sizes.fontSizeFive, fontWeight: FontWeight.w500),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  resDocPersonalDetail() {
+    return Consumer<DoctorAvlAppointmentViewModel>(builder: (context, dAVM, _) {
+      final docData = dAVM.doctorAvlAppointmentModel!.data!.details![0];
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        width: Sizes.screenWidth,
+        // height: Sizes.screenWidth / 2,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            appointmentDateTimeWithStatus(),
+            Sizes.spaceHeight10,
+            Row(
+              children: [
+                Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Container(
+                      width: Sizes.screenWidth / 2.4,
+                      height: Sizes.screenWidth / 2.6,
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                              image: docData.signedImageUrl == null
+                                  ? const AssetImage(
+                                      Assets.logoDoctor,
+                                    )
+                                  : NetworkImage(docData.signedImageUrl ?? ""),
+                              fit: BoxFit.cover)),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 18,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 3, vertical: 2),
+                        decoration: BoxDecoration(
+                            color: const Color(0xffFFC700),
+                            borderRadius: BorderRadius.circular(6)),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: AppColor.whiteColor,
+                              size: 10,
+                            ),
+                            Sizes.spaceWidth3,
+                            TextConst(
+                              "${docData.averageRating}",
+                              size: Sizes.fontSizeFour,
+                              color: AppColor.whiteColor,
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextConst(
+                            "${docData.experience}",
+                            fontWeight: FontWeight.w400,
+                            size: Sizes.fontSizeFourPFive,
+                            color: AppColor.textGrayColor,
+                          ),
+                        ],
+                      ),
+                      Sizes.spaceHeight3,
+                      TextConst(
+                        "${docData.doctorName}",
+                        fontWeight: FontWeight.w500,
+                        size: Sizes.fontSizeSeven,
+                      ),
+                      Sizes.spaceHeight3,
+                      TextConst(
+                        "${docData.qualification} (${docData.specializationName})",
+                        fontWeight: FontWeight.w400,
+                        size: Sizes.fontSizeFourPFive,
+                        color: AppColor.textGrayColor,
+                      ),
+                      Sizes.spaceHeight5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 5),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColor.grey)),
+                        child: TextConst(
+                          textAlign: TextAlign.center,
+                          "Please select a new slot to\nreschedule this appointment",
+                          color: AppColor.textGrayColor,
+                          size: Sizes.fontSizeFour,
+                        ),
+                      ),
+                      Sizes.spaceHeight5,
+                      AppBtn(
+                        title: "Cancel appointment",
+                        onTap: () {
+                          final uAVM = Provider.of<UpdateAppointmentViewModel>(
+                              context,
+                              listen: false);
+
+                          if (isMoreThanOneHourAway(
+                              uAVM.rescheduleAppointmentData!.bookingDate
+                                  .toString(),
+                              uAVM.rescheduleAppointmentData!.hour24Format
+                                  .toString())) {
+                            showCupertinoDialog(
+                              context: context,
+                              builder: (_) => ActionOverlay(
+                                text: "Cancel Appointment",
+                                subtext:
+                                    "Are you sure you want to cancel\n your appointment?",
+                                onTap: () {
+                                  Provider.of<CancelAppointmentViewModel>(
+                                          context,
+                                          listen: false)
+                                      .cancelAppointmentApi(
+                                          context,
+                                          uAVM.rescheduleAppointmentData!
+                                              .appointmentId
+                                              .toString());
+                                },
+                              ),
+                            );
+                          }
+                        },
+                        height: Sizes.screenWidth / 14,
+                        borderRadius: 8,
+                        color: Color(0xffC10000),
+                        fontSize: Sizes.fontSizeFour,
+                        fontWidth: FontWeight.w500,
+                        padding: const EdgeInsets.all(0),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       );

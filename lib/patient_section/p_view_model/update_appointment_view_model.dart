@@ -12,9 +12,17 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/user/patient_Appointment_model.dart';
+
 class UpdateAppointmentViewModel extends ChangeNotifier {
   final _updateAppointmentRepo = UpdateAppointmentRepo();
 
+  AppointmentsData? _rescheduleAppointmentData;
+  AppointmentsData? get rescheduleAppointmentData=> _rescheduleAppointmentData;
+  setRescheduleAppointmentData(AppointmentsData? data){
+    _rescheduleAppointmentData= data;
+    notifyListeners();
+  }
   bool _loading = false;
   bool get loading => _loading;
 
@@ -38,15 +46,16 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
     dynamic timeId,
     dynamic appId,
   }) async {
-    print("jhghjgj");
+    final bookingDateFormatted = DateFormat("yyyy-MM-dd").format(
+      DateFormat("dd-MM-yyyy").parse(bookingDate!.toString()),
+    );
     final userId = await UserViewModel().getUser();
     setLoading(true);
     Map data = {
       "patient_id": userId,
       "doctor_id": docId,
       "clinic_id": clinicId,
-      "booking_date": DateFormat("yyyy-MM-dd")
-          .format(DateTime.parse(bookingDate)),
+      "booking_date": bookingDateFormatted,
       "time_id": timeId,
       "appointment_id": appId,
       // "appointment_id": _rescheduleAppointmentID,
@@ -56,7 +65,6 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
     _updateAppointmentRepo.updateAppointmentApi(data).then((value) {
       Utils.show(value['message'], context);
       if (value['status'] == true) {
-        // setRescheduleAppointmentID("");
         Provider.of<PatientAppointmentViewModel>(context, listen: false)
             .patientAppointmentApi(context);
         Provider.of<PatientHomeViewModel>(context, listen: false)
