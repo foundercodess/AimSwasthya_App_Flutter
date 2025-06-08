@@ -71,25 +71,25 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                 title: AppLocalizations.of(context)!.book_an_appointment,
                 fontWeight: FontWeight.w500,
                 onTap: () {
-                  if (_selectedPaymentIndex != null) {
-                    final phone = docAppointmentCon.doctorAvlAppointmentModel
-                            ?.data?.details?[0].phoneNumber ??
-                        "";
-                    final email = docAppointmentCon.doctorAvlAppointmentModel
-                            ?.data?.details?[0].email ??
-                        "";
-                    final amount =
-                        docAppointmentCon.payableAmountAfterDiscount.toString();
+                  // if (_selectedPaymentIndex != null) {
+                  //   final phone = docAppointmentCon.doctorAvlAppointmentModel
+                  //           ?.data?.details?[0].phoneNumber ??
+                  //       "";
+                  //   final email = docAppointmentCon.doctorAvlAppointmentModel
+                  //           ?.data?.details?[0].email ??
+                  //       "";
+                  //   final amount =
+                  //       docAppointmentCon.payableAmountAfterDiscount.toString();
 
-                    if (_selectedPaymentIndex == 0) {
-                      paymentCon.payWithRazorpay(context, amount, phone, email);
-                    } else if (_selectedPaymentIndex == 1) {
-                      Utils.show(
-                          "Phone-pe under development! coming soon", context);
-                    }
-                  } else {
-                    Utils.show("Choose payment method to proceed", context);
-                  }
+                  //   if (_selectedPaymentIndex == 0) {
+                  //     paymentCon.payWithRazorpay(context, amount, phone, email);
+                  //   } else if (_selectedPaymentIndex == 1) {
+                  //     Utils.show(
+                  //         "Phone-pe under development! coming soon", context);
+                  //   }
+                  // } else {
+                  //   Utils.show("Choose payment method to proceed", context);
+                  // }
                 },
                 color:
                     _selectedPaymentIndex == null ? Colors.grey : AppColor.blue,
@@ -104,9 +104,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   Widget doctorSection() {
     final docAppointmentCon =
         Provider.of<DoctorAvlAppointmentViewModel>(context);
-    DateTime dateTime = DateTime.parse(
-        docAppointmentCon.selectedDate!.availabilityDate.toString());
-    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+    final formattedDate = docAppointmentCon.selectedDate!.availabilityDate.toString();
+
     return Container(
       margin: const EdgeInsets.only(left: 12, right: 12),
       width: Sizes.screenWidth,
@@ -129,27 +128,27 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                  ),
-                  child: docAppointmentCon.doctorAvlAppointmentModel!.data!
-                              .details![0].signedImageUrl !=
-                          null
-                      ? Image.network(
-                          docAppointmentCon.doctorAvlAppointmentModel!.data!
-                              .details![0].signedImageUrl,
-                          width: Sizes.screenWidth * 0.4,
-                          height: Sizes.screenHeight / 7,
-                          fit: BoxFit.cover,
-                        )
-                      : Image(
-                          image: const AssetImage(Assets.logoDoctor),
-                          width: Sizes.screenWidth * 0.4,
-                          height: Sizes.screenHeight / 7,
-                          fit: BoxFit.cover,
-                        ),
-                ),
+                // ClipRRect(
+                //   borderRadius: const BorderRadius.only(
+                //     topLeft: Radius.circular(15),
+                //   ),
+                //   child: docAppointmentCon.doctorAvlAppointmentModel!.data!
+                //               .details![0].signedImageUrl !=
+                //           null
+                //       ? Image.network(
+                //           docAppointmentCon.doctorAvlAppointmentModel!.data!
+                //               .details![0].signedImageUrl,
+                //           width: Sizes.screenWidth * 0.4,
+                //           height: Sizes.screenHeight / 7,
+                //           fit: BoxFit.cover,
+                //         )
+                //       : Image(
+                //           image: const AssetImage(Assets.logoDoctor),
+                //           width: Sizes.screenWidth * 0.4,
+                //           height: Sizes.screenHeight / 7,
+                //           fit: BoxFit.cover,
+                //         ),
+                // ),
                 Container(
                   width: Sizes.screenWidth * 0.4,
                   padding: const EdgeInsets.only(left: 10, top: 5, bottom: 8),
@@ -618,12 +617,12 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           Row(
             children: [
               textConstent(),
-              TextConst(
-                "${docAppointmentCon.doctorAvlAppointmentModel!.data!.location![0].fee.toString()}.00",
-                size: Sizes.fontSizeTen,
-                fontWeight: FontWeight.w600,
-                color: AppColor.black,
-              ),
+              // TextConst(
+              //   "${docAppointmentCon.doctorAvlAppointmentModel!.data!.location![0].fee.toString()}.00",
+              //   size: Sizes.fontSizeTen,
+              //   fontWeight: FontWeight.w600,
+              //   color: AppColor.black,
+              // ),
             ],
           ),
           Sizes.spaceHeight15,
@@ -634,11 +633,11 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             color: AppColor.black,
           ),
           Sizes.spaceHeight5,
-          dataField(
-            AppLocalizations.of(context)!.appointment_fee,
-            docAppointmentCon.doctorAvlAppointmentModel!.data!.location![0].fee
-                .toString(),
-          ),
+          // dataField(
+          //   AppLocalizations.of(context)!.appointment_fee,
+          //   docAppointmentCon.doctorAvlAppointmentModel!.data!.location![0].fee
+          //       .toString(),
+          // ),
           // dataField(
           //     AppLocalizations.of(context)!.digiSwasthya_discount,
           //     docAppointmentCon.doctorAvlAppointmentModel!.data!.location![0]

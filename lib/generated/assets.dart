@@ -5,6 +5,7 @@ class Assets {
   static const String aimSwasthyaAppAssetsNoDataFound = 'assets/no_data_found.png';
   static const String allImagesAddProfile = 'assets/all_Images/add_profile.png';
   static const String allImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';
+  static const String allImagesViewMap = 'assets/all_Images/view_map.png';
   static const String assetsAllImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';
   static const String assetsAnimation2mic = 'assets/animation_2mic.png';
   static const String assetsAnimation3mic = 'assets/animation_3mic.png';
@@ -46,6 +47,7 @@ class Assets {
   static const String iconsGoogle = 'assets/icons/google.png';
   static const String iconsGoogleSymbol = 'assets/icons/googleSymbol.png';
   static const String iconsGpayIcon = 'assets/icons/gpayIcon.png';
+  static const String iconsHugeiconsClinic = 'assets/icons/hugeicons_clinic.png';
   static const String iconsLanguage = 'assets/icons/language.png';
   static const String iconsLocationPin = 'assets/icons/locationPin.png';
   static const String iconsMap = 'assets/icons/map.png';
@@ -69,6 +71,7 @@ class Assets {
   static const String iconsSymptoms = 'assets/icons/symptoms.png';
   static const String iconsTemperature = 'assets/icons/temperature.png';
   static const String iconsTickIcon = 'assets/icons/tickIcon.png';
+  static const String iconsUimClinicMedical = 'assets/icons/uim_clinic-medical.png';
   static const String iconsUserBottomImg = 'assets/icons/user_bottom_img.png';
   static const String iconsWellIcon = 'assets/icons/wellIcon.png';
   static const String imagesAppointment = 'assets/images/appointment.png';

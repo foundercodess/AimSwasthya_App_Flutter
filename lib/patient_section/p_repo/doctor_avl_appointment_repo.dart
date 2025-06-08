@@ -36,4 +36,20 @@ class DoctorAvlAppointmentRepo {
       rethrow;
     }
   }
+
+  Future<dynamic> addDoctorToFavApi(dynamic data) async {
+    try {
+      dynamic response =
+      await _apiServices.getPostApiResponse(PatientApiUrl.addPatientDoctorUrl, data);
+      return response;
+
+    } catch (e) {
+      showInfoOverlay(statusCode: "response.statusCode");
+      if (kDebugMode) {
+        print('Error occurred during addDoctorApi: $e');
+      }
+      rethrow;
+    }
+  }
+
 }

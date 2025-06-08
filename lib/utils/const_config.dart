@@ -12,4 +12,13 @@ class Config{
     }
   }
 
+  static launchDialer(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      throw 'Could not launch $phoneUri';
+    }
+  }
+
 }

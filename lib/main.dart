@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => PaymentViewModel()),
         ChangeNotifierProvider(create: (ctx) => AddReviewViewModel()),
         ChangeNotifierProvider(create: (ctx) => GetImageUrlViewModel()),
-        ChangeNotifierProvider(create: (ctx) => AddDoctorViewModel()),
+        // ChangeNotifierProvider(create: (ctx) => AddDoctorViewModel()),
         ChangeNotifierProvider(create: (ctx) => VoiceSymptomSearchViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpdateAppointmentViewModel()),
         ChangeNotifierProvider(create: (ctx) => CancelAppointmentViewModel()),

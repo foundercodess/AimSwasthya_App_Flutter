@@ -15,9 +15,8 @@ import 'package:provider/provider.dart';
 import '../../utils/routes/routes_name.dart';
 import 'package:aim_swasthya/common/view_model/notification_view_model.dart';
 
-enum avlTimeType { Morning, Afternoon, Evening }
-
 class DoctorAvlAppointmentViewModel extends ChangeNotifier {
+  final avlTimeType = ['Morning', 'Afternoon', 'Evening'];
   final _doctorAvlAppointmentRepo = DoctorAvlAppointmentRepo();
   final _mapCon = MapController();
   bool _loading = false;
@@ -38,15 +37,15 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
 
   Slots? _selectedData;
   Slots? get selectedDate => _selectedData;
-  setSelectedDate(Slots value) {
+  setSelectedDate(Slots? value) {
     _selectedData = value;
     notifyListeners();
   }
 
-  bool _showConfirmDailog = false;
-  bool get showConfirmDailog => _showConfirmDailog;
-  setConfirmDailog(bool value) {
-    _showConfirmDailog = value;
+  bool _showConfirmDialog = false;
+  bool get showConfirmDialog => _showConfirmDialog;
+  setConfirmDialog(bool value) {
+    _showConfirmDialog = value;
     notifyListeners();
   }
 
@@ -62,24 +61,28 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _selectedMonth = avlTimeType.Morning.toString().split('.').last;
-  String get selectedMonth => _selectedMonth;
-  setSelectedMonthData(avlTimeType value) {
-    print("dddddd $value");
-    _selectedMonth = value.toString().split('.').last;
+  String _selectedTimeType = 'Morning';
+  String get selectedTimeType => _selectedTimeType;
+  setSelectedTimeTypeData(String value) {
+    _selectedTimeType = value;
     notifyListeners();
   }
 
   setDoctorAppointmentData(DoctorAvlAppointmentModel value) {
     _doctorAvlAppointmentModel = value;
     notifyListeners();
-    setSelectedDate(value.data!.slots![0]);
-    if (value.data!.location!.isNotEmpty) {
-      final location = value.data!.location![0];
-      _payableAmountAfterDiscount = double.parse(location.fee.toString());
-      // -
-      // double.parse(location.digiswasthyaDiscount.toString());
+    if (value.data!.slots!.isNotEmpty) {
+      setSelectedDate(value.data!.slots![0]);
+    } else {
+      setSelectedDate(null);
     }
+
+    // if (value.data!.location!.isNotEmpty) {
+    //   final location = value.data!.location![0];
+    //   _payableAmountAfterDiscount = double.parse(location.fee.toString());
+    //   // -
+    //   // double.parse(location.digiswasthyaDiscount.toString());
+    // }
     notifyListeners();
   }
 
@@ -103,7 +106,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       debugPrint("Location data not found");
       return;
     }
-    setLoading(true);
+    setLoading(clearCon);
     final userId = await UserViewModel().getUser();
     Map data = {
       "lat": latitude.toStringAsFixed(5),
@@ -112,14 +115,13 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       "doctor_id": docId,
       "clinic_id": clinicId,
     };
-    print("hgfhg ${jsonEncode(data)}");
     _doctorAvlAppointmentRepo.doctorAvlAppointmentApi(data).then((value) {
       if (value.status == true) {
         setDoctorAppointmentData(value);
       } else {
         showInfoOverlay(
             title: "Info",
-            errorMessage: '${value.message}',
+            errorMessage: '${value}',
             onTap: () {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -142,6 +144,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
 
   dynamic _requestData;
   dynamic get requestData => _requestData;
+
   setRequestData(dynamic value, context) {
     _requestData = value;
     Navigator.pushNamed(context, RoutesName.bookAppointmentScreen);
@@ -187,7 +190,6 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       "payment_method": payMode,
       'symptoms': symptoms
     };
-    print("hgdgh: $data");
     debugPrint("appointment booking data: ${jsonEncode(data)}");
     _doctorAvlAppointmentRepo
         .doctorBookAppointmentApi(data)
@@ -195,7 +197,6 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       debugPrint("$value");
       Utils.show(value['message'], context);
       if (value['status'] == true) {
-        // Send appointment booking notification
         final notificationViewModel =
             Provider.of<NotificationViewModel>(context, listen: false);
         await notificationViewModel.sendAppointmentStatusNotification(
@@ -212,13 +213,54 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
 
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .patientHomeApi(context);
-        // Navigator.pushReplacementNamed(context, RoutesName.successSplashScreen);
         Navigator.pushNamedAndRemoveUntil(
           context,
           RoutesName.successSplashScreen,
           (Route<dynamic> route) =>
               route.settings.name == RoutesName.bottomNavBar,
         );
+      }
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print('error: $error');
+      }
+    });
+  }
+
+  String _selectedClinicId = '';
+  String get selectedClinicId => _selectedClinicId;
+  setSelectedClinic(String id) {
+    _selectedClinicId = id;
+    notifyListeners();
+  }
+
+  String getFormattedDate(String date) {
+    DateTime parsedDate = DateFormat("dd-MM-yyyy").parse(date);
+    String formattedDate = DateFormat("EEE,d").format(parsedDate);
+    return formattedDate;
+  }
+
+  Future<void> addDoctorToFavApi(dynamic docId, context,
+      {dynamic clinicId}) async {
+    final userId = await UserViewModel().getUser();
+    final locationData =
+        Provider.of<PatientHomeViewModel>(context, listen: false)
+            .selectedLocationData;
+    double latitude = double.parse(locationData!.latitude.toString());
+    double longitude = double.parse(locationData.longitude.toString());
+    Map data = {
+      "lat": latitude,
+      "lon": longitude,
+      "clinic_id": clinicId,
+      "patient_id": userId,
+      "doctor_id": docId,
+    };
+    _doctorAvlAppointmentRepo.addDoctorToFavApi(data).then((value) {
+      Utils.show(value['message'], context);
+      if (value['status'] == true) {
+        if (clinicId != null) {
+          doctorAvlAppointmentApi(docId, clinicId, context, clearCon: false);
+        }
       }
     }).onError((error, stackTrace) {
       if (kDebugMode) {

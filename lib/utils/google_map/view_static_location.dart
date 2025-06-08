@@ -5,11 +5,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class GetLocationOnMap extends StatefulWidget {
   final double latitude;
   final double longitude;
+  final String? clinicName;
+  final String? address;
 
   const GetLocationOnMap({
     super.key,
     required this.latitude,
-    required this.longitude,
+    required this.longitude,  this.clinicName,  this.address,
   });
 
   @override
@@ -48,7 +50,7 @@ class _GetLocationOnMapState extends State<GetLocationOnMap> {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
         target: _position,
-        zoom: 14,
+        zoom: 16,
       ),
       onMapCreated: (GoogleMapController controller) {
         _mapController = controller;
@@ -57,6 +59,7 @@ class _GetLocationOnMapState extends State<GetLocationOnMap> {
         Marker(
           markerId: const MarkerId("Clinic location"),
           position: _position,
+          infoWindow: InfoWindow(title: widget.clinicName, snippet: widget.address)
         ),
       },
       liteModeEnabled: true,

@@ -1,3 +1,4 @@
+// patient_section/p_view_model/services/payment_con.dart
 // import 'package:flutter/cupertino.dart';
 // import 'package:provider/provider.dart';
 // import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -198,14 +199,14 @@ class PaymentViewModel extends ChangeNotifier {
     final docAppointmentCon =
         Provider.of<DoctorAvlAppointmentViewModel>(_context!, listen: false);
     Provider.of<DoctorAvlAppointmentViewModel>(_context!, listen: false);
-    docAppointmentCon.doctorBookAppointmentApi(
-        _context!,
-        docAppointmentCon.doctorAvlAppointmentModel!.data!.details![0].doctorId,
-        docAppointmentCon
-            .doctorAvlAppointmentModel!.data!.location![0].clinicId,
-        paymentRes,
-        'razorpay',
-        2);
+    // docAppointmentCon.doctorBookAppointmentApi(
+    //     _context!,
+    //     docAppointmentCon.doctorAvlAppointmentModel!.data!.details![0].doctorId,
+    //     docAppointmentCon
+    //         .doctorAvlAppointmentModel!.data!.location![0].clinicId,
+    //     paymentRes,
+    //     'razorpay',
+    //     2);
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
@@ -216,16 +217,16 @@ class PaymentViewModel extends ChangeNotifier {
       'signature': response.signature,
     };
     log("Payment Successful! Payment ID: ${response.paymentId}");
-    final docAppointmentCon =
-        Provider.of<DoctorAvlAppointmentViewModel>(_context!, listen: false);
-    docAppointmentCon.doctorBookAppointmentApi(
-        _context!,
-        docAppointmentCon.doctorAvlAppointmentModel!.data!.details![0].doctorId,
-        docAppointmentCon
-            .doctorAvlAppointmentModel!.data!.location![0].clinicId,
-        paymentRes,
-        'razorpay',
-        1);
+    // final docAppointmentCon =
+    //     Provider.of<DoctorAvlAppointmentViewModel>(_context!, listen: false);
+    // docAppointmentCon.doctorBookAppointmentApi(
+    //     _context!,
+    //     docAppointmentCon.doctorAvlAppointmentModel!.data!.details![0].doctorId,
+    //     docAppointmentCon
+    //         .doctorAvlAppointmentModel!.data!.location![0].clinicId,
+    //     paymentRes,
+    //     'razorpay',
+    //     1);
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
