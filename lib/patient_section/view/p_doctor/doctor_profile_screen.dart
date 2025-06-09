@@ -32,11 +32,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   final scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
   bool viewAllSlots = false;
+  bool viewAllStories = false;
   bool isAppointmentReschedule = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("jvhvhh$viewAllStories");
       final arguments = ModalRoute.of(context)!.settings.arguments as Map?;
       if (arguments != null) {
         final doctorId = arguments["doctor_id"];
@@ -49,6 +51,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         setState(() {
           isAppointmentReschedule = !isNewBooking;
         });
+
       }
     });
   }
@@ -149,7 +152,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               height: Sizes.screenWidth / 3.4,
               margin: const EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
-                  color: Colors.red,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10)),
@@ -333,7 +335,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10)),
-                    color: Colors.red,
                     image: DecorationImage(
                         image: AssetImage(Assets.allImagesViewMap),
                         fit: BoxFit.cover,
@@ -787,7 +788,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 padding: const EdgeInsets.all(0),
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: reviewData.length,
+                itemCount:viewAllStories
+                    ? reviewData.length
+                    : reviewData.length > 2
+                    ? 2
+                    :  reviewData.length,
                 itemBuilder: (context, int i) {
                   final review = reviewData[i];
                   return Container(
@@ -845,7 +850,26 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       ],
                     ),
                   );
-                })
+                }),
+            Sizes.spaceHeight20,
+            if (!viewAllStories && reviewData.length > 2)...[
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      viewAllStories = true;
+                    });
+                  },
+                  child: TextConst(
+                    "View All Stories",
+                    color: AppColor.lightBlue,
+                    fontWeight: FontWeight.w500,
+                    size: Sizes.fontSizeFour,
+                  ),
+                ),
+              ),
+              Sizes.spaceHeight30,
+            ]
           ],
         ),
       );

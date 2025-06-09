@@ -12,6 +12,7 @@ class TextConst extends StatelessWidget {
   final TextDecoration? decoration;
   final Color? decorationColor;
   final List<FontVariation>? fontVariations;
+  final int? maxLines;
 
   TextConst(
     this.title, {
@@ -25,7 +26,7 @@ class TextConst extends StatelessWidget {
     this.fontFamily,
     this.decoration,
     this.decorationColor,
-    this.fontVariations,
+    this.fontVariations, this.maxLines,
   });
 
   @override
@@ -35,6 +36,7 @@ class TextConst extends StatelessWidget {
       child: Text(
         title,
         textAlign: textAlign,
+        maxLines: maxLines??null,
         style: TextStyle(
           fontVariations: fontVariations,
           overflow: overflow,

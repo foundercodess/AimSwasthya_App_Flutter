@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/google_map/view_static_location.dart';
 import '../../p_view_model/patient_profile_view_model.dart';
 
 class BookAppointmentScreen extends StatefulWidget {
@@ -73,12 +74,14 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                 title: AppLocalizations.of(context)!.book_an_appointment,
                 fontWeight: FontWeight.w500,
                 onTap: () {
-                  final userProfileVm= Provider.of<UserPatientProfileViewModel>(context,listen: false).userPatientProfileModel!.data![0];
+                  final userProfileVm =
+                      Provider.of<UserPatientProfileViewModel>(context,
+                              listen: false)
+                          .userPatientProfileModel!
+                          .data![0];
                   if (_selectedPaymentIndex != null) {
-                    final phone = userProfileVm.phoneNumber ??
-                        "";
-                    final email = userProfileVm.email ??
-                        "";
+                    final phone = userProfileVm.phoneNumber ?? "";
+                    final email = userProfileVm.email ?? "";
                     final amount =
                         docAppointmentCon.payableAmountAfterDiscount.toString();
 
@@ -170,6 +173,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                       ),
                       Sizes.spaceHeight5,
                       TextConst(
+                        maxLines: 1,
                         docAppointmentCon.doctorAvlAppointmentModel!.data!
                                 .details![0].doctorName ??
                             '',
@@ -221,13 +225,32 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   color: const Color(0xff959595),
                 ),
                 // Sizes.spaceHeight5,
-                SizedBox(
-                  width: Sizes.screenWidth * 0.47,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      Assets.imagesMapImg,
-                      fit: BoxFit.contain,
+                GestureDetector(
+                  onTap: () {
+                    final dAVM = Provider.of<DoctorAvlAppointmentViewModel>(
+                        context,
+                        listen: false);
+                    final clinicData =
+                        dAVM.doctorAvlAppointmentModel!.data!.clinics![0];
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GetLocationOnMap(
+                                clinicName: clinicData.name.toString(),
+                                address: clinicData.address.toString(),
+                                latitude: double.parse(
+                                    clinicData.latitude.toString()),
+                                longitude: double.parse(
+                                    clinicData.longitude.toString()))));
+                  },
+                  child: SizedBox(
+                    width: Sizes.screenWidth * 0.47,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        Assets.allImagesViewMap,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 )
