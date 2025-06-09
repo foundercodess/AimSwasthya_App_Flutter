@@ -36,6 +36,7 @@ class CancelAppointmentViewModel extends ChangeNotifier {
               .patientAppointmentApi(context);
           Provider.of<PatientHomeViewModel>(context, listen: false)
               .patientHomeApi(context);
+          Navigator.pop(context);
         }else{
           Provider.of<DocPatientAppointmentViewModel>(context, listen: false)
               .docPatientAppointmentApi();

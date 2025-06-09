@@ -89,6 +89,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
     }
     if (_dobController.text.isEmpty) {
       _dobController.text = formatDate(profileData![0].dateOfBirth);
+      _dobController.text = formatDate(profileData![0].dateOfBirth);
     }
     if (_heightController.text.isEmpty) {
       _heightController.text = profileData![0].height ?? '';
@@ -133,7 +134,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
         _genderController.clear();
         _numberEmailController.clear();
         _emailController.clear();
-        _dobController.clear();
+        // _dobController.clear();
         _heightController.clear();
         _weightController.clear();
         _bloodController.clear();

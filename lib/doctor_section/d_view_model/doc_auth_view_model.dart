@@ -135,7 +135,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
     Map data = {"phone": phone, "email": email, "type": type};
     debugPrint(jsonEncode(data));
     _doctorAuthRepo.isRegisterDocApi(data).then((value) {
-      debugPrint(value);
+      // debugPrint(value);
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         _senOtpData = {

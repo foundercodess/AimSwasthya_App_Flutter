@@ -19,6 +19,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:aim_swasthya/common/view_model/notification_view_model.dart';
 
+import '../../../model/user/patient_Appointment_model.dart';
+import '../../p_view_model/update_appointment_view_model.dart';
+
 class UserHomeScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   const UserHomeScreen({super.key, required this.scaffoldKey});
@@ -687,7 +690,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     });
   }
 
-  Widget docRescheduleScr(Appointments appointmentData) {
+  Widget docRescheduleScr(AppointmentsData appointmentData) {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -811,6 +814,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     title: AppLocalizations.of(context)!.reschedule,
                     fontSize: Sizes.fontSizeFourPFive,
                     onTap: () {
+                      Provider.of<UpdateAppointmentViewModel>(context,
+                          listen: false)
+                          .setRescheduleAppointmentData(appointmentData);
                       Navigator.pushNamed(
                           context, RoutesName.doctorProfileScreen,
                           arguments: {

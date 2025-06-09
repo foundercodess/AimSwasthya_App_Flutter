@@ -1,12 +1,10 @@
 // main.dart
 import 'package:aim_swasthya/res/size_const.dart';
-import 'package:aim_swasthya/view/animation_con.dart';
 import 'package:aim_swasthya/patient_section/view/symptoms/dowenloade_image.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/add_clinic_doctor_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/all_specialization_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/delete_account_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/doc_auth_view_model.dart';
-import 'package:aim_swasthya/doctor_section/d_view_model/doc_graph_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/doc_health_report_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/doc_home_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/doc_map_view_model.dart';
@@ -19,7 +17,6 @@ import 'package:aim_swasthya/doctor_section/d_view_model/patient_profile_view_mo
 import 'package:aim_swasthya/doctor_section/d_view_model/revenue_doctor_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/schedule_doctor_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/upser_smc_number_view_model.dart';
-import 'package:aim_swasthya/patient_section/p_view_model/add_doctor_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/add_review_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/auth_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/bottom_nav_view_model.dart';
@@ -83,7 +80,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => RegisterViewModel()),
         ChangeNotifierProvider(create: (ctx) => ScheduleViewModel()),
         ChangeNotifierProvider(create: (ctx) => UserRoleViewModel()),
-        // ChangeNotifierProvider(create: (ctx) => DocGraphViewModel()),
         ChangeNotifierProvider(create: (ctx) => ChangeLanguageViewModel()),
         ChangeNotifierProvider(create: (ctx) => BottomNavProvider()),
         ChangeNotifierProvider(create: (ctx) => PatientAuthViewModel()),
@@ -100,7 +96,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => PaymentViewModel()),
         ChangeNotifierProvider(create: (ctx) => AddReviewViewModel()),
         ChangeNotifierProvider(create: (ctx) => GetImageUrlViewModel()),
-        // ChangeNotifierProvider(create: (ctx) => AddDoctorViewModel()),
         ChangeNotifierProvider(create: (ctx) => VoiceSymptomSearchViewModel()),
         ChangeNotifierProvider(create: (ctx) => UpdateAppointmentViewModel()),
         ChangeNotifierProvider(create: (ctx) => CancelAppointmentViewModel()),

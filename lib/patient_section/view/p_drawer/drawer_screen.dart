@@ -153,48 +153,63 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TermsOfUserScreen(
-                                    type: '1',
-                                  )));
-                    },
-                    child: TextConst(
-                      "Terms of Use",
-                      size: Sizes.fontSizeFive,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.white,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '1',
+                                        )));
+                          },
+                          child: TextConst(
+                            "Terms of use",
+                            size: Sizes.fontSizeFive,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.white,
+                          ),
+                        ),
+                        TextConst(
+                          " & ",
+                          size: Sizes.fontSizeFive,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.white,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '3',
+                                        )));
+                          },
+                          child: TextConst(
+                            "Privacy policy",
+                            size: Sizes.fontSizeFive,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  TextConst(
-                    " & ",
-                    size: Sizes.fontSizeFive,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.white,
-                  ),
-                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TermsOfUserScreen(
-                                    type: '3',
-                                  )));
-                    },
-                    child: TextConst(
-                      "Privacy Policy",
-                      size: Sizes.fontSizeFive,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.white,
+
+                    Sizes.spaceHeight10,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, RoutesName.aboutUsScreen);
+                      },
+                      child: TextConst(
+                        AppLocalizations.of(context)!.about_Us,
+                        size: Sizes.fontSizeFive,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.white,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Sizes.spaceHeight10,
+                    Sizes.spaceHeight10,
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
@@ -211,23 +226,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     Sizes.spaceHeight10,
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, RoutesName.aboutUsScreen);
-                      },
-                      child: TextConst(
-                        AppLocalizations.of(context)!.about_Us,
-                        size: Sizes.fontSizeFive,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.white,
-                      ),
-                    ),
-                    Sizes.spaceHeight10,
-                    GestureDetector(
-                      onTap: () {
                         showCupertinoDialog(
                             barrierDismissible: false,
                             barrierLabel: "Register Prompt",
-                            // barrierColor: Colors.black.withOpacity(0.4),
-
                             context: context,
                             builder: (context) {
                               return const ActionOverlay();

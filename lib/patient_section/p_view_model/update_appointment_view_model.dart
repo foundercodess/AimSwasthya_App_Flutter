@@ -20,6 +20,7 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
   AppointmentsData? _rescheduleAppointmentData;
   AppointmentsData? get rescheduleAppointmentData=> _rescheduleAppointmentData;
   setRescheduleAppointmentData(AppointmentsData? data){
+    _rescheduleAppointmentData=null;
     _rescheduleAppointmentData= data;
     notifyListeners();
   }

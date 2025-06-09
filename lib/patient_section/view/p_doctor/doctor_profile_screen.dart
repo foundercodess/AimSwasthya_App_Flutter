@@ -51,27 +51,38 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         setState(() {
           isAppointmentReschedule = !isNewBooking;
         });
-
       }
     });
   }
 
   bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
-    // Combine date and time
     String dateTimeString = "$bookingDate $hour24Format";
 
-    // Parse using the correct format
     DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
     DateTime bookingDateTime = format.parse(dateTimeString);
 
-    // Get current time
     DateTime now = DateTime.now();
 
-    // Calculate difference
     Duration difference = bookingDateTime.difference(now);
 
-    // Return true if more than 1 hour away
     return difference.inMinutes > 60;
+  }
+
+  String formatBookingDate(String inputDate) {
+    DateTime dateTime;
+
+    try {
+      if (inputDate.contains('T')) {
+        dateTime = DateTime.parse(inputDate);
+      } else {
+        dateTime = DateFormat('d-M-yyyy').parse(inputDate);
+      }
+
+      return DateFormat('d MMM').format(dateTime);
+    } catch (e) {
+      print("Date parsing error: $e");
+      return 'Invalid Date';
+    }
   }
 
   void _scrollToTop() {
@@ -156,6 +167,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10)),
                   image: DecorationImage(
+                      alignment: Alignment.topCenter,
                       image: docData.signedImageUrl == null
                           ? const AssetImage(
                               Assets.logoDoctor,
@@ -204,6 +216,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   Sizes.spaceHeight3,
                   TextConst(
                     "${docData.doctorName}",
+                    maxLines: 1,
                     fontWeight: FontWeight.w500,
                     size: Sizes.fontSizeSeven,
                   ),
@@ -788,11 +801,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 padding: const EdgeInsets.all(0),
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:viewAllStories
+                itemCount: viewAllStories
                     ? reviewData.length
                     : reviewData.length > 2
-                    ? 2
-                    :  reviewData.length,
+                        ? 2
+                        : reviewData.length,
                 itemBuilder: (context, int i) {
                   final review = reviewData[i];
                   return Container(
@@ -852,7 +865,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   );
                 }),
             Sizes.spaceHeight20,
-            if (!viewAllStories && reviewData.length > 2)...[
+            if (!viewAllStories && reviewData.length > 2) ...[
               Center(
                 child: GestureDetector(
                   onTap: () {
@@ -1018,14 +1031,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     });
   }
 
-  /// reschedule appointment cases:
-
   Widget appointmentDateTimeWithStatus() {
     return Consumer<UpdateAppointmentViewModel>(builder: (context, uAVM, _) {
       final appointmentData = uAVM.rescheduleAppointmentData!;
-      DateTime dateTime =
-          DateFormat('dd-MM-yyyy').parse(appointmentData.bookingDate!);
-      final formattedDate = DateFormat('d MMMM').format(dateTime);
+
+      final formattedDate =
+          formatBookingDate(appointmentData.bookingDate.toString());
       return SizedBox(
         width: Sizes.screenWidth,
         child: Row(
@@ -1040,9 +1051,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 color: AppColor.blue,
               ),
               child: TextConst(
-                appointmentData.status == 'scheduled'
-                    ? "Appointment Reschedule"
-                    : appointmentData.status,
+                appointmentData.status == null
+                    ? ""
+                    : appointmentData.status == 'scheduled'
+                        ? "Appointment Reschedule"
+                        : appointmentData.status == 'reschduled'
+                            ? "Appointent On Hold"
+                            : appointmentData.status,
                 color: AppColor.white,
                 size: Sizes.fontSizeFour,
                 fontWeight: FontWeight.w500,
@@ -1053,14 +1068,24 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 Image.asset(Assets.iconsCalander,
                     color: Colors.grey, width: Sizes.screenWidth * 0.05),
                 Sizes.spaceWidth5,
-                TextConst(formattedDate,
-                    size: Sizes.fontSizeFive, fontWeight: FontWeight.w500),
+                TextConst(
+                    appointmentData.status == 'reschduled'
+                        ? "On hold"
+                        : formattedDate.length > 8
+                            ? formattedDate.substring(0, 6)
+                            : formattedDate,
+                    size: Sizes.fontSizeFive,
+                    fontWeight: FontWeight.w500),
                 Sizes.spaceWidth10,
                 const Icon(Icons.watch_later_outlined,
                     color: Colors.grey, size: 20),
                 Sizes.spaceWidth5,
-                TextConst(appointmentData.hour24Format!,
-                    size: Sizes.fontSizeFive, fontWeight: FontWeight.w500),
+                TextConst(
+                    appointmentData.status == 'reschduled'
+                        ? "-"
+                        : appointmentData.hour24Format!,
+                    size: Sizes.fontSizeFive,
+                    fontWeight: FontWeight.w500),
               ],
             ),
           ],
@@ -1148,6 +1173,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       Sizes.spaceHeight3,
                       TextConst(
                         "${docData.doctorName}",
+                        maxLines: 1,
                         fontWeight: FontWeight.w500,
                         size: Sizes.fontSizeSeven,
                       ),

@@ -344,7 +344,8 @@ class PatientAuthViewModel extends ChangeNotifier {
           } else {
             UserViewModel().saveUser(patientId);
           }
-          
+          UserViewModel().saveRole(2);
+
           // Send profile completion notification
           final notificationViewModel = Provider.of<NotificationViewModel>(context, listen: false);
           await notificationViewModel.sendProfileCompletionNotification(
@@ -356,7 +357,6 @@ class PatientAuthViewModel extends ChangeNotifier {
           );
 
           Navigator.pushNamed(context, RoutesName.allSetDocScreen);
-          UserViewModel().saveRole(2);
         }
       }).onError((error, stackTrace) {
         setLoading(false);

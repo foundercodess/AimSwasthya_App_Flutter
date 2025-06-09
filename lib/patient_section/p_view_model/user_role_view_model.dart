@@ -17,6 +17,7 @@ class UserRoleViewModel extends ChangeNotifier {
   // Set navigation type (login/signup)
   setNavType(int value) {
     _navType = value;
+    print("etted nav type: $_navType");
     notifyListeners();
   }
 
@@ -38,8 +39,8 @@ class UserRoleViewModel extends ChangeNotifier {
   // Reset all values to default
   resetValues() {
     _isPersonalInfoSelected = 1;
-    _navType = 1;
-    _userRole = 1;
+    // _navType = 1;
+    // _userRole = 1;
     notifyListeners();
   }
 

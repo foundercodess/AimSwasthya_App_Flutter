@@ -19,14 +19,15 @@ class _AllSetDocScreenState extends State<AllSetDocScreen> {
   void initState() {
     final authCon = Provider.of<UserRoleViewModel>(context, listen: false);
     super.initState();
-    if (authCon.userRole == 2) {}
     Timer(const Duration(milliseconds: 1500), () async {
+      print("user role dat: ${authCon.userRole}");
       authCon.userRole == 1
           ? Navigator.pushNamedAndRemoveUntil(
               context, RoutesName.doctorBottomNevBar, (context) => false)
           : Navigator.pushNamedAndRemoveUntil(
               context, RoutesName.bottomNavBar, (context) => false,
               arguments: true);
+      // userRegCon.resetValues();
     });
   }
 
