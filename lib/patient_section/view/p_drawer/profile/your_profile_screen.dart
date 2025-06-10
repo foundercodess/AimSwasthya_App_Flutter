@@ -508,7 +508,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                 ),
                 isScrollControlled: true,
                 builder: (BuildContext context) {
-                  return  AddMemberOverlay();
+                  return AddMemberOverlay();
                 },
               );
             },
@@ -528,7 +528,8 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
           builder: (context, viewModel, child) {
             final image = viewModel.userPatientProfileModel?.data?[0];
             final hasImage = viewModel.profileImage != null ||
-                (image?.signedImageUrl != null && image!.signedImageUrl!.isNotEmpty);
+                (image?.signedImageUrl != null &&
+                    image!.signedImageUrl!.isNotEmpty);
             return GestureDetector(
               onTap: () {
                 showModalBottomSheet(
@@ -536,11 +537,13 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                   isScrollControlled: true,
                   context: context,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
                   backgroundColor: AppColor.white,
                   builder: (BuildContext context) {
-                    return showImageBottomSheet(true);
+                    return showImageBottomSheet(
+                        true, image!.signedImageUrl == null ? false : true);
                   },
                 );
               },
@@ -579,34 +582,32 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                               ),
                             )
                           else ...[
-                              Sizes.spaceHeight5,
-                              Container(
-                                alignment: Alignment.center,
-                                width: Sizes.screenHeight * 0.05,
-                                height: Sizes.screenHeight * 0.05,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffDFEDFF),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: AppColor.blue,
-                                  size: 32,
-                                ),
+                            Sizes.spaceHeight5,
+                            Container(
+                              alignment: Alignment.center,
+                              width: Sizes.screenHeight * 0.05,
+                              height: Sizes.screenHeight * 0.05,
+                              decoration: const BoxDecoration(
+                                color: Color(0xffDFEDFF),
+                                shape: BoxShape.circle,
                               ),
-                              Sizes.spaceHeight5,
-                              // Sizes.spaceHeight3,
-                              TextConst(
-                                "Add a profile photo",
-                                size: Sizes.fontSizeThree,
-                                fontWeight: FontWeight.w400,
-                                color: AppColor.textfieldGrayColor,
+                              child: const Icon(
+                                Icons.add,
+                                color: AppColor.blue,
+                                size: 32,
                               ),
-
-                            ],
+                            ),
+                            Sizes.spaceHeight5,
+                            // Sizes.spaceHeight3,
+                            TextConst(
+                              "Add a profile photo",
+                              size: Sizes.fontSizeThree,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.textfieldGrayColor,
+                            ),
+                          ],
                         ],
                       ),
-
                       if (hasImage)
                         const Positioned(
                           bottom: 20,
@@ -795,7 +796,7 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
   }
 
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
-  Widget showImageBottomSheet(bool isProfile) {
+  Widget showImageBottomSheet(bool isProfile, bool directupdate) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -814,9 +815,9 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                       .setProfileImage(img);
                   Provider.of<UserPatientProfileViewModel>(context,
                           listen: false)
-                      .addImageApi('doctor', img.name.toString(),
-                          img.path.toString(), 'profile_photo', context, isDirectUpdate: true);
-                          
+                      .addImageApi('patient', img.name.toString(),
+                          img.path.toString(), 'profile_photo', context,
+                          isDirectUpdate: directupdate);
                 }
               }
               Navigator.pop(context);
@@ -835,8 +836,9 @@ class _YourProfileScreenState extends State<YourProfileScreen> {
                         .setProfileImage(img);
                     Provider.of<UserPatientProfileViewModel>(context,
                             listen: false)
-                        .addImageApi('doctor', img.name.toString(),
-                            img.path.toString(), 'profile_photo', context, isDirectUpdate: true);
+                        .addImageApi('patient', img.name.toString(),
+                            img.path.toString(), 'profile_photo', context,
+                            isDirectUpdate: directupdate);
                   }
                 }
                 Navigator.pop(context);

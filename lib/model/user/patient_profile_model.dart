@@ -42,6 +42,7 @@ class Data {
   String? chronicIllnesses;
   String? lifestyleHabbits;
   String? signedImageUrl;
+  String? image_url;
 
   Data(
       {this.name,
@@ -56,7 +57,8 @@ class Data {
         this.currentMedications,
         this.chronicIllnesses,
         this.lifestyleHabbits,
-        this.signedImageUrl
+        this.signedImageUrl,
+        this.image_url
       });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -73,6 +75,7 @@ class Data {
     chronicIllnesses = json['chronic_illnesses'];
     lifestyleHabbits = json['lifestyle_habbits'];
     signedImageUrl = json['signedImageUrl'];
+    image_url = json['image_url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -90,6 +93,7 @@ class Data {
     data['chronic_illnesses'] = chronicIllnesses;
     data['lifestyle_habbits'] = lifestyleHabbits;
     data['signedImageUrl'] = signedImageUrl;
+    data['image_url'] = image_url;
     return data;
   }
 }

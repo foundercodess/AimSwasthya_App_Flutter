@@ -68,6 +68,26 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     return difference.inMinutes > 60;
   }
 
+  String timeAgo(String isoDateString) {
+    final now = DateTime.now().toUtc();
+    final past = DateTime.parse(isoDateString);
+    final diff = now.difference(past);
+
+    if (diff.inDays >= 7) {
+      final weeks = diff.inDays ~/ 7;
+      return '$weeks week${weeks > 1 ? 's' : ''} ago';
+    } else if (diff.inDays >= 1) {
+      return '${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago';
+    } else if (diff.inHours >= 1) {
+      return '${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago';
+    } else if (diff.inMinutes >= 1) {
+      return '${diff.inMinutes} minute${diff.inMinutes > 1 ? 's' : ''} ago';
+    } else {
+      return 'Just now';
+    }
+  }
+
+
   String formatBookingDate(String inputDate) {
     DateTime dateTime;
 
@@ -827,7 +847,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             size: Sizes.fontSizeFive,
                           ),
                           subtitle: TextConst(
-                            "7 week ago",
+                            timeAgo(review.createdAt.toString()),
                             size: Sizes.fontSizeFour,
                             color: AppColor.textGrayColor,
                           ),

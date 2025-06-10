@@ -159,26 +159,27 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       "entity_id": userId,
       "entity_type": entityType,
       "image_name":
-          "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
+          "${fileTypeName == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
       "file_type": fileTypeName
     };
+
+    print("body: $data");
     if (isDirectUpdate) {
+      print("ewewweiwehoei");
       Provider.of<GetImageUrlViewModel>(context, listen: false)
           .uploadFile(context,
               filePath: imagePath,
-              // filePath: value['image_url']);
-              fileName: "patient/$userId/profile.$fileType");
+              fileName: "patient/$userId/id_prood.$fileType");
       return;
     }
-
+    print("continueeeeeeeeee");
     _userPatientProfileRepo.addImageUrlApi(data).then((value) {
-      debugPrint(value);
+      debugPrint("response: $value");
       Utils.show(value['message'], context);
       if (value['status'] == true) {
         Provider.of<GetImageUrlViewModel>(context, listen: false)
             .uploadFile(context,
                 filePath: imagePath,
-                // filePath: value['image_url']);
                 fileName: value['image_url']);
         Utils.show(value['message'], context);
       }

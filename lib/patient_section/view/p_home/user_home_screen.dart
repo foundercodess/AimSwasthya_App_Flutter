@@ -19,8 +19,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:aim_swasthya/common/view_model/notification_view_model.dart';
 
+import '../../../common/view_model/network_check.dart';
 import '../../../model/user/patient_Appointment_model.dart';
+import '../../p_view_model/patient_profile_view_model.dart';
 import '../../p_view_model/update_appointment_view_model.dart';
+import '../../p_view_model/wellness_library_view_model.dart';
 
 class UserHomeScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -37,64 +40,135 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     height: Sizes.screenHeight * 0.02,
   );
   int currentPage = 0;
+  bool? isInternetConnected;
+  @override
+  void initState() {
+    _checkConnection();
+    super.initState();
+  }
+
+  void _checkConnection() async {
+    isInternetConnected = await NetworkChecker.hasInternetConnection();
+    setState(() {});
+    if (isInternetConnected!) {
+      Provider.of<PatientHomeViewModel>(context, listen: false)
+          .getLocationApi(context);
+      Provider.of<WellnessLibraryViewModel>(context, listen: false)
+          .getPatientWellnessApi(context);
+      await LocalImageHelper.instance.loadImages();
+      Provider.of<UserPatientProfileViewModel>(context, listen: false)
+          .userPatientProfileApi(context);
+      Provider.of<NotificationViewModel>(context, listen: false)
+          .fetchNotifications(
+        type: 'patient',
+      );
+      Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
+          .clearValues();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeCon = Provider.of<PatientHomeViewModel>(context);
     return Scaffold(
       backgroundColor: AppColor.white,
-      body: homeCon.patientHomeModel == null ||
-              homeCon.patientHomeModel!.data == null ||
-              homeCon.loading
-          ? const Center(child: LoadData())
-          : RefreshIndicator(
-              color: AppColor.blue,
-              onRefresh: () async {
-                Provider.of<PatientHomeViewModel>(context, listen: false)
-                    .patientHomeApi(context);
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
+      body: isInternetConnected != null &&
+              !isInternetConnected! &&
+              (homeCon.patientHomeModel == null ||
+                  homeCon.patientHomeModel!.data == null)
+          ? Center(
+              child: Container(
+                padding: EdgeInsets.all(15),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(Assets.imagesPlusIcons),
+                      fit: BoxFit.fitWidth),
+                ),
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      constAppBarContainer(),
-                      sectionSpacing,
-                      if (homeCon.patientHomeModel != null &&
-                          homeCon.patientHomeModel!.data!.appointments!
-                              .isNotEmpty &&
-                          !homeCon.noServicesArea)
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Sizes.screenWidth * 0.04,
-                          ),
-                          child: textFields(BorderRadius.circular(15)),
-                        ),
-                      sectionSpacing,
-                      if (homeCon.patientHomeModel != null &&
-                          homeCon.patientHomeModel!.data != null)
-                        symptomsSection(),
-                      sectionSpacing,
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Sizes.screenWidth * 0.03),
-                        width: Sizes.screenWidth,
-                        child: const Image(
-                            image: AssetImage(Assets.imagesAppointment)),
-                      ),
-                      sectionSpacing,
-                      if (homeCon.patientHomeModel != null &&
-                          homeCon.patientHomeModel!.data != null)
-                        const SpecialiasationScreen(),
-                      sectionSpacing,
-                      topSpecialistNearMe(),
-                      sectionSpacing,
-                      const HealthSectionScreen(),
-                      SizedBox(height: Sizes.screenHeight * 0.16),
-                    ]
-                    // ],
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      Assets.assetsNoInternet,
+                      height: Sizes.screenHeight * 0.12,
+                      width: Sizes.screenWidth * 0.18,
                     ),
+                    // Sizes.spaceHeight5,
+                    TextConst(
+                      "Oops! Unable to Access AIMSwasthya",
+                      size: Sizes.fontSizeSix,
+                      // size: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.black,
+                    ),
+                    TextConst(
+                      "Please check your internet connection and try again.",
+                      size: Sizes.fontSizeFour,
+                      // size: 10,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.blue,
+                    ),
+                    Sizes.spaceHeight20,
+                    AppBtn(
+                        title: "Refresh",
+                        onTap: () {
+                          _checkConnection();
+                        })
+                  ],
+                ),
               ),
-            ),
+            )
+          : homeCon.patientHomeModel == null ||
+                  homeCon.patientHomeModel!.data == null ||
+                  homeCon.loading
+              ? const Center(child: LoadData())
+              : RefreshIndicator(
+                  color: AppColor.blue,
+                  onRefresh: () async {
+                    _checkConnection();
+                  },
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          constAppBarContainer(),
+                          sectionSpacing,
+                          if (homeCon.patientHomeModel != null &&
+                              homeCon.patientHomeModel!.data!.appointments!
+                                  .isNotEmpty &&
+                              !homeCon.noServicesArea)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Sizes.screenWidth * 0.04,
+                              ),
+                              child: textFields(BorderRadius.circular(15)),
+                            ),
+                          sectionSpacing,
+                          if (homeCon.patientHomeModel != null &&
+                              homeCon.patientHomeModel!.data != null)
+                            symptomsSection(),
+                          sectionSpacing,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Sizes.screenWidth * 0.03),
+                            width: Sizes.screenWidth,
+                            child: const Image(
+                                image: AssetImage(Assets.imagesAppointment)),
+                          ),
+                          sectionSpacing,
+                          if (homeCon.patientHomeModel != null &&
+                              homeCon.patientHomeModel!.data != null)
+                            const SpecialiasationScreen(),
+                          sectionSpacing,
+                          topSpecialistNearMe(),
+                          sectionSpacing,
+                          const HealthSectionScreen(),
+                          SizedBox(height: Sizes.screenHeight * 0.16),
+                        ]
+                        // ],
+                        ),
+                  ),
+                ),
     );
   }
 
@@ -217,6 +291,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         children: [
                           Consumer<PatientHomeViewModel>(
                               builder: (context, homeCon, _) {
+                            if (!isInternetConnected!) {
+                              return Text("-");
+                            }
                             if (homeCon.selectedLocationData == null) {
                               return const SizedBox();
                             }
@@ -241,31 +318,34 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     ),
                   ),
                   const Spacer(),
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, RoutesName.userNotificationScreen);
-                      },
-                      child: Consumer<NotificationViewModel>(
-                        builder: (context, notificationVM, _) {
-                          final hasUnreadNotifications = notificationVM.notificationModel?.data?.any((n) => n.readAt == null) ?? false;
-                          return Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              Image(
-                                image: const AssetImage(Assets.iconsWellIcon),
-                                height: Sizes.screenHeight * 0.025,
-                              ),
-                              if (hasUnreadNotifications)
-                                Container(
-                                  height: 8,
-                                  width: 8,
-                                  decoration: const BoxDecoration(color: Color(0xff64DB3A), shape: BoxShape.circle),
-                                )
-                            ],
-                          );
-                        },
-                      )),
+                  GestureDetector(onTap: () {
+                    Navigator.pushNamed(
+                        context, RoutesName.userNotificationScreen);
+                  }, child: Consumer<NotificationViewModel>(
+                    builder: (context, notificationVM, _) {
+                      final hasUnreadNotifications = notificationVM
+                              .notificationModel?.data
+                              ?.any((n) => n.readAt == null) ??
+                          false;
+                      return Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Image(
+                            image: const AssetImage(Assets.iconsWellIcon),
+                            height: Sizes.screenHeight * 0.025,
+                          ),
+                          if (hasUnreadNotifications)
+                            Container(
+                              height: 8,
+                              width: 8,
+                              decoration: const BoxDecoration(
+                                  color: Color(0xff64DB3A),
+                                  shape: BoxShape.circle),
+                            )
+                        ],
+                      );
+                    },
+                  )),
                   Sizes.spaceWidth15,
                   Image(
                       image: const AssetImage(Assets.logoProfileAppLogo),
@@ -277,15 +357,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 thickness: 0.5,
                 color: Color(0xff306E92),
               ),
-              // if (homeCon.locationData == null ||
-              //     homeCon.locationData!.patientLocation!.name == null)
-              //   noServesArea(),
-              // if (homeCon.patientHomeModel != null &&
-              //     homeCon.locationData != null)
-              //   homeCon.patientHomeModel!.data!.appointments!.isEmpty
-              //       ?
-              //       : docRescheduleScr(
-              //           homeCon.patientHomeModel!.data!.appointments![0]),
               getAppbarContentBasedOnCondition(),
               Sizes.spaceHeight3,
             ],
@@ -297,6 +368,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Widget getAppbarContentBasedOnCondition() {
     return Consumer<PatientHomeViewModel>(builder: (context, homeCon, _) {
+      if (!isInternetConnected!) {
+        return noInternet();
+        // Image.asset(Assets.assetsNoInternet, width: Sizes.screenWidth/4s,);
+      }
       if ((homeCon.locationData == null ||
           homeCon.locationData!.patientLocation!.name == null)) {
         return noServesArea();
@@ -313,6 +388,80 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         }
       }
     });
+  }
+
+  Widget noInternet() {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage(Assets.imagesPlusIcons), fit: BoxFit.fitWidth),
+      ),
+      child: Column(
+        children: [
+          Image.asset(
+            Assets.assetsNoInternet,
+            height: Sizes.screenHeight * 0.12,
+            width: Sizes.screenWidth * 0.18,
+          ),
+          // Sizes.spaceHeight5,
+          TextConst(
+            "Oops! Unable to Access AIMSwasthya",
+            size: Sizes.fontSizeSix,
+            // size: 16,
+            fontWeight: FontWeight.w500,
+            color: AppColor.white,
+          ),
+          TextConst(
+            "Please check your internet connection and try again.",
+            size: Sizes.fontSizeFour,
+            // size: 10,
+            fontWeight: FontWeight.w400,
+            color: AppColor.white,
+          ),
+          Sizes.spaceHeight20,
+          Container(
+            width: Sizes.screenWidth,
+            alignment: Alignment.center,
+            height: Sizes.screenHeight * 0.013,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: AppColor.lightSkyBlue.withOpacity(0.5),
+            ),
+            child: Container(
+              width: Sizes.screenWidth / 3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColor.lightBlue,
+              ),
+            ),
+            // Row(
+            //   children: [
+            //     Container(
+            //       // height: Sizes.screenHeight*0.01,
+            //       width: 110,
+            //       decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.circular(20),
+            //         color: Colors.transparent,
+            //       ),
+            //     ),
+            //
+            //     // Container(
+            //     //   // height: Sizes.screenHeight*0.018,
+            //     //   width: 110,
+            //     //   decoration: BoxDecoration(
+            //     //     borderRadius: BorderRadius.circular(20),
+            //     //     color: Colors.transparent,
+            //     //   ),
+            //     // ),
+            //   ],
+            // ),
+          ),
+          Sizes.spaceHeight25,
+
+          textFields(BorderRadius.circular(20))
+        ],
+      ),
+    );
   }
 
   Widget symptomsSection() {
@@ -815,7 +964,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     fontSize: Sizes.fontSizeFourPFive,
                     onTap: () {
                       Provider.of<UpdateAppointmentViewModel>(context,
-                          listen: false)
+                              listen: false)
                           .setRescheduleAppointmentData(appointmentData);
                       Navigator.pushNamed(
                           context, RoutesName.doctorProfileScreen,
@@ -875,27 +1024,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 color: AppColor.lightBlue,
               ),
             ),
-            // Row(
-            //   children: [
-            //     Container(
-            //       // height: Sizes.screenHeight*0.01,
-            //       width: 110,
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(20),
-            //         color: Colors.transparent,
-            //       ),
-            //     ),
-            //
-            //     // Container(
-            //     //   // height: Sizes.screenHeight*0.018,
-            //     //   width: 110,
-            //     //   decoration: BoxDecoration(
-            //     //     borderRadius: BorderRadius.circular(20),
-            //     //     color: Colors.transparent,
-            //     //   ),
-            //     // ),
-            //   ],
-            // ),
           ),
           Sizes.spaceHeight25,
           textFields(BorderRadius.circular(20))

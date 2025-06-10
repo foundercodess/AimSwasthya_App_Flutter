@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/view_model/network_check.dart';
 import '../../p_view_model/patient_profile_view_model.dart';
 import '../../p_view_model/voice_search_view_model.dart';
 import '../../p_view_model/user_role_view_model.dart';
@@ -41,23 +42,33 @@ class _BottomNevBarState extends State<BottomNevBar> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final makeApiCall = ModalRoute.of(context)?.settings.arguments;
-      if (makeApiCall == true) {
-        Provider.of<PatientHomeViewModel>(context, listen: false)
-            .getLocationApi(context);
-        Provider.of<WellnessLibraryViewModel>(context,listen: false)
-            .getPatientWellnessApi(context);
-        await LocalImageHelper.instance.loadImages();
-        Provider.of<UserPatientProfileViewModel>(context,listen: false).userPatientProfileApi(context);
-         Provider.of<NotificationViewModel>(context, listen: false)
+      _checkConnection();
+    });
+    super.initState();
+  }
+
+  void _checkConnection() async {
+    final isInternetConnected = await NetworkChecker.hasInternetConnection();
+    setState(() {});
+    if (!isInternetConnected) {
+      return;
+    }
+    final makeApiCall = ModalRoute.of(context)?.settings.arguments;
+    if (makeApiCall == true) {
+      Provider.of<PatientHomeViewModel>(context, listen: false)
+          .getLocationApi(context);
+      Provider.of<WellnessLibraryViewModel>(context, listen: false)
+          .getPatientWellnessApi(context);
+      await LocalImageHelper.instance.loadImages();
+      Provider.of<UserPatientProfileViewModel>(context, listen: false)
+          .userPatientProfileApi(context);
+      Provider.of<NotificationViewModel>(context, listen: false)
           .fetchNotifications(
         type: 'patient',
       );
-      }
-      Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
-          .clearValues();
-    });
-    super.initState();
+    }
+    Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
+        .clearValues();
   }
 
   @override

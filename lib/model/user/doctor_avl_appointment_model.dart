@@ -658,6 +658,7 @@ class Reviews {
   dynamic review;
   dynamic patientId;
   dynamic name;
+  dynamic createdAt;
 
   Reviews(
       {this.reviewId,
@@ -665,7 +666,9 @@ class Reviews {
       this.consultedFor,
       this.review,
       this.patientId,
-      this.name});
+      this.name,
+      this.createdAt
+      });
 
   Reviews.fromJson(Map<String, dynamic> json) {
     reviewId = json['review_id'];
@@ -674,6 +677,7 @@ class Reviews {
     review = json['review'];
     patientId = json['patient_id'];
     name = json['name'];
+    createdAt = json['created_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -684,6 +688,7 @@ class Reviews {
     data['review'] = review;
     data['patient_id'] = patientId;
     data['name'] = name;
+    data['created_at'] = createdAt;
     return data;
   }
 }
