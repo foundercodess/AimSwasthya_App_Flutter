@@ -24,11 +24,12 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
   bool isChecked = false;
   @override
   void initState() {
-        final patientAuthCon =
+    final patientAuthCon =
         Provider.of<UserRoleViewModel>(context, listen: false);
-        if(patientAuthCon.userRole==2){
-           ImageDownloader().fetchAndDownloadImages(context, folderName: 'logos/static_icons/');
-        }
+    if (patientAuthCon.userRole == 2) {
+      ImageDownloader()
+          .fetchAndDownloadImages(context, folderName: 'logos/static_icons/');
+    }
     super.initState();
   }
 
@@ -98,12 +99,13 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   filled: true,
                   onChanged: (v) {
                     if (v.length == 10) {
+                      print("role ${authCon.userRole} || nav ${navType}");
                       FocusScope.of(context).unfocus();
-                      if (authCon.userRole ==
-                      2) {
+                      if (authCon.userRole == 2) {
                         patientAuthCon.isRegisterApi(
                             phoneController.text, "", "phone", context);
                       } else {
+                        print("fdklfsjlk");
                         doctorAuthCon.isRegisterDocApi(
                             phoneController.text, "", "phone", context);
                       }
@@ -142,14 +144,13 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        if(authCon.userRole==1){
+                        if (authCon.userRole == 1) {
                           User? user =
-                          await doctorAuthCon.signInWithGoogle(context);
-                        }else{
+                              await doctorAuthCon.signInWithGoogle(context);
+                        } else {
                           User? user =
-                          await patientAuthCon.signInWithGoogle(context);
+                              await patientAuthCon.signInWithGoogle(context);
                         }
-
                       },
                       child: Image.asset(
                         Assets.iconsGoogle,
@@ -186,7 +187,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                       ),
                       TextSpan(
                         text:
-                            " ${AppLocalizations.of(context)!.terms_and_conditions}",
+                            AppLocalizations.of(context)!.terms_and_conditions,
                         style: TextStyle(
                           fontFamily: 'Poppins-Regular',
                           decoration: TextDecoration.underline,
@@ -197,7 +198,13 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const TermsOfUserScreen(type: '1',)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '1',
+                                        )));
                           },
                       ),
                       TextSpan(
@@ -221,7 +228,13 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const TermsOfUserScreen(type: '3',)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '3',
+                                        )));
                           },
                       ),
                     ]),

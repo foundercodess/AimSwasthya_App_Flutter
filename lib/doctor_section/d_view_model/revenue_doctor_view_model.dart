@@ -60,7 +60,7 @@ class RevenueDoctorViewModel extends ChangeNotifier {
     Map data = {
       "doctor_id" : userId
     };
-    print(jsonEncode(data));
+    debugPrint(jsonEncode(data));
     _revenueDoctorRepo.revenueDoctorApi(data).then((value) {
       if (value.status == true) {
         setRevenueDoctorData(value);

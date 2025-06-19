@@ -427,50 +427,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
               suffixIcon: smcViewModel.loading
                   ? const CupertinoActivityIndicator()
                   : GestureDetector(
-                onTap: () async {
-                  if (!isSmcEntered) {
-                    Utils.show("Please enter SMC number to verify", context);
-                    return;
-                  }
+                      onTap: () async {
+                        if (!isSmcEntered) {
+                          Utils.show(
+                              "Please enter SMC number to verify", context);
+                          return;
+                        }
 
-                  await smcViewModel.docUpsertSmcNumberApi(_smcNumController.text,context);
+                        await smcViewModel.docUpsertSmcNumberApi(
+                            _smcNumController.text, context);
 
-                  final model = smcViewModel.upsertSmcNumberModel;
+                        final model = smcViewModel.upsertSmcNumberModel;
 
-                  if (model?.status == true && model?.verifiedFlag == "Y") {
-                    Utils.show("SMC Number verified successfully.", context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(model?.message ?? "Invalid SMC Number")),
-                    );
-                  }
+                        if (model?.status == true &&
+                            model?.verifiedFlag == "Y") {
+                          Utils.show(
+                              "SMC Number verified successfully.", context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    model?.message ?? "Invalid SMC Number")),
+                          );
+                        }
 
-                  // Refresh UI
-                  setState(() {});
-                },
-                child: isVerified
-                    ? Icon(
-                  Icons.check_circle,
-                  size: Sizes.screenWidth * 0.1,
-                  color: const Color(0xff4ECB71),
-                )
-                    : Container(
-                  decoration: BoxDecoration(
-                    color: isSmcEntered ? AppColor.textfieldGrayColor : AppColor.textfieldGrayColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  height: Sizes.screenHeight * 0.02,
-                  width: Sizes.screenWidth * 0.22,
-                  alignment: Alignment.center,
-                  child: TextConst(
-                    "verify".toUpperCase(),
-                    size: Sizes.fontSizeFour,
-                    fontWeight: FontWeight.w400,
-                    color: isSmcEntered ? AppColor.black : Colors.black,
-                  ),
-                ),
-              ),
+                        // Refresh UI
+                        setState(() {});
+                      },
+                      child: isVerified
+                          ? Icon(
+                              Icons.check_circle,
+                              size: Sizes.screenWidth * 0.1,
+                              color: const Color(0xff4ECB71),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: isSmcEntered
+                                    ? AppColor.blue
+                                    : AppColor.textfieldGrayColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              height: Sizes.screenHeight * 0.02,
+                              width: Sizes.screenWidth * 0.22,
+                              alignment: Alignment.center,
+                              child: TextConst(
+                                "verify".toUpperCase(),
+                                size: Sizes.fontSizeFour,
+                                fontWeight: FontWeight.w400,
+                                color: isSmcEntered
+                                    ? AppColor.white
+                                    : Colors.black,
+                              ),
+                            ),
+                    ),
             ),
 
             // CustomTextField(
@@ -551,7 +561,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (doctorCon.identityImage != null) ...[
                       Sizes.spaceHeight3,
                       SizedBox(
-                        width: Sizes.screenWidth*0.32,
+                        width: Sizes.screenWidth * 0.32,
                         child: TextConst(
                           overflow: TextOverflow.ellipsis,
                           padding:

@@ -1,4 +1,6 @@
 // model/user/patient_home_model.dart
+import 'package:aim_swasthya/model/user/patient_Appointment_model.dart' show AppointmentsData;
+
 class PatientHomeModel {
   bool? status;
   Data? data;
@@ -22,7 +24,7 @@ class PatientHomeModel {
 
 class Data {
   Patient? patient;
-  List<Appointments>? appointments;
+  List<AppointmentsData>? appointments;
   List<Doctors>? doctors;
   List<SymptomsDetails>? symptomsDetails;
   List<Specializations>? specializations;
@@ -43,9 +45,9 @@ class Data {
     patient =
         json['patient'] != null ? Patient.fromJson(json['patient']) : null;
     if (json['appointments'] != null) {
-      appointments = <Appointments>[];
+      appointments = <AppointmentsData>[];
       json['appointments'].forEach((v) {
-        appointments!.add(Appointments.fromJson(v));
+        appointments!.add(AppointmentsData.fromJson(v));
       });
     }
     if (json['doctors'] != null) {

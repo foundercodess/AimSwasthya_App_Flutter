@@ -2,7 +2,7 @@
 class Assets {
   Assets._();
 
-  static const String aimSwasthyaAppAssetsNoDataFound = 'assets/no_data_found.png';
+  static const String aimSwasthyaAppFlutterAssetsNoDataFound = 'assets/no_data_found.png';
   static const String allImagesAddProfile = 'assets/all_Images/add_profile.png';
   static const String allImagesSolarCalendar = 'assets/all_Images/solar_calendar.png';
   static const String allImagesViewMap = 'assets/all_Images/view_map.png';
@@ -25,6 +25,7 @@ class Assets {
   static const String assetsMic5 = 'assets/mic-5.png';
   static const String assetsMicc = 'assets/micc.png';
   static const String assetsNoDataFound = 'assets/no_data_found.jpg';
+  static const String assetsNoInternet = 'assets/no_internet.png';
   static const String assetsNoService = 'assets/no_service.png';
   static const String assetsYourProfile = 'assets/your_profile.png';
   static const String iconsAppointmens = 'assets/icons/appointmens.png';

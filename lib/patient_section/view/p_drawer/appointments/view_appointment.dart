@@ -370,10 +370,10 @@ class _ViewAppointmentsScreenState extends State<ViewAppointmentsScreen> {
                                     "Oops! You can’t reschedule appointments less than 1 hour before the scheduled time.");
                             return;
                           }
-                          Provider.of<UpdateAppointmentViewModel>(context,
-                                  listen: false)
-                              .setRescheduleAppointmentID(
-                                  appointmentData.appointmentId.toString());
+                          // Provider.of<UpdateAppointmentViewModel>(context,
+                          //         listen: false)
+                          //     .setRescheduleAppointmentID(
+                          //         appointmentData.appointmentId.toString());
                           Provider.of<UpdateAppointmentViewModel>(context,
                                   listen: false)
                               .setRescheduleAppointmentData(appointmentData);

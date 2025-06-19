@@ -135,8 +135,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             }
           } else if (slotScheduleCon.widgetIndex == 2) {
             slotScheduleCon.docScheduleSlotTypeApi(context);
-          }else{
-
+          } else {
             slotScheduleCon.docScheduleInsertApi(context);
           }
         },
@@ -151,6 +150,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       void Function()? onTap}) {
     return AppBar(
         backgroundColor: AppColor.white,
+        leadingWidth: 30,
+        toolbarHeight: 30,
         leading: GestureDetector(
             onTap: onTap ??
                 () {
@@ -158,7 +159,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 },
             child: const Padding(
               padding: EdgeInsets.only(left: 12),
-              child: Image(image: AssetImage(Assets.iconsBackBtn)),
+              child: Image(image: AssetImage('assets/icons/back.png'), width: 20,height: 20,alignment: Alignment.center,),
             )),
         bottom: isBottomAllowed
             ? PreferredSize(
@@ -187,7 +188,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             Center(
               child: TextConst(
                 AppLocalizations.of(context)!.select_maximum_days,
-                size: Sizes.fontSizeFive ,
+                size: Sizes.fontSizeFive,
                 fontWeight: FontWeight.w400,
                 color: AppColor.textfieldTextColor.withOpacity(0.7),
               ),
@@ -282,7 +283,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               slotScheduleCon.appointmentDurationList.length, (index) {
             final time = slotScheduleCon.appointmentDurationList[index];
             return GestureDetector(
-              onTap: () {   
+              onTap: () {
                 print("asdfghjkl;: ${time['value']}");
                 slotScheduleCon.setAppointmentDuration(time['value']!);
               },
@@ -341,7 +342,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     required bool showDatePicker,
   }) {
     final isSelected = slotScheduleCon.slotType == type;
-    
+
     return Row(
       children: [
         _buildRadioButton(
@@ -376,7 +377,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: isSelected ? AppColor.lightBlue : AppColor.textfieldGrayColor,
+            color:
+                isSelected ? AppColor.lightBlue : AppColor.textfieldGrayColor,
             width: 2,
           ),
         ),

@@ -254,6 +254,8 @@ class AddClinicDoctorViewModel extends ChangeNotifier {
       "longitude": selectedLongitude!.toStringAsFixed(5),
       "landmark": landMark
     };
+
+    debugPrint("payload: ${jsonEncode(data)}");
     _addClinicDoctorRepo.addClinicDocApi(data).then((value) {
       if (value ["status"] == true) {
         setClinicData(true);

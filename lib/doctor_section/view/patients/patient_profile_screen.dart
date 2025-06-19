@@ -115,12 +115,14 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         patientAppointmentData.status!.toLowerCase() == "cancelled";
     final isRescheduled =
         patientAppointmentData.status!.toLowerCase() == "reschduled";
-    
+    final isPastAppointment =
+        Provider.of<DocPatientAppointmentViewModel>(context).isPastAppointment;
     if (patientAppointmentData == null) {
       return const Center(child: LoadData());
     }
 
-    void showConfirmationDialog(String title, String message, VoidCallback onConfirm) {
+    void showConfirmationDialog(
+        String title, String message, VoidCallback onConfirm) {
       showCupertinoDialog(
         context: context,
         builder: (_) => ActionOverlay(
@@ -133,8 +135,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
 
     return Container(
       margin: EdgeInsets.only(
-          left: Sizes.screenWidth * 0.04,
-          right: Sizes.screenWidth * 0.05),
+          left: Sizes.screenWidth * 0.04, right: Sizes.screenWidth * 0.05),
       width: Sizes.screenWidth,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -151,8 +152,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                 ),
                 image: DecorationImage(
                     image: patientAppointmentData.signedImageUrl != null
-                        ? NetworkImage(
-                            patientAppointmentData.signedImageUrl!)
+                        ? NetworkImage(patientAppointmentData.signedImageUrl!)
                         : const AssetImage(Assets.logoDoctor) as ImageProvider,
                     fit: BoxFit.fitHeight)),
           ),
@@ -177,8 +177,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                       Sizes.spaceWidth5,
                       TextConst(
                         DateFormat('d MMM').format(DateTime.parse(
-                            patientAppointmentData.appointmentDate
-                                .toString())),
+                            patientAppointmentData.appointmentDate.toString())),
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,
                       ),
@@ -222,117 +221,119 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   fontWeight: FontWeight.w400,
                 ),
                 Sizes.spaceHeight15,
-                isCancelled
-                    ? SizedBox(
-                        height: Sizes.screenHeight * 0.06,
-                        child: TextConst(
-                          "Cancelled",
-                          color: Colors.grey,
-                          size: Sizes.fontSizeFour,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    : Row(
-                        children: [
-                          if (!isRescheduled && !isCancelled)
-                            ButtonConst(
-                                title: "Reschedule",
-                                size: Sizes.fontSizeTwo,
-                                fontWeight: FontWeight.w400,
-                                borderRadius: 8,
-                                height: Sizes.screenHeight * 0.031,
-                                width: Sizes.screenWidth * 0.23,
-                                color: AppColor.blue,
-                                onTap: () {
-                                  if (cancelRescheduleAllowed) {
-                                    showConfirmationDialog(
-                                      "Reschedule Appointment",
-                                      "Are you sure you want to reschedule your appointment?",
-                                      () {
-                                        Provider.of<CancelAppointmentViewModel>(
-                                                context,
-                                                listen: false)
-                                            .cancelAppointmentApi(
-                                                status: 'reschduled',
-                                                isDoctorCancel: true,
-                                                context,
-                                                patientAppointmentData
-                                                    .appointmentId
-                                                    .toString());
-                                      },
-                                    );
-                                  } else {
-                                    showInfoOverlay(
-                                        title: "Info",
-                                        errorMessage:
-                                            "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
-                                  }
-                                }),
-                          if (isCancelled || isRescheduled) ...[
-                            Sizes.spaceWidth5,
-                            Center(
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: Sizes.screenHeight * 0.06,
-                                child: TextConst(
-                                  isCancelled
-                                      ? "Cancelled"
-                                      : "Rescheduled",
-                                  color: Colors.grey,
-                                  size: Sizes.fontSizeFour,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                isPastAppointment
+                    ? const SizedBox()
+                    : isCancelled
+                        ? SizedBox(
+                            height: Sizes.screenHeight * 0.06,
+                            child: TextConst(
+                              "Cancelled",
+                              color: Colors.grey,
+                              size: Sizes.fontSizeFour,
+                              fontWeight: FontWeight.w500,
                             ),
-                          ],
-                          Sizes.spaceWidth10,
-                          if (isCancelAllowed && !isCancelled)
-                            TextButton(
-                                onPressed: () {
-                                  if (cancelRescheduleAllowed) {
-                                    showConfirmationDialog(
-                                      "Cancel Appointment",
-                                      "Are you sure you want to cancel your appointment?",
-                                      () {
-                                        Provider.of<CancelAppointmentViewModel>(
-                                                context,
-                                                listen: false)
-                                            .cancelAppointmentApi(
-                                                isDoctorCancel: true,
-                                                context,
-                                                patientAppointmentData
-                                                    .appointmentId
-                                                    .toString());
-                                      },
-                                    );
-                                  } else {
-                                    showInfoOverlay(
-                                        title: "Info",
-                                        errorMessage:
-                                            "Oops! You can't cancel appointments less than 1 hour before the scheduled time.");
-                                  }
-                                },
-                                child: TextConst(
-                                  "Cancel",
-                                  size: Sizes.fontSizeFour,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.red,
-                                )),
-                          if (isCancelled)
-                            Center(
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: Sizes.screenHeight * 0.06,
-                                child: TextConst(
-                                  "Cancelled",
-                                  color: Colors.grey,
-                                  size: Sizes.fontSizeFour,
-                                  fontWeight: FontWeight.w500,
+                          )
+                        : Row(
+                            children: [
+                              if (!isRescheduled && !isCancelled)
+                                ButtonConst(
+                                    title: "Reschedule",
+                                    size: Sizes.fontSizeThree,
+                                    fontWeight: FontWeight.w400,
+                                    borderRadius: 10,
+                                    height: Sizes.screenHeight * 0.038,
+                                    width: Sizes.screenWidth * 0.3,
+                                    color: AppColor.blue,
+                                    onTap: () {
+                                      if (cancelRescheduleAllowed) {
+                                        showConfirmationDialog(
+                                          "Reschedule Appointment",
+                                          "Are you sure you want to reschedule your appointment?",
+                                          () {
+                                            Provider.of<CancelAppointmentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .cancelAppointmentApi(
+                                                    status: 'reschduled',
+                                                    isDoctorCancel: true,
+                                                    context,
+                                                    patientAppointmentData
+                                                        .appointmentId
+                                                        .toString());
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      } else {
+                                        showInfoOverlay(
+                                            title: "Info",
+                                            errorMessage:
+                                                "Oops! You can't reschedule appointments less than 1 hour before the scheduled time.");
+                                      }
+                                    }),
+                              if (isCancelled || isRescheduled) ...[
+                                Sizes.spaceWidth5,
+                                Center(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: Sizes.screenHeight * 0.06,
+                                    child: TextConst(
+                                      isCancelled ? "Cancelled" : "Rescheduled",
+                                      color: Colors.grey,
+                                      size: Sizes.fontSizeFour,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                        ],
-                      ),
+                              ],
+                              Sizes.spaceWidth10,
+                              if (isCancelAllowed && !isCancelled)
+                                TextButton(
+                                    onPressed: () {
+                                      if (cancelRescheduleAllowed) {
+                                        showConfirmationDialog(
+                                          "Cancel Appointment",
+                                          "Are you sure you want to cancel your appointment?",
+                                          () {
+                                            Provider.of<CancelAppointmentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .cancelAppointmentApi(
+                                                    isDoctorCancel: true,
+                                                    context,
+                                                    patientAppointmentData
+                                                        .appointmentId
+                                                        .toString());
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      } else {
+                                        showInfoOverlay(
+                                            title: "Info",
+                                            errorMessage:
+                                                "Oops! You can't cancel appointments less than 1 hour before the scheduled time.");
+                                      }
+                                    },
+                                    child: TextConst(
+                                      "Cancel",
+                                      size: Sizes.fontSizeFour,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.red,
+                                    )),
+                              if (isCancelled)
+                                Center(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: Sizes.screenHeight * 0.06,
+                                    child: TextConst(
+                                      "Cancelled",
+                                      color: Colors.grey,
+                                      size: Sizes.fontSizeFour,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                 Sizes.spaceHeight5,
                 Sizes.spaceHeight3,
               ],
@@ -383,7 +384,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
         Provider.of<DocPatientAppointmentViewModel>(context)
             .doctorsAppointmentsDataModel;
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
-    
+
     if (patientProfileData.loading) {
       return const Center(child: LoadData());
     }
@@ -411,8 +412,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
             shrinkWrap: true,
             padding: const EdgeInsets.all(0),
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: patientProfileData
-                .patientProfileModel!.medicalRecords!.length,
+            itemCount:
+                patientProfileData.patientProfileModel!.medicalRecords!.length,
             itemBuilder: (context, index) {
               final docData = patientProfileData
                   .patientProfileModel!.medicalRecords![index];
@@ -451,8 +452,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                             context,
                                             listen: false)
                                         .medicalHealthReportApi(
-                                            patientAppointmentData!
-                                                .patientId
+                                            patientAppointmentData!.patientId
                                                 .toString());
                                     if (!context.mounted) return;
                                     Navigator.pushNamed(context,
@@ -461,7 +461,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                     if (!context.mounted) return;
                                     showInfoOverlay(
                                       title: "Error",
-                                      errorMessage: "Failed to load medical reports. Please try again.",
+                                      errorMessage:
+                                          "Failed to load medical reports. Please try again.",
                                     );
                                   }
                                 },
@@ -535,10 +536,9 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: Sizes.screenWidth*0.5,
+                      width: Sizes.screenWidth * 0.5,
                       child: TextConst(
-                        overflow:
-                        TextOverflow.ellipsis,
+                        overflow: TextOverflow.ellipsis,
                         documentName ?? "",
                         size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w400,

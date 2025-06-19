@@ -1,3 +1,4 @@
+// doctor_section/view/payout/payout_screen.dart
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +47,10 @@ class _PayoutScreenState extends State<PayoutScreen> {
               fontWeight: FontWeight.w400,
             ),
             Sizes.spaceHeight20,
-            paymentMethod("Use a card", Assets.iconsRazorpayIcon,
-                "Debit/Credit cards", 0),
+            paymentMethod("Razorpay", Assets.iconsRazorpayIcon,
+                "", 0),
             Sizes.spaceHeight3,
-            paymentMethod("PhonePe", Assets.iconsPaytmIcon, "", 1),
+            paymentMethod("PhonePe", Assets.iconsPhonepeIcon, "", 1),
             // Sizes.spaceHeight3,
             // paymentMethod("PhonePe", Assets.iconsPaytmIcon, "", 2),
             // Sizes.spaceHeight3,

@@ -38,35 +38,37 @@ class _ShowDoctorsScreenState extends State<ShowDoctorsScreen> {
                   AppbarConst(
                     title: AppLocalizations.of(context)!.symptoms,
                   ),
-                  if (voiceSearchCon.aiSearchData!.data == null ||
-                      voiceSearchCon.aiSearchData!.data!.isEmpty)
-                  SizedBox(
-                    height: Sizes.screenHeight/1.3,
-                    child: Column(
-                      // 945
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const NoMessage(
-                          message: "No specialists around here, for now...",
-                          title: "We’re working to bring expert care to your area",
-                        ),
-                    if(homeCon.noServicesArea)
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: Sizes.screenWidth * 0.04),
-                      child: ButtonConst(
-                        title:
-                        'Change Location',
-                        onTap: () {
-                         Navigator.pop(context);
-                         Navigator.pop(context);
-                        },
-                        color: AppColor.btnPurpleColor,
-                      ),)
-                      ],
+                  if (voiceSearchCon.aiSearchData == null ||
+                      (voiceSearchCon.aiSearchData!.data == null ||
+                          voiceSearchCon.aiSearchData!.data!.isEmpty))
+                    SizedBox(
+                      height: Sizes.screenHeight / 1.3,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const NoMessage(
+                            message: "No specialists around here, for now...",
+                            title:
+                                "We’re working to bring expert care to your area",
+                          ),
+                          if (homeCon.noServicesArea)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Sizes.screenWidth * 0.04),
+                              child: ButtonConst(
+                                title: 'Change Location',
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                color: AppColor.btnPurpleColor,
+                              ),
+                            )
+                        ],
+                      ),
                     ),
-                  ),
-                  if (voiceSearchCon.aiSearchData!.data != null &&
+                  if (voiceSearchCon.aiSearchData != null &&
+                      voiceSearchCon.aiSearchData!.data != null &&
                       voiceSearchCon.aiSearchData!.data!.isNotEmpty) ...[
                     SizedBox(
                       width: Sizes.screenWidth,
@@ -149,115 +151,6 @@ class _ShowDoctorsScreenState extends State<ShowDoctorsScreen> {
                 ],
               ),
             ),
-      // SingleChildScrollView(
-      //   child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.center,
-      //       children: [
-      //         const AppbarConst(
-      //           title: 'Symptoms',
-      //         ),
-      //         Sizes.spaceHeight10,
-      //         Center(
-      //           child: TextConst(
-      //             "Based on your symptoms, here are some",
-      //             color: AppColor.textfieldTextColor,
-      //             size: Sizes.fontSizeFour,
-      //             fontWeight: FontWeight.w400,
-      //           ),
-      //         ),
-      //         TextConst(
-      //           "top rated specialists for you!",
-      //           color: AppColor.textfieldTextColor,
-      //           size: Sizes.fontSizeFour,
-      //           fontWeight: FontWeight.w400,
-      //         ),
-      //         Sizes.spaceHeight20,
-      //         Container(
-      //           margin: const EdgeInsets.all(11),
-      //           padding: const EdgeInsets.only(top: 10,bottom: 15,left: 15,right: 15),
-      //           width: Sizes.screenWidth,
-      //           decoration: BoxDecoration(
-      //             // gradient: LinearGradient(
-      //             //   colors: [
-      //             //     Colors.white.withOpacity(0.3),
-      //             //     Colors.white.withOpacity(0.1),
-      //             //   ],
-      //             //   begin: Alignment.topLeft,
-      //             //   end: Alignment.bottomRight,
-      //             // ),
-      //             borderRadius: BorderRadius.circular(20),
-      //             boxShadow: [
-      //               BoxShadow(
-      //                 color: const Color(0xFFF3F3F3).withOpacity(0.25),
-      //                 offset: const Offset(0, 0),
-      //                 blurRadius: 0,
-      //                 spreadRadius: -2,
-      //               ),
-      //               BoxShadow(
-      //                 color: const Color(0xFFF3F3F3).withOpacity(0.6),
-      //                 offset: const Offset(0, 0),
-      //                 blurRadius: 0,
-      //                 spreadRadius: -2,
-      //               ),
-      //               BoxShadow(
-      //                 color: const Color(0xFFF3F3F3).withOpacity(0.05),
-      //                 offset: const Offset(0, 0),
-      //                 blurRadius: 10,
-      //                 spreadRadius: 2,
-      //               ),
-      //             ],
-      //           ),
-      //           // decoration: BoxDecoration(
-      //           //   borderRadius: BorderRadius.circular(24),
-      //           //
-      //           //   color: const Color(0xFFF3F3F3),
-      //           // ),
-      //           child:
-      //           GridView.builder(
-      //             padding: const EdgeInsets.all(0),
-      //             shrinkWrap: true,
-      //             physics: const NeverScrollableScrollPhysics(),
-      //             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      //               crossAxisCount: 2,
-      //               crossAxisSpacing: 30.0,
-      //               mainAxisSpacing: 30.0,
-      //               childAspectRatio: 0.862,
-      //             ),
-      //             itemCount: doctorListCon.doctors.length,
-      //             itemBuilder: (context, index) {
-      //               final doctor = doctorListCon.doctors[index];
-      //               // return
-      //               //   DoctorTile(
-      //               //   doctor: doctor,
-      //               //     color: AppColor.white,
-      //               // );
-      //
-      //             },
-      //           ),
-      //         ),
-      //         Sizes.spaceHeight20,
-      //         TextConst(
-      //           "Or else,  you can choose a specialist",
-      //           color: AppColor.textfieldTextColor,
-      //           size: Sizes.fontSizeFour,
-      //           fontWeight: FontWeight.w400,
-      //         ),
-      //         Sizes.spaceHeight20,
-      //         Padding(
-      //           padding:  EdgeInsets.symmetric(horizontal: Sizes.screenWidth*0.05),
-      //           child: ButtonConst(
-      //             title: 'Select a Specialist',
-      //             color: AppColor.blue,
-      //             onTap: () {
-      //               Navigator.pushNamed(context, RoutesName.allSpecialistScreen);
-      //             },
-      //           ),
-      //         ),
-      //         Sizes.spaceHeight20,
-      //
-      //       ],
-      //     ),
-      // ),
     );
   }
 

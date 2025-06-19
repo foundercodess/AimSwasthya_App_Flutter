@@ -6,7 +6,6 @@ import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/bottom_nav_view_model.dart';
 import 'package:flutter/cupertino.dart'
     show CupertinoAlertDialog, CupertinoDialogAction, showCupertinoDialog;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -153,61 +152,50 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TermsOfUserScreen(
-                                    type: '1',
-                                  )));
-                    },
-                    child: TextConst(
-                      "Terms of Use",
-                      size: Sizes.fontSizeFive,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.white,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '1',
+                                        )));
+                          },
+                          child: TextConst(
+                            "Terms of use",
+                            size: Sizes.fontSizeFive,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.white,
+                          ),
+                        ),
+                        TextConst(
+                          " & ",
+                          size: Sizes.fontSizeFive,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.white,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsOfUserScreen(
+                                          type: '3',
+                                        )));
+                          },
+                          child: TextConst(
+                            "Privacy policy",
+                            size: Sizes.fontSizeFive,
+                            fontWeight: FontWeight.w500,
+                            color: AppColor.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  TextConst(
-                    " & ",
-                    size: Sizes.fontSizeFive,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.white,
-                  ),
-                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TermsOfUserScreen(
-                                    type: '3',
-                                  )));
-                    },
-                    child: TextConst(
-                      "Privacy Policy",
-                      size: Sizes.fontSizeFive,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.white,
-                    ),
-                  ),
-                ],
-              ),
-              Sizes.spaceHeight10,
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, RoutesName.userDeleteAccountScreen);
-                        // Navigator.pushNamed(context, RoutesName.wellnesslibraryScreen);
-                      },
-                      child: TextConst(
-                        "Delete Account",
-                        size: Sizes.fontSizeFive,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.white,
-                      ),
-                    ),
+
                     Sizes.spaceHeight10,
                     GestureDetector(
                       onTap: () {
@@ -215,6 +203,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       },
                       child: TextConst(
                         AppLocalizations.of(context)!.about_Us,
+                        size: Sizes.fontSizeFive,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.white,
+                      ),
+                    ),
+                    Sizes.spaceHeight10,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, RoutesName.userDeleteAccountScreen);
+                      },
+                      child: TextConst(
+                        "Delete account",
                         size: Sizes.fontSizeFive,
                         fontWeight: FontWeight.w600,
                         color: AppColor.white,
@@ -226,8 +227,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         showCupertinoDialog(
                             barrierDismissible: false,
                             barrierLabel: "Register Prompt",
-                            // barrierColor: Colors.black.withOpacity(0.4),
-
                             context: context,
                             builder: (context) {
                               return const ActionOverlay();

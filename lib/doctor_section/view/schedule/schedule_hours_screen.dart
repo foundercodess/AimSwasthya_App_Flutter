@@ -32,13 +32,11 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
   Widget build(BuildContext context) {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     return Scaffold(
-            backgroundColor: AppColor.white,
-            body:revenueDocCon.revenueDoctorModel == null || revenueDocCon.loading
-                ? const Center(child: LoadData())
-                :
-            SingleChildScrollView(
+      backgroundColor: AppColor.white,
+      body: revenueDocCon.revenueDoctorModel == null || revenueDocCon.loading
+          ? const Center(child: LoadData())
+          : SingleChildScrollView(
               child: Column(
-
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   appBarConstant(
@@ -97,7 +95,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                 ],
               ),
             ),
-          );
+    );
   }
 
   Widget payoutSection() {
@@ -151,13 +149,14 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                           items: revenueDocCon.revenueDoctorModel!.earningMonth!
                               .map(
                                 (month) => PopupMenuItem<Map<String, String>>(
-                              value: {
-                                'monthYear': month.monthYear ?? '',
-                                'totalAmount': month.totalAmount?.toString() ?? '0',
-                              },
-                              child: Text(month.monthYear ?? ""),
-                            ),
-                          )
+                                  value: {
+                                    'monthYear': month.monthYear ?? '',
+                                    'totalAmount':
+                                        month.totalAmount?.toString() ?? '0',
+                                  },
+                                  child: Text(month.monthYear ?? ""),
+                                ),
+                              )
                               .toList(),
                         );
 
@@ -215,7 +214,6 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     );
   }
 
-
   Widget scheduleGraph() {
     final PageController pageController = PageController();
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
@@ -224,10 +222,10 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     final itemCount = analyticsList?.length ?? 0;
 
     if (analyticsList == null || analyticsList.isEmpty) {
-      return const Center(child: NoDataMessages(
+      return const Center(
+          child: NoDataMessages(
         message: "No Revenue analytics found",
-        title:
-        "You haven't recived any revenue analytics yet",
+        title: "You haven't recived any revenue analytics yet",
       ));
     }
 
@@ -360,10 +358,10 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
     final patientPayments = revenueDocCon.revenueDoctorModel!.patientPayment;
 
     if (patientPayments == null || patientPayments.isEmpty) {
-      return  const Center(child: NoDataMessages(
+      return const Center(
+          child: NoDataMessages(
         message: "No transaction found",
-        title:
-        "You haven't recived any transaction yet",
+        title: "You haven't recived any transaction yet",
       ));
       //   Center(
       //   child: Padding(
@@ -384,8 +382,10 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
         itemCount: revenueDocCon.revenueDoctorModel!.patientPayment!.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          final paymentData = revenueDocCon.revenueDoctorModel!.patientPayment![index];
-          final isNegative = paymentData.amount != null && paymentData.amount!.startsWith('-');
+          final paymentData =
+              revenueDocCon.revenueDoctorModel!.patientPayment![index];
+          final isNegative =
+              paymentData.amount != null && paymentData.amount!.startsWith('-');
 
           return Container(
             margin: EdgeInsets.only(
@@ -427,7 +427,9 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                 paymentData.amount ?? "",
                 size: Sizes.fontSizeFive,
                 fontWeight: FontWeight.w600,
-                color: isNegative ? const Color(0xffC10000) : const Color(0xff36D000),
+                color: isNegative
+                    ? const Color(0xffC10000)
+                    : const Color(0xff36D000),
               ),
             ),
           );
@@ -496,8 +498,6 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
         //     ),
         //   );
         // }
-    );
-
+        );
   }
-
 }

@@ -124,7 +124,7 @@ class DoctorAvlAppointmentViewModel extends ChangeNotifier {
       } else {
         showInfoOverlay(
             title: "Info",
-            errorMessage: '${value}',
+            errorMessage: '${value.msg}',
             onTap: () {
               Navigator.pop(context);
               Navigator.pop(context);

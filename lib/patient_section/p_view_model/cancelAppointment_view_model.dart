@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
 import '../../doctor_section/d_view_model/doc_update_appointment_view_model.dart' show DocPatientAppointmentViewModel;
-import 'doctor_avl_appointment_view_model.dart';
 
 
 class CancelAppointmentViewModel extends ChangeNotifier {
@@ -38,9 +37,11 @@ class CancelAppointmentViewModel extends ChangeNotifier {
               .patientHomeApi(context);
         }else{
           Provider.of<DocPatientAppointmentViewModel>(context, listen: false)
-              .docPatientAppointmentApi();
+              .docPatientAppointmentApi(loading: false);
           Provider.of<DoctorHomeViewModel>(context, listen: false)
               .doctorHomeApi(context);
+            //  Navigator.pop(context);
+
         }
 
         Navigator.pop(context);

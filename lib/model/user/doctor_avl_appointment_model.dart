@@ -334,21 +334,23 @@
 //   }
 // }
 
-
 class DoctorAvlAppointmentModel {
   bool? status;
   Data? data;
+  dynamic msg;
 
-  DoctorAvlAppointmentModel({this.status, this.data});
+  DoctorAvlAppointmentModel({this.status, this.data, this.msg});
 
   DoctorAvlAppointmentModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
+    msg = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = <String, dynamic>{};
     json['status'] = status;
+    json['message'] = msg;
     if (data != null) {
       json['data'] = data!.toJson();
     }
@@ -362,9 +364,15 @@ class Data {
   OtherClinic? otherClinic;
   List<Reviews>? reviews;
   List<Slots>? slots;
+  List<DiscountPercent>? discountPercent;
 
   Data(
-      {this.details, this.clinics, this.otherClinic, this.reviews, this.slots});
+      {this.details,
+      this.clinics,
+      this.otherClinic,
+      this.reviews,
+      this.slots,
+      this.discountPercent});
 
   Data.fromJson(Map<String, dynamic> json) {
     if (json['Details'] != null) {
@@ -394,6 +402,12 @@ class Data {
         slots!.add(Slots.fromJson(v));
       });
     }
+    if (json['DiscountPercent'] != null) {
+      discountPercent = <DiscountPercent>[];
+      json['DiscountPercent'].forEach((v) {
+        discountPercent!.add(DiscountPercent.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -412,6 +426,10 @@ class Data {
     }
     if (slots != null) {
       data['Slots'] = slots!.map((v) => v.toJson()).toList();
+    }
+    if (discountPercent != null) {
+      data['DiscountPercent'] =
+          discountPercent!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -433,22 +451,22 @@ class Details {
   dynamic preferredDoctorStatus;
   dynamic signedImageUrl;
 
-  Details(
-      {this.doctorId,
-      this.doctorName,
-      this.qualification,
-      this.email,
-      this.imageUrl,
-      this.experience,
-      this.smcNumber,
-      this.averageRating,
-      this.topRated,
-      this.reviewCount,
-      this.specializationId,
-      this.specializationName,
-      this.preferredDoctorStatus,
-      this.signedImageUrl,
-      });
+  Details({
+    this.doctorId,
+    this.doctorName,
+    this.qualification,
+    this.email,
+    this.imageUrl,
+    this.experience,
+    this.smcNumber,
+    this.averageRating,
+    this.topRated,
+    this.reviewCount,
+    this.specializationId,
+    this.specializationName,
+    this.preferredDoctorStatus,
+    this.signedImageUrl,
+  });
 
   Details.fromJson(Map<String, dynamic> json) {
     doctorId = json['doctor_id'];
@@ -658,6 +676,7 @@ class Reviews {
   dynamic review;
   dynamic patientId;
   dynamic name;
+  dynamic createdAt;
 
   Reviews(
       {this.reviewId,
@@ -665,7 +684,8 @@ class Reviews {
       this.consultedFor,
       this.review,
       this.patientId,
-      this.name});
+      this.name,
+      this.createdAt});
 
   Reviews.fromJson(Map<String, dynamic> json) {
     reviewId = json['review_id'];
@@ -674,6 +694,7 @@ class Reviews {
     review = json['review'];
     patientId = json['patient_id'];
     name = json['name'];
+    createdAt = json['created_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -684,6 +705,7 @@ class Reviews {
     data['review'] = review;
     data['patient_id'] = patientId;
     data['name'] = name;
+    data['created_at'] = createdAt;
     return data;
   }
 }
@@ -719,7 +741,7 @@ class Slots {
     if (json['available_time'] != null) {
       availableTime = <AvailableTime>[];
       json['available_time'].forEach((v) {
-        availableTime!.add( AvailableTime.fromJson(v));
+        availableTime!.add(AvailableTime.fromJson(v));
       });
     }
   }
@@ -734,8 +756,7 @@ class Slots {
     data['available_slots'] = availableSlots;
     data['rbg'] = rbg;
     if (availableTime != null) {
-      data['available_time'] =
-          availableTime!.map((v) => v.toJson()).toList();
+      data['available_time'] = availableTime!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -763,6 +784,22 @@ class AvailableTime {
     data['slot_time'] = slotTime;
     data['time_of_day'] = timeOfDay;
     data['slot_available_flag'] = slotAvailableFlag;
+    return data;
+  }
+}
+
+class DiscountPercent {
+  dynamic pId;
+  dynamic discount;
+  DiscountPercent({this.discount, this.pId});
+  DiscountPercent.fromJson(Map<String, dynamic> json) {
+    pId = json['patient_id'];
+    discount = json['DiscountPercent'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['patient_id'] = pId;
+    data['DiscountPercent'] = discount;
     return data;
   }
 }

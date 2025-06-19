@@ -34,15 +34,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   bool viewAllSlots = false;
   bool viewAllStories = false;
   bool isAppointmentReschedule = false;
+  dynamic doctorId;
+  dynamic clinicId;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("jvhvhh$viewAllStories");
       final arguments = ModalRoute.of(context)!.settings.arguments as Map?;
       if (arguments != null) {
-        final doctorId = arguments["doctor_id"];
-        final clinicId = arguments["clinic_id"];
+        setState(() {
+          doctorId = arguments["doctor_id"];
+          clinicId = arguments["clinic_id"];
+        });
         final docDCon =
             Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
         docDCon.doctorAvlAppointmentApi(doctorId, clinicId, context);
@@ -51,27 +54,105 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         setState(() {
           isAppointmentReschedule = !isNewBooking;
         });
-
       }
     });
   }
 
-  bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
-    // Combine date and time
-    String dateTimeString = "$bookingDate $hour24Format";
 
-    // Parse using the correct format
-    DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
-    DateTime bookingDateTime = format.parse(dateTimeString);
+  // bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+  //   print(bookingDate);
+  //   print(hour24Format);
+  //   // Convert ISO8601 to DateTime
+  //   DateTime parsedDate = DateTime.parse(bookingDate).toLocal();
+  //
+  //   // Format it to match "dd-MM-yyyy hh:mm a"
+  //   String formattedDate = DateFormat("dd-MM-yyyy").format(parsedDate);
+  //
+  //   String dateTimeString = "$formattedDate $hour24Format";
+  //   print(dateTimeString);
+  //
+  //   DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
+  //   DateTime bookingDateTime = format.parse(dateTimeString);
+  //
+  //   DateTime now = DateTime.now();
+  //
+  //   Duration difference = bookingDateTime.difference(now);
+  //
+  //   return difference.inMinutes > 60;
+  // }
 
-    // Get current time
-    DateTime now = DateTime.now();
+    bool isMoreThanOneHourAway(String bookingDate, String time) {
+    try {
+      DateTime bookingDateTime;
 
-    // Calculate difference
-    Duration difference = bookingDateTime.difference(now);
+      if (bookingDate.contains('T')) {
+        // Case 1: ISO 8601 format
+        DateTime parsed = DateTime.parse(bookingDate).toLocal();
+        String formattedDate = DateFormat("dd-MM-yyyy").format(parsed);
+        bookingDateTime = DateFormat("dd-MM-yyyy hh:mm a")
+            .parse("$formattedDate $time");
+      } else {
+        // Case 2: Already in dd-MM-yyyy format
+        bookingDateTime = DateFormat("dd-MM-yyyy hh:mm a")
+            .parse("$bookingDate $time");
+      }
 
-    // Return true if more than 1 hour away
-    return difference.inMinutes > 60;
+      DateTime now = DateTime.now();
+      Duration difference = bookingDateTime.difference(now);
+      return difference.inMinutes > 60;
+    } catch (e) {
+      print("❌ Date parsing error: $e");
+      return false;
+    }
+  }
+
+  // bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
+  //   String dateTimeString = "$bookingDate $hour24Format";
+  //   print(dateTimeString);
+  //   DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
+  //   DateTime bookingDateTime = format.parse(dateTimeString);
+  //
+  //   DateTime now = DateTime.now();
+  //
+  //   Duration difference = bookingDateTime.difference(now);
+  //
+  //   return difference.inMinutes > 60;
+  // }
+
+  String timeAgo(String isoDateString) {
+    final now = DateTime.now().toUtc();
+    final past = DateTime.parse(isoDateString);
+    final diff = now.difference(past);
+
+    if (diff.inDays >= 7) {
+      final weeks = diff.inDays ~/ 7;
+      return '$weeks week${weeks > 1 ? 's' : ''} ago';
+    } else if (diff.inDays >= 1) {
+      return '${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago';
+    } else if (diff.inHours >= 1) {
+      return '${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago';
+    } else if (diff.inMinutes >= 1) {
+      return '${diff.inMinutes} minute${diff.inMinutes > 1 ? 's' : ''} ago';
+    } else {
+      return 'Just now';
+    }
+  }
+
+  String formatBookingDate(String inputDate) {
+    DateTime dateTime;
+
+    try {
+      if (inputDate.contains('T')) {
+        dateTime = DateTime.parse(inputDate);
+      } else {
+        dateTime = DateFormat('d-M-yyyy').parse(inputDate);
+      }
+
+      return DateFormat('d MMM').format(dateTime);
+    } catch (e) {
+      print("Date parsing error: $e");
+      return 'Invalid Date';
+    }
   }
 
   void _scrollToTop() {
@@ -156,6 +237,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10)),
                   image: DecorationImage(
+                      alignment: Alignment.topCenter,
                       image: docData.signedImageUrl == null
                           ? const AssetImage(
                               Assets.logoDoctor,
@@ -204,6 +286,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   Sizes.spaceHeight3,
                   TextConst(
                     "${docData.doctorName}",
+                    maxLines: 1,
                     fontWeight: FontWeight.w500,
                     size: Sizes.fontSizeSeven,
                   ),
@@ -621,12 +704,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               final currentDate = DateTime.timestamp();
               dAVM.setRequestData({
                 'patient_id': userId,
-                "doctor_id": dAVM
-                    .doctorAvlAppointmentModel!.data!.details![0].doctorId
-                    .toString(),
-                "clinic_id": dAVM
-                    .doctorAvlAppointmentModel!.data!.clinics![0].clinicId
-                    .toString(),
+                "doctor_id": doctorId.toString(),
+                "clinic_id": clinicId.toString(),
                 "booking_date": dAVM.selectedDate!.availabilityDate,
                 "time_id": dAVM.selectedTime!.timeId,
                 "amount": dAVM.doctorAvlAppointmentModel!.data!.clinics![0].fee,
@@ -697,9 +776,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
               DateTime now = DateTime.now();
               bool isPast = slotDateTime.isBefore(now);
-
-              debugPrint("Combined Slot Time: $slotDateTime");
-              debugPrint("Is Past: $isPast");
               return GestureDetector(
                 onTap: () {
                   if (isPast) {
@@ -788,11 +864,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 padding: const EdgeInsets.all(0),
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:viewAllStories
+                itemCount: viewAllStories
                     ? reviewData.length
                     : reviewData.length > 2
-                    ? 2
-                    :  reviewData.length,
+                        ? 2
+                        : reviewData.length,
                 itemBuilder: (context, int i) {
                   final review = reviewData[i];
                   return Container(
@@ -814,7 +890,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             size: Sizes.fontSizeFive,
                           ),
                           subtitle: TextConst(
-                            "7 week ago",
+                            timeAgo(review.createdAt.toString()),
                             size: Sizes.fontSizeFour,
                             color: AppColor.textGrayColor,
                           ),
@@ -852,7 +928,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   );
                 }),
             Sizes.spaceHeight20,
-            if (!viewAllStories && reviewData.length > 2)...[
+            if (!viewAllStories && reviewData.length > 2) ...[
               Center(
                 child: GestureDetector(
                   onTap: () {
@@ -1018,14 +1094,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     });
   }
 
-  /// reschedule appointment cases:
-
   Widget appointmentDateTimeWithStatus() {
     return Consumer<UpdateAppointmentViewModel>(builder: (context, uAVM, _) {
       final appointmentData = uAVM.rescheduleAppointmentData!;
-      DateTime dateTime =
-          DateFormat('dd-MM-yyyy').parse(appointmentData.bookingDate!);
-      final formattedDate = DateFormat('d MMMM').format(dateTime);
+
+      final formattedDate =
+          formatBookingDate(appointmentData.bookingDate.toString());
       return SizedBox(
         width: Sizes.screenWidth,
         child: Row(
@@ -1040,9 +1114,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 color: AppColor.blue,
               ),
               child: TextConst(
-                appointmentData.status == 'scheduled'
-                    ? "Appointment Reschedule"
-                    : appointmentData.status,
+                appointmentData.status == null
+                    ? ""
+                    : appointmentData.status == 'scheduled'
+                        ? "Appointment Reschedule"
+                        : appointmentData.status == 'reschduled'
+                            ? "Appointent On Hold"
+                            : appointmentData.status,
                 color: AppColor.white,
                 size: Sizes.fontSizeFour,
                 fontWeight: FontWeight.w500,
@@ -1053,14 +1131,24 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 Image.asset(Assets.iconsCalander,
                     color: Colors.grey, width: Sizes.screenWidth * 0.05),
                 Sizes.spaceWidth5,
-                TextConst(formattedDate,
-                    size: Sizes.fontSizeFive, fontWeight: FontWeight.w500),
+                TextConst(
+                    appointmentData.status == 'reschduled'
+                        ? "On hold"
+                        : formattedDate.length > 8
+                            ? formattedDate.substring(0, 6)
+                            : formattedDate,
+                    size: Sizes.fontSizeFive,
+                    fontWeight: FontWeight.w500),
                 Sizes.spaceWidth10,
                 const Icon(Icons.watch_later_outlined,
                     color: Colors.grey, size: 20),
                 Sizes.spaceWidth5,
-                TextConst(appointmentData.hour24Format!,
-                    size: Sizes.fontSizeFive, fontWeight: FontWeight.w500),
+                TextConst(
+                    appointmentData.status == 'reschduled'
+                        ? "-"
+                        : appointmentData.hour24Format!,
+                    size: Sizes.fontSizeFive,
+                    fontWeight: FontWeight.w500),
               ],
             ),
           ],
@@ -1148,6 +1236,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       Sizes.spaceHeight3,
                       TextConst(
                         "${docData.doctorName}",
+                        maxLines: 1,
                         fontWeight: FontWeight.w500,
                         size: Sizes.fontSizeSeven,
                       ),
@@ -1201,6 +1290,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                           uAVM.rescheduleAppointmentData!
                                               .appointmentId
                                               .toString());
+                                  Navigator.pop(context);
                                 },
                               ),
                             );
@@ -1208,7 +1298,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         },
                         height: Sizes.screenWidth / 14,
                         borderRadius: 8,
-                        color: Color(0xffC10000),
+                        color: const Color(0xffC10000),
                         fontSize: Sizes.fontSizeFour,
                         fontWidth: FontWeight.w500,
                         padding: const EdgeInsets.all(0),

@@ -1,3 +1,4 @@
+// res/appbar_const.dart
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ Widget appBarConstant(BuildContext context,
                   left: Sizes.screenWidth * 0.047,
                   top: Sizes.screenHeight * 0.03)
               : const EdgeInsets.all(0),
-          child: const Image(image: AssetImage(Assets.iconsBackBtn)),
+          child: const Image(image: AssetImage('assets/icons/back.png'),width: 20,),
         ),
       ),
       if (isBottomAllowed)
@@ -109,11 +110,12 @@ class AppbarConst extends StatelessWidget {
               onPressed:onPressed?? () {
                 Navigator.of(context).pop();
               },
-              icon:  Icon(
-                Icons.arrow_back,
-                color:iconColor?? AppColor.black,
-                size: 25,
-              ),
+              icon: Image(image: AssetImage('assets/icons/back.png'),width: 20,) 
+              // Icon(
+              //   Icons.arrow_back,
+              //   color:iconColor?? AppColor.black,
+              //   size: 25,
+              // ),
             ),
             TextConst(
               title,

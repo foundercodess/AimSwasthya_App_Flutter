@@ -128,7 +128,8 @@ class ImageDownloader {
         debugPrint("❌ Failed to download doctor image");
       }
     } catch (e) {
-      debugPrint("❗ Error in doctor image download: $e");
+      debugPrint("❗ "
+          "Error in doctor image download: $e");
     }
   }
 

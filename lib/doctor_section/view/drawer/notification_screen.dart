@@ -57,7 +57,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Expanded(
                 child: viewModel.loading
                     ? const Scaffold(
-                        body: LoadData(),
+                        body: Center(child: LoadData(),),
                       )
                     : ListView(
                         padding: const EdgeInsets.symmetric(
@@ -67,10 +67,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             _sectionHeader('Today'),
                             ...todayList.map(
                                 (n) => _notificationTile(n, highlight: true)),
+                                Sizes.spaceHeight10,
                           ],
                           if (allList.isNotEmpty) ...[
                             _sectionHeader('All notifications'),
                             ...allList.map((n) => _notificationTile(n)),
+                            Sizes.spaceHeight10,
                           ],
                           if (notifications.isEmpty)
                             Padding(

@@ -35,7 +35,8 @@ class _OtpScreenState extends State<OtpScreen> {
     );
     debugPrint("patient ${patientAuthCon.seconds}");
     debugPrint("doctor: ${doctorAuthCon.seconds}");
-    final navType = authCon.userRole;
+    final navType = authCon.navType;
+    final userRole = authCon.userRole;
     return Scaffold(
       backgroundColor: AppColor.white,
       body: Column(
@@ -155,7 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
                 Sizes.spaceHeight30,
-                navType == 1
+                userRole == 1
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

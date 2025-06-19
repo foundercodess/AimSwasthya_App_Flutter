@@ -11,7 +11,7 @@
   "your_account": "Log into your account",
   "register": "Register",
   "sign_up": "Sign up",
-  "log_in": "By login, you accept the",
+  "log_in": "By logging in, you accept the ",
 
   "hello_introduction": "Hello! Let’s start by introducing yourself",
   "tell_name": "Tell us your name",
@@ -129,16 +129,16 @@
    "you_can_choose_a_specialist": "Or else, you can choose a specialist",
    "select_a_specialists": "Select a specialists",
 
-   "medical_records": "Medical records",
+   "medical_records": "Medical Records",
    "uploaded_medical_records": "Uploaded medical records",
    "upload_your_medical_records": "Upload your medical records",
 
-   "my_doctors": "My doctors",
+   "my_doctors": "My Doctors",
    "your_health_is_our_priority": "Your health is our priority, your trust is our foundation!",
 
    "appointments": "Appointments",
-   "about_Us": "About Us",
-   "log_Out": "Log Out",
+   "about_Us": "About us",
+   "log_Out": "Log out",
 
 
    "personal_information": "Personal information",

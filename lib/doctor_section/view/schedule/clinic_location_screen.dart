@@ -1,10 +1,7 @@
 // doctor_section/view/schedule/clinic_location_screen.dart
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
-import 'package:aim_swasthya/utils/routes/routes_name.dart';
-import 'package:aim_swasthya/doctor_section/d_view_model/doc_reg_view_model.dart';
 import 'package:aim_swasthya/doctor_section/d_view_model/doctor_profile_view_model.dart';
-import 'package:aim_swasthya/patient_section/p_view_model/bottom_nav_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,80 +43,84 @@ class _ClinicLocationScreenState extends State<ClinicLocationScreen> {
             ),
           ),
           Sizes.spaceHeight20,
-
           Column(
             children: [
-              if (clinics == null || clinics.isEmpty)
+              if (clinics.isEmpty)
                 const Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: const Center(
-                    child: NoDataMessages(
-                      message: "No Clinics Found",
-                      title: "You haven’t added any clinics yet.",
-                    ),
-                  )
-                )
-              else
-              Container(
-                margin: const EdgeInsets.all(20),
-                padding: const EdgeInsets.symmetric(vertical: 25),
-                width: Sizes.screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey.shade100,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: clinics.map((clinic) {
-
-                    return GestureDetector(
-                      onTap: () {
-                        print("clinic.clinicId.toString() ${clinic.clinicId}");
-                        slotScheduleCon
-                            .setSelectedClinicId(clinic.clinicId.toString());
-                      },
-                      child: Container(
-                        width: Sizes.screenWidth * 0.4,
-                        padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 8),
-                        decoration: BoxDecoration(
-                          border: slotScheduleCon.selectedClinicId ==
-                                  clinic.clinicId.toString()
-                              ? Border.all(color: AppColor.blue)
-                              : null,
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey.shade100,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextConst(
-                              clinic.name ?? "",
-                              size: Sizes.fontSizeFour,
-                              color: Colors.grey,
-                              textAlign: TextAlign.center,
-                            ),
-                            Sizes.spaceHeight3,
-                            Image.asset(
-                              Assets.logoClinicImage,
-                              height: Sizes.screenHeight * 0.1,
-                            ),
-                            Sizes.spaceHeight3,
-                            TextConst(
-                              "${clinic.address}, ${clinic.city}",
-                              size: Sizes.fontSizeFour * 1.1,
-                              color: Colors.grey,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
+                    padding: EdgeInsets.only(top: 20),
+                    child: const Center(
+                      child: NoDataMessages(
+                        message: "No Clinics Found",
+                        title: "You haven’t added any clinics yet.",
                       ),
-                    );
-                  }).toList(),
+                    ))
+              else
+                Container(
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  width: Sizes.screenWidth,
+                  alignment: Alignment.center,
+                  constraints:
+                      BoxConstraints(minHeight: Sizes.screenHeight / 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey.shade100,
+                  ),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: clinics.map((clinic) {
+                      return GestureDetector(
+                        onTap: () {
+                          debugPrint(
+                              "clinic.clinicId.toString() ${clinic.clinicId}");
+                          slotScheduleCon
+                              .setSelectedClinicId(clinic.clinicId.toString());
+                        },
+                        child: Container(
+                          width: Sizes.screenWidth * 0.4,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: slotScheduleCon.selectedClinicId ==
+                                    clinic.clinicId.toString()
+                                ? Border.all(color: AppColor.blue)
+                                : null,
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey.shade100,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextConst(
+                                clinic.name ?? "",
+                                size: Sizes.fontSizeFour,
+                                color: Colors.grey,
+                                textAlign: TextAlign.center,
+                              ),
+                              Sizes.spaceHeight3,
+                              Image.asset(
+                                Assets.logoClinicImage,
+                                height: Sizes.screenHeight * 0.1,
+                              ),
+                              Sizes.spaceHeight3,
+                              TextConst(
+                                "${clinic.address}, ${clinic.city}",
+                                size: Sizes.fontSizeFour * 1.1,
+                                color: Colors.grey,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
             ],
           ),
           Sizes.spaceHeight10,

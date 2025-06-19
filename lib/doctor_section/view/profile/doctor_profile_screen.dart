@@ -33,6 +33,12 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   int currentPage = 0;
   bool isClicked = false;
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
+  
+  // Generate years list for experience dropdown (1950 to current year)
+  final List<String> yearOptions = List.generate(
+    DateTime.now().year - 1949, 
+    (index) => (1950 + index).toString()
+  );
 
   @override
   void initState() {
@@ -272,22 +278,76 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       ),
                     ),
                     Sizes.spaceHeight10,
-                    CustomTextField(
-                      contentPadding:
-                          const EdgeInsets.only(top: 18, bottom: 20, left: 10),
-                      fillColor: AppColor.textfieldGrayColor.withOpacity(0.4),
-                      hintText: docProfileCon.doctorProfileModel!.data!
-                              .doctors![0].experience ??
-                          "Experience",
-                      controller: _expController,
-                      cursorColor: AppColor.textGrayColor,
-                      enabled: docProfileCon.isEditMode,
-                      keyboardType: TextInputType.number,
-                      maxLength: 4,
-                    ),
+                    // Experience field - dropdown in edit mode, view in non-edit mode
+                    docProfileCon.isEditMode
+                        ? Center(
+                            child: Container(
+                              height: 55,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Sizes.screenWidth * 0.03),
+                              child: DropdownButton<String>(
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.grey,
+                                  size: 20,
+                                ),
+                                value: _expController.text.isNotEmpty
+                                    ? _expController.text
+                                    : null,
+                                hint: TextConst(
+                                  docProfileCon.doctorProfileModel?.data?.doctors?[0]
+                                          .experience ??
+                                      "Practice Start Year",
+                                  size: Sizes.fontSizeFive,
+                                  color: AppColor.textfieldTextColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                underline: const SizedBox(),
+                                isExpanded: true,
+                                items: yearOptions.map((year) {
+                                  return DropdownMenuItem<String>(
+                                    value: year,
+                                    child: TextConst(
+                                      year,
+                                      fontWeight: FontWeight.w500,
+                                      size: Sizes.fontSizeFive,
+                                      color: AppColor.blue,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? year) {
+                                  if (year != null) {
+                                    setState(() {
+                                      _expController.text = year;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextConst(
+                              docProfileCon.doctorProfileModel?.data?.doctors?[0].experience ?? "Not specified",
+                              size: Sizes.fontSizeFive,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.textfieldTextColor,
+                            ),
+                          ),
                     Sizes.spaceHeight30,
                     TextConst(
-                      "Clinic details",
+                      "Clinic/Hospital details",
                       size: Sizes.fontSizeFive * 1.1,
                       fontWeight: FontWeight.w500,
                     ),
@@ -329,7 +389,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextConst(
-                                  "Clinic ${index + 1}",
+                                  "Clinic: ${index + 1}",
                                   size: Sizes.fontSizeFourPFive,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -432,9 +492,10 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             );
                           },
                           child: TextConst(
-                            "Add more clinics",
+                            "Add more",
                             size: Sizes.fontSizeFour,
                             fontWeight: FontWeight.w500,
+                            color: AppColor.textGrayColor,
                           )),
                     ),
                     Sizes.spaceHeight10,

@@ -8,7 +8,6 @@ import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/doctor_section/view/bottom_nav_bar_screen.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/bottom_nav_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/user_role_view_model.dart';
-import 'package:aim_swasthya/patient_section/p_view_model/user_role_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +62,7 @@ class _DocComBottomNevBarState extends State<DocComBottomNevBar> {
         child: BottomAppBar(
           elevation: 20,
           shadowColor: AppColor.black,
-          height: 60,
+          height: 60 + MediaQuery.of(context).padding.bottom,
           padding: const EdgeInsets.only(left: 40, right: 40),
           shape: const CircularNotchedRectangle(),
           color: const Color(0xffF0F0F0),

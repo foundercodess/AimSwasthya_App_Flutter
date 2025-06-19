@@ -73,7 +73,7 @@ class Routers {
         return (context) =>  UserRegisterScreen();
       case RoutesName.userHomeScreen:
         return (context) =>  UserHomeScreen(
-              scaffoldKey: null,
+              scaffoldKey: null, invokeAllAPi: true,
             );
       case RoutesName.allSymptomsScreen:
         return (context) => const AllSymptomsScreen();

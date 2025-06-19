@@ -20,6 +20,7 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
   AppointmentsData? _rescheduleAppointmentData;
   AppointmentsData? get rescheduleAppointmentData=> _rescheduleAppointmentData;
   setRescheduleAppointmentData(AppointmentsData? data){
+    _rescheduleAppointmentData=null;
     _rescheduleAppointmentData= data;
     notifyListeners();
   }
@@ -31,12 +32,12 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _rescheduleAppointmentID = '';
+  // String _rescheduleAppointmentID = '';
 
-  setRescheduleAppointmentID(String id) {
-    _rescheduleAppointmentID = id;
-    notifyListeners();
-  }
+  // setRescheduleAppointmentID(String id) {
+  //   _rescheduleAppointmentID = id;
+  //   notifyListeners();
+  // }
 
   Future<void> updateAppointmentApi(
     context, {
@@ -58,10 +59,9 @@ class UpdateAppointmentViewModel extends ChangeNotifier {
       "booking_date": bookingDateFormatted,
       "time_id": timeId,
       "appointment_id": appId,
-      // "appointment_id": _rescheduleAppointmentID,
       "status": "scheduled"
     };
-    print("datfkhja: ${jsonEncode(data)}");
+    debugPrint("datfkhja: ${jsonEncode(data)}");
     _updateAppointmentRepo.updateAppointmentApi(data).then((value) {
       Utils.show(value['message'], context);
       if (value['status'] == true) {

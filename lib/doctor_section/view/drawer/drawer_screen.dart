@@ -183,7 +183,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                       Navigator.pushNamed(context, RoutesName.aboutUsScreen);
                     },
                     child: TextConst(
-                      "About Us",
+                      "About us",
                       size: Sizes.fontSizeFivePFive,
                       fontWeight: FontWeight.w500,
                       color: AppColor.white,
@@ -202,7 +202,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
 
                     },
                     child: TextConst(
-                      "Log Out",
+                      "Log out",
                       // size: 14,
                       size: Sizes.fontSizeFivePFive,
                       fontWeight: FontWeight.w500,

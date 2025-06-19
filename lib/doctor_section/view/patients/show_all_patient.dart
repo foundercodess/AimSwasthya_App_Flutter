@@ -30,62 +30,65 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
           .docPatientAppointmentApi();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final bottomCon = Provider.of<BottomNavProvider>(context);
     final patientappCon = Provider.of<DocPatientAppointmentViewModel>(context);
 
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: AppColor.white,
-      body:patientappCon.docPatientAppointmentModel ==null|| patientappCon.loading
-          ? const Center(child: LoadData()) : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            appBarConstant(
-              context,
-              onTap: () {
-                if (bottomCon.currentIndex == 1) {
-                  bottomCon.setIndex(0);
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              child: Center(
-                child: TextConst(
-                  "My Patient",
-                  size: Sizes.fontSizeSix * 1.1,
-                  fontWeight: FontWeight.w500,
-                ),
+      body: patientappCon.docPatientAppointmentModel == null ||
+              patientappCon.loading
+          ? const Center(child: LoadData())
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  appBarConstant(
+                    context,
+                    onTap: () {
+                      if (bottomCon.currentIndex == 1) {
+                        bottomCon.setIndex(0);
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Center(
+                      child: TextConst(
+                        "My Patient",
+                        size: Sizes.fontSizeSix * 1.1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    isBottomAllowed: true,
+                  ),
+                  Sizes.spaceHeight20,
+                  TextConst(
+                    padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                    "Active patients",
+                    size: Sizes.fontSizeFourPFive,
+                    fontWeight: FontWeight.w500,
+                    color: AppColor.textfieldTextColor,
+                  ),
+                  Sizes.spaceHeight20,
+                  activePatientSec(),
+                  Sizes.spaceHeight25,
+                  TextConst(
+                    "Past history",
+                    padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
+                    size: Sizes.fontSizeFourPFive,
+                    fontWeight: FontWeight.w500,
+                    color: AppColor.textfieldTextColor,
+                  ),
+                  Sizes.spaceHeight20,
+                  pastHistory(),
+                  Sizes.spaceHeight30,
+                  Sizes.spaceHeight30,
+                  Sizes.spaceHeight30,
+                ],
               ),
-              isBottomAllowed: true,
             ),
-            Sizes.spaceHeight20,
-            TextConst(
-              padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-              "Active patients",
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w500,
-              color: AppColor.textfieldTextColor,
-            ),
-            Sizes.spaceHeight20,
-            activePatientSec(),
-            Sizes.spaceHeight25,
-            TextConst(
-              "Past history",
-              padding: EdgeInsets.only(left: Sizes.screenWidth * 0.04),
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w500,
-              color: AppColor.textfieldTextColor,
-            ),
-            Sizes.spaceHeight20,
-            pastHistory(),
-            Sizes.spaceHeight30,
-            Sizes.spaceHeight30,
-            Sizes.spaceHeight30,
-          ],
-        ),
-      ),
     );
   }
 
@@ -121,7 +124,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                       right: Sizes.screenWidth * 0.02,
                     ),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(12),
                         color: AppColor.grey.withOpacity(0.8)),
                     child: Column(
                       children: [
@@ -139,8 +142,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                       image: schedule.signedImageUrl != null
                                           ? NetworkImage(
                                               schedule.signedImageUrl!)
-                                          : const AssetImage(
-                                              Assets.logoDoctor),
+                                          : const AssetImage(Assets.logoDoctor),
                                       fit: BoxFit.fitHeight)),
                             ),
                             Sizes.spaceWidth10,
@@ -196,10 +198,14 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                                     width: Sizes.screenWidth * 0.33,
                                     color: AppColor.blue,
                                     onTap: () {
-                                      patientappCon.setDoctorsAppointmentsData(schedule);
-                                        patientProfileData.patientProfileApi(schedule.patientId.toString(),schedule.appointmentId.toString(), context);
-                                        Navigator.pushNamed(context,
-                                            RoutesName.patientProfileScreen);
+                                      patientappCon
+                                          .setDoctorsAppointmentsData(schedule, false);
+                                      patientProfileData.patientProfileApi(
+                                          schedule.patientId.toString(),
+                                          schedule.appointmentId.toString(),
+                                          context);
+                                      Navigator.pushNamed(context,
+                                          RoutesName.patientProfileScreen);
                                       // patientProfileData.patientProfileApi(schedule.patientId.toString(),context);
                                       // Navigator.pushNamed(context,
                                       //     RoutesName.patientProfileScreen,);
@@ -221,160 +227,177 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
     final patientProfileData = Provider.of<PatientProfileViewModel>(context);
 
     return patientappCon.docPatientAppointmentModel != null &&
-        patientappCon.docPatientAppointmentModel!.pastAppointments !=
-            null &&
-        patientappCon
-            .docPatientAppointmentModel!.pastAppointments!.isNotEmpty
+            patientappCon.docPatientAppointmentModel!.pastAppointments !=
+                null &&
+            patientappCon
+                .docPatientAppointmentModel!.pastAppointments!.isNotEmpty
         ? SizedBox(
-      child: ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(0),
-          shrinkWrap: true,
-          itemCount: patientappCon
-              .docPatientAppointmentModel!.pastAppointments!.length,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            final patientData = patientappCon
-                .docPatientAppointmentModel!.pastAppointments![index];
-            return Container(
-              margin: EdgeInsets.only(bottom: Sizes.screenHeight * 0.03),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      left: Sizes.screenWidth * 0.07,
-                    ),
-                    padding: EdgeInsets.only(
-                        left: Sizes.screenWidth * 0.026,
-                        right: Sizes.screenWidth * 0.037,
-                        top: Sizes.screenHeight * 0.006,
-                        bottom: Sizes.screenHeight * 0.01),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        // color: Colors.grey.shade100
-                        color: AppColor.grey.withOpacity(0.8)),
-                    child: Column(
+            child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                shrinkWrap: true,
+                itemCount: patientappCon
+                    .docPatientAppointmentModel!.pastAppointments!.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  final patientData = patientappCon
+                      .docPatientAppointmentModel!.pastAppointments![index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: Sizes.screenHeight * 0.03),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: Sizes.screenHeight * 0.067,
-                              width: Sizes.screenWidth * 0.167,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.lightBlue),
-                              child: Center(
-                                child: TextConst(
-                                  patientData.patientName!
-                                      .substring(0, 1)
-                                      .toUpperCase(),
-                                  size: Sizes.fontSizeTen,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColor.white,
-                                ),
-                              ),
-                            ),
-                            Sizes.spaceWidth10,
-                            Container(
-                              alignment: Alignment.bottomCenter,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                // mainAxisSize: MainAxisSize.min,
+                        Container(
+                          margin: EdgeInsets.only(
+                            left: Sizes.screenWidth * 0.07,
+                          ),
+                          padding: EdgeInsets.only(
+                              left: Sizes.screenWidth * 0.026,
+                              right: Sizes.screenWidth * 0.037,
+                              top: Sizes.screenHeight * 0.006,
+                              bottom: Sizes.screenHeight * 0.01),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              // color: Colors.grey.shade100
+                              color: AppColor.grey.withOpacity(0.8)),
+                          child: Column(
+                            children: [
+                              Row(
                                 children: [
-                                  // Sizes.spaceHeight3,
-                                  TextConst(
-                                    patientData.patientName??"",
-                                    // size: 12,
-                                    size: Sizes.fontSizeFourPFive,
-                                    fontWeight: FontWeight.w400,
+                                  Container(
+                                    height: Sizes.screenHeight * 0.067,
+                                    width: Sizes.screenWidth * 0.167,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColor.lightBlue),
+                                    child: Center(
+                                      child: TextConst(
+                                        patientData.patientName == null?"":
+                                        patientData.patientName!
+                                            .substring(0, 1)
+                                            .toUpperCase(),
+                                        size: Sizes.fontSizeTen,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColor.white,
+                                      ),
+                                    ),
                                   ),
-                                  Sizes.spaceHeight3,
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        Assets.iconsSolarCalendar,
-                                        // height: 16,
-                                        width: Sizes.screenWidth * 0.035,
-                                      ),
-                                      Sizes.spaceWidth5,
-                                      TextConst(
-                                          DateFormat('d MMM').format(DateTime.parse(
-                                              patientData.appointmentDate.toString())),
-                                        size: Sizes.fontSizeThree,
-                                        fontWeight: FontWeight.w500,
-                                        color: const Color(0xff535353),
-                                      ),
-                                      Sizes.spaceWidth5,
-                                      Image.asset(
-                                        Assets.iconsMdiClock,
-                                        // height: 16,
-                                        width: Sizes.screenWidth * 0.04,
-                                      ),
-                                      Sizes.spaceWidth5,
-                                      TextConst(
-                                        patientData.appointmentTime.toString(),
-                                        size: Sizes.fontSizeThree,
-                                        fontWeight: FontWeight.w500,
-                                        color: const Color(0xff535353),
-                                      ),
-                                    ],
+                                  Sizes.spaceWidth10,
+                                  Container(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      // mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Sizes.spaceHeight3,
+                                        TextConst(
+                                          patientData.patientName ?? "",
+                                          // size: 12,
+                                          size: Sizes.fontSizeFourPFive,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        Sizes.spaceHeight3,
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              Assets.iconsSolarCalendar,
+                                              // height: 16,
+                                              width: Sizes.screenWidth * 0.035,
+                                            ),
+                                            Sizes.spaceWidth5,
+                                            TextConst(
+                                              DateFormat('d MMM').format(
+                                                  DateTime.parse(patientData
+                                                      .appointmentDate
+                                                      .toString())),
+                                              size: Sizes.fontSizeThree,
+                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xff535353),
+                                            ),
+                                            Sizes.spaceWidth5,
+                                            Image.asset(
+                                              Assets.iconsMdiClock,
+                                              // height: 16,
+                                              width: Sizes.screenWidth * 0.04,
+                                            ),
+                                            Sizes.spaceWidth5,
+                                            TextConst(
+                                              patientData.appointmentTime
+                                                  .toString(),
+                                              size: Sizes.fontSizeThree,
+                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xff535353),
+                                            ),
+                                          ],
+                                        ),
+                                        Sizes.spaceHeight5,
+                                        ButtonConst(
+                                            title: "View",
+                                            size: Sizes.fontSizeFour,
+                                            fontWeight: FontWeight.w400,
+                                            borderRadius: 5,
+                                            height: Sizes.screenHeight * 0.029,
+                                            width: Sizes.screenWidth * 0.37,
+                                            color: AppColor.blue,
+                                            onTap: () {
+                                              patientappCon
+                                                  .setDoctorsAppointmentsData(
+                                                      patientData, true);
+                                              patientProfileData
+                                                  .patientProfileApi(
+                                                      patientData.patientId
+                                                          .toString(),
+                                                      patientData.appointmentId
+                                                          .toString(),
+                                                      context);
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RoutesName
+                                                      .patientProfileScreen);
+                                            })
+                                      ],
+                                    ),
                                   ),
-                                  Sizes.spaceHeight5,
-                                  ButtonConst(
-                                      title: "View",
-                                      size: Sizes.fontSizeFour,
-                                      fontWeight: FontWeight.w400,
-                                      borderRadius: 5,
-                                      height: Sizes.screenHeight * 0.029,
-                                      width: Sizes.screenWidth * 0.37,
-                                      color: AppColor.blue,
-                                      onTap: () {
-                                        patientappCon.setDoctorsAppointmentsData(patientData);
-                                        patientProfileData.patientProfileApi(patientData.patientId.toString(),patientData.appointmentId.toString(), context);
-                                        Navigator.pushNamed(context,
-                                            RoutesName.patientProfileScreen);
-                                      })
                                 ],
                               ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            final phone = patientData.phoneNumber.toString();
+                            if (phone.isNotEmpty) {
+                              launchDialer(phone);
+                            } else {
+                              print("No phone number available.");
+                            }
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                right: Sizes.screenWidth * 0.07),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Sizes.screenWidth * 0.053,
+                                vertical: Sizes.screenHeight * 0.032),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: AppColor.grey.withOpacity(0.8)),
+                            child: const Icon(
+                              Icons.call,
+                              color: AppColor.lightBlue,
+                              size: 23,
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      final phone = patientData.phoneNumber.toString();
-                      if (phone.isNotEmpty) {
-                        launchDialer(phone);
-                      } else {
-                        print("No phone number available.");
-                      }
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: Sizes.screenWidth * 0.07),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: Sizes.screenWidth * 0.053,
-                          vertical: Sizes.screenHeight * 0.032),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: AppColor.grey.withOpacity(0.8)),
-                      child: const Icon(
-                        Icons.call,
-                        color: AppColor.lightBlue,
-                        size: 23,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-    ) :const Center(
-        child: NoDataMessages(
-          message: "No past Appointment yet",
-        ));
+                  );
+                }),
+          )
+        : const Center(
+            child: NoDataMessages(
+            message: "No past Appointment yet",
+          ));
   }
 }
 

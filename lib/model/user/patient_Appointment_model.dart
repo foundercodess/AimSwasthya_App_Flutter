@@ -79,6 +79,7 @@ class AppointmentsData {
   String? amPm;
   String? hour24Format;
   dynamic signedImageUrl;
+  int? reviewCount;
 
   AppointmentsData(
       {this.appointmentId,
@@ -105,6 +106,7 @@ class AppointmentsData {
         this.amPm,
         this.hour24Format,
         this.signedImageUrl,
+        this.reviewCount
       });
 
   AppointmentsData.fromJson(Map<String, dynamic> json) {
@@ -132,6 +134,7 @@ class AppointmentsData {
     amPm = json['am_pm'];
     hour24Format = json['hour_24_format'];
     signedImageUrl = json['signedImageUrl'];
+    reviewCount = json['review_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -160,6 +163,7 @@ class AppointmentsData {
     data['am_pm'] = amPm;
     data['hour_24_format'] = hour24Format;
     data['signedImageUrl'] = signedImageUrl;
+    data['review_count'] = reviewCount;
     return data;
   }
 }

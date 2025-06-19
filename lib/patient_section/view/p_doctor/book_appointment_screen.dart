@@ -22,6 +22,7 @@ class BookAppointmentScreen extends StatefulWidget {
 
 class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   bool isChecked = false;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                     final phone = userProfileVm.phoneNumber ?? "";
                     final email = userProfileVm.email ?? "";
                     final amount =
-                        docAppointmentCon.payableAmountAfterDiscount.toString();
+                        getPayableAmount().toString();
 
                     if (_selectedPaymentIndex == 0) {
                       paymentCon.payWithRazorpay(context, amount, phone, email);
@@ -210,14 +211,11 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   fontWeight: FontWeight.w600,
                   color: const Color(0xff959595),
                 ),
-                // Sizes.spaceHeight10,
                 TextConst(
-                    "$formattedDate at ${docAppointmentCon.selectedTime!.slotTime!.toString()} AM",
-                    //   "01/06/2024 at 12:30 pm",
+                    "$formattedDate at ${_formatTimeWithAmPm(docAppointmentCon.selectedTime!.slotTime!.toString())}",
                     size: Sizes.fontSizeFive,
                     fontWeight: FontWeight.w500,
                     color: AppColor.black),
-                // Sizes.spaceHeight10,
                 TextConst(
                   AppLocalizations.of(context)!.clinic_details,
                   size: Sizes.fontSizeFour,
@@ -262,8 +260,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     );
   }
 
-  bool isExpended = false;
-
   Widget paymentSection() {
     final paymentCon = Provider.of<PaymentViewModel>(context);
     final docAppointmentCon =
@@ -289,7 +285,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             padding: EdgeInsets.symmetric(
                 horizontal: Sizes.screenWidth * 0.03,
                 vertical: Sizes.screenHeight * 0.02),
-            // height: Sizes.screenHeight*0.2,
             width: Sizes.screenWidth,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
@@ -297,7 +292,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             ),
             child: Column(
               children: [
-                paymentOptionWidget(
+                PaymentOptionWidget(
                   image: payments[0]['image'],
                   name: payments[0]['name'],
                   isSelected: _selectedPaymentIndex == 0,
@@ -306,9 +301,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                       _selectedPaymentIndex = 0;
                     });
                   },
-                  onTap: () {},
                 ),
-                paymentOptionWidget(
+                PaymentOptionWidget(
                   image: payments[1]['image'],
                   name: payments[1]['name'],
                   isSelected: _selectedPaymentIndex == 1,
@@ -317,249 +311,10 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                       _selectedPaymentIndex = 1;
                     });
                   },
-                  onTap: () {
-                    // optional
-                  },
                 ),
               ],
             ),
           ),
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(40),
-          //   child: ExpansionTile(
-          //     onExpansionChanged: (v) {
-          //       setState(() {
-          //         isExpended = v;
-          //       });
-          //     },
-          //     collapsedBackgroundColor: AppColor.blue,
-          //     backgroundColor: AppColor.blue,
-          //     leading: Image.asset(
-          //       Assets.logoRupayLogo,
-          //       height: 20,
-          //     ),
-          //     title: TextConst(
-          //       'Debit card : **** **** 0056',
-          //       size: Sizes.fontSizeFivePFive,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColor.white,
-          //     ),
-          //     trailing: Icon(
-          //       isExpended ? Icons.keyboard_arrow_up : Icons.expand_more,
-          //       color: AppColor.white,
-          //     ),
-          //     children: [
-          //       Container(
-          //         margin: EdgeInsets.symmetric(
-          //             horizontal: Sizes.screenWidth * 0.04,
-          //             vertical: Sizes.screenHeight * 0.015),
-          //         padding: EdgeInsets.symmetric(
-          //             horizontal: Sizes.screenWidth * 0.04,
-          //             vertical: Sizes.screenHeight * 0.015),
-          //         // height: Sizes.screenHeight * 0.3,
-          //         width: Sizes.screenWidth,
-          //         decoration: BoxDecoration(
-          //             borderRadius: BorderRadius.circular(40),
-          //             color: const Color(0xff015cd6)),
-          //         child: Column(
-          //           children: [
-          //             Container(
-          //               width: Sizes.screenWidth,
-          //               decoration: BoxDecoration(
-          //                   borderRadius: BorderRadius.circular(30),
-          //                   color: AppColor.lightBlue),
-          //               child: Center(
-          //                 child: ListTile(
-          //                   title: TextConst(
-          //                     AppLocalizations.of(context)!
-          //                         .added_debit_credit_Cards,
-          //                     size: Sizes.fontSizeFive,
-          //                     fontWeight: FontWeight.w400,
-          //                     color: AppColor.white,
-          //                   ),
-          //                   trailing: const Icon(
-          //                     Icons.expand_more,
-          //                     color: AppColor.white,
-          //                   ),
-          //                 ),
-          //               ),
-          //             ),
-          //             Sizes.spaceHeight10,
-          //             Row(
-          //               children: [
-          //                 Expanded(
-          //                   child: Divider(
-          //                     color: AppColor.lightSkyBlue.withOpacity(0.4),
-          //                     thickness: 0.8,
-          //                   ),
-          //                 ),
-          //                 Container(
-          //                   padding: const EdgeInsets.symmetric(
-          //                       horizontal: 8, vertical: 2),
-          //                   decoration: BoxDecoration(
-          //                       borderRadius: BorderRadius.circular(5),
-          //                       color: Colors.white.withOpacity(0.1)),
-          //                   child: Center(
-          //                     child: TextConst(
-          //                       AppLocalizations.of(context)!.other_methods,
-          //                       size: Sizes.fontSizeThree,
-          //                       fontWeight: FontWeight.w300,
-          //                       color: AppColor.grey.withOpacity(0.8),
-          //                     ),
-          //                   ),
-          //                 ),
-          //                 Expanded(
-          //                   child: Divider(
-          //                     color: AppColor.lightSkyBlue.withOpacity(0.4),
-          //                     thickness: 0.8,
-          //                   ),
-          //                 ),
-          //               ],
-          //             ),
-          //             // paymentOptionWidget(
-          //             //     image: payments[0]['image'],
-          //             //     name: payments[0]['name'],
-          //             //     onTap: () {
-          //             //       paymentCon.payWithRazorpay(
-          //             //           context,
-          //             //           docAppointmentCon.payableAmountAfterDiscount
-          //             //               .toString(),
-          //             //           docAppointmentCon.doctorAvlAppointmentModel!
-          //             //               .data!.details![0].phoneNumber
-          //             //               .toString(),
-          //             //           docAppointmentCon.doctorAvlAppointmentModel!
-          //             //               .data!.details![0].email);
-          //             //     }),
-          //             // paymentOptionWidget(
-          //             //     image: payments[1]['image'],
-          //             //     name: payments[1]['name'],
-          //             //     onTap: () {
-          //             //       paymentCon.payWithPhonePe(
-          //             //         context,
-          //             //         docAppointmentCon.payableAmountAfterDiscount
-          //             //             .toString(),
-          //             //         docAppointmentCon.doctorAvlAppointmentModel!.data!
-          //             //             .details![0].phoneNumber
-          //             //             .toString(),
-          //             //       );
-          //             //     }),
-          //             paymentOptionWidget(
-          //               image: payments[0]['image'],
-          //               name: payments[0]['name'],
-          //               isSelected: _selectedPaymentIndex == 0,
-          //               onSelect: () {
-          //                 setState(() {
-          //                   _selectedPaymentIndex = 0;
-          //                 });
-          //               },
-          //               onTap: () {
-          //               },
-          //             ),
-          //             paymentOptionWidget(
-          //               image: payments[1]['image'],
-          //               name: payments[1]['name'],
-          //               isSelected: _selectedPaymentIndex == 1,
-          //               onSelect: () {
-          //                 setState(() {
-          //                   _selectedPaymentIndex = 1;
-          //                 });
-          //               },
-          //               onTap: () {
-          //                 // optional
-          //               },
-          //             ),
-          //
-          //             // ListView.builder(
-          //             //   padding: const EdgeInsets.all(0),
-          //             //   itemCount: payments.length,
-          //             //   shrinkWrap: true,
-          //             //   itemBuilder: (context, index) {
-          //             //     final payment = payments[index];
-          //             //     return Padding(
-          //             //       padding: EdgeInsets.symmetric(
-          //             //           horizontal: Sizes.screenWidth * 0.02,
-          //             //           vertical: Sizes.screenHeight * 0.005),
-          //             //       child: Row(
-          //             //         children: [
-          //             //           InkWell(
-          //             //             onTap: () {
-          //             //               if (payment['name'] == 'Razor Pay') {
-          //             //                 print("fbyferrytgr");
-          //             //                 paymentCon.initiatePayment(
-          //             //                   context,
-          //             //                   docAppointmentCon
-          //             //                       .doctorAvlAppointmentModel!.data!.location![0].consultationFee
-          //             //                       .toString(),
-          //             //                   docAppointmentCon
-          //             //                       .doctorAvlAppointmentModel!.data!.details![0].phoneNumber
-          //             //                       .toString(),
-          //             //                   docAppointmentCon.doctorAvlAppointmentModel!.data!.details![0].email,
-          //             //                 );}
-          //             //               else if (payment['name'] == 'Google Pay') {
-          //             //                 print("ansjsji");
-          //             //                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MerchantApp()));
-          //             //                 // paymentCon.initiateGooglePayPayment(
-          //             //                 //   context,
-          //             //                 //   docAppointmentCon
-          //             //                 //       .doctorAvlAppointmentModel!.data!.location![0].consultationFee
-          //             //                 //       .toString(),
-          //             //                 //   docAppointmentCon
-          //             //                 //       .doctorAvlAppointmentModel!.data!.details![0].phoneNumber
-          //             //                 //       .toString(),
-          //             //                 //   docAppointmentCon.doctorAvlAppointmentModel!.data!.details![0].email,
-          //             //                 // );
-          //             //               }
-          //             //
-          //             //               paymentCon.initiatePayment(
-          //             //                   context,
-          //             //                   docAppointmentCon
-          //             //                       .doctorAvlAppointmentModel!
-          //             //                       .data!
-          //             //                       .location![0]
-          //             //                       .consultationFee
-          //             //                       .toString(),
-          //             //                   docAppointmentCon
-          //             //                       .doctorAvlAppointmentModel!
-          //             //                       .data!
-          //             //                       .details![0]
-          //             //                       .phoneNumber
-          //             //                       .toString(),
-          //             //                   docAppointmentCon
-          //             //                       .doctorAvlAppointmentModel!
-          //             //                       .data!
-          //             //                       .details![0]
-          //             //                       .email);
-          //             //             },
-          //             //             child: Container(
-          //             //               width: 32,
-          //             //               height: 32,
-          //             //               decoration: BoxDecoration(
-          //             //                 shape: BoxShape.circle,
-          //             //                 image: DecorationImage(
-          //             //                   image: AssetImage(payment['image']),
-          //             //                   fit: BoxFit.cover,
-          //             //                 ),
-          //             //               ),
-          //             //             ),
-          //             //           ),
-          //             //           Sizes.spaceWidth10,
-          //             //           TextConst(
-          //             //             payment['name'],
-          //             //             size: Sizes.fontSizeFour,
-          //             //             fontWeight: FontWeight.w400,
-          //             //             color: AppColor.white,
-          //             //           ),
-          //             //         ],
-          //             //       ),
-          //             //     );
-          //             //   },
-          //             // )
-          //           ],
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -639,7 +394,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             children: [
               textConstent(),
               TextConst(
-                "${docAppointmentCon.doctorAvlAppointmentModel!.data!.clinics![0].fee.toString()}.00",
+                "${getFee().toStringAsFixed(2)}",
                 size: Sizes.fontSizeTen,
                 fontWeight: FontWeight.w600,
                 color: AppColor.black,
@@ -656,37 +411,35 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           Sizes.spaceHeight5,
           dataField(
             AppLocalizations.of(context)!.appointment_fee,
-            docAppointmentCon.doctorAvlAppointmentModel!.data!.clinics![0].fee
-                .toString(),
+            getFee().toStringAsFixed(2),
           ),
-          // dataField(
-          //     AppLocalizations.of(context)!.digiSwasthya_discount,
-          //     docAppointmentCon.doctorAvlAppointmentModel!.data!.location![0]
-          //         .digiswasthyaDiscount
-          //         .toString()),
+          dataField("Discount", "₹ ${getDiscountAmount().toStringAsFixed(2)}"),
           dataField(AppLocalizations.of(context)!.tax, ""),
           const Divider(),
           dataField(AppLocalizations.of(context)!.amount_payable,
-              docAppointmentCon.payableAmountAfterDiscount.toString()
-              // calculateAmountPayable(
-              //   docAppointmentCon
-              //       .doctorAvlAppointmentModel!.data!.location![0].fee,
-              //   docAppointmentCon
-              //       .doctorAvlAppointmentModel!.data!.location![0].digiswasthyaDiscount,
-              // ).toString(),
-              ),
+              "₹ ${getPayableAmount().toStringAsFixed(2)}"),
         ],
       ),
     );
   }
 
-  double calculateAmountPayable(double fee, double digiswasthyaDiscount) {
-    double totalAmount = fee - digiswasthyaDiscount;
-    if (totalAmount < 0) {
-      totalAmount = 0.0;
-    }
+  double getFee() {
+    final docAppointmentCon = Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
+    return double.tryParse(docAppointmentCon.doctorAvlAppointmentModel!.data!.clinics![0].fee.toString()) ?? 0.0;
+  }
 
-    return totalAmount;
+  double getDiscountPercent() {
+    final docAppointmentCon = Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
+    return double.tryParse(docAppointmentCon.doctorAvlAppointmentModel!.data!.discountPercent![0].discount.toString()) ?? 0.0;
+  }
+
+  double getDiscountAmount() {
+    return (getFee() * getDiscountPercent()) / 100;
+  }
+
+  double getPayableAmount() {
+    double amount = getFee() - getDiscountAmount();
+    return amount < 0 ? 0.0 : amount;
   }
 
   Widget dataField(String label, String value) {
@@ -723,78 +476,54 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   }
 
   int? _selectedPaymentIndex;
-  Widget paymentOptionWidget({
-    required String image,
-    required String name,
-    required bool isSelected,
-    required VoidCallback onTap,
-    required VoidCallback onSelect,
-  }) {
+
+  String _formatTimeWithAmPm(String time24) {
+    if (time24.isEmpty) return '';
+    final parts = time24.split(":");
+    if (parts.length < 2) return time24;
+    int hour = int.tryParse(parts[0]) ?? 0;
+    int minute = int.tryParse(parts[1]) ?? 0;
+    final dt = DateTime(0, 1, 1, hour, minute);
+    return TimeOfDay(hour: dt.hour, minute: dt.minute).format(context);
+  }
+}
+
+class PaymentOptionWidget extends StatelessWidget {
+  final String image;
+  final String name;
+  final bool isSelected;
+  final VoidCallback onSelect;
+
+  const PaymentOptionWidget({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.isSelected,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onSelect,
-      child: Container(
-        // padding: const EdgeInsets.all(12),
-        // decoration: BoxDecoration(
-        //   border: Border.all(
-        //     color: isSelected ? AppColor.blue : Colors.grey,
-        //     width: 2,
-        //   ),
-        //   borderRadius: BorderRadius.circular(10),
-        // ),
-        child: Row(
-          children: [
-            Image.asset(image, width: 40, height: 40),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                name,
-                style: const TextStyle(
-                    color: AppColor.white, fontWeight: FontWeight.w400),
-              ),
+      child: Row(
+        children: [
+          Image.asset(image, width: 40, height: 40),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              name,
+              style: const TextStyle(
+                  color: AppColor.white, fontWeight: FontWeight.w400),
             ),
-            Checkbox(
-                value: isSelected,
-                onChanged: (_) => onSelect(),
-                activeColor: AppColor.blue,
-                hoverColor: Colors.red),
-          ],
-        ),
+          ),
+          Checkbox(
+              value: isSelected,
+              onChanged: (_) => onSelect(),
+              activeColor: AppColor.blue,
+              hoverColor: Colors.red),
+        ],
       ),
     );
   }
-
-// Widget paymentOptionWidget({
-  //   required String image,
-  //   required String name,
-  //   required VoidCallback onTap,
-  // }) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-  //     child: GestureDetector(
-  //       onTap: onTap,
-  //       child: Row(
-  //         children: [
-  //           Container(
-  //             width: 32,
-  //             height: 32,
-  //             decoration: BoxDecoration(
-  //               shape: BoxShape.circle,
-  //               image: DecorationImage(
-  //                 image: AssetImage(image),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //           const SizedBox(width: 10),
-  //           TextConst(
-  //             name,
-  //             size: Sizes.fontSizeFour,
-  //             fontWeight: FontWeight.w400,
-  //             color: AppColor.white,
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }

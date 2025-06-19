@@ -20,9 +20,12 @@ class DocPatientAppointmentViewModel extends ChangeNotifier {
   DoctorsAppointmentsDataModel? _doctorsAppointmentsDataModel;
   DoctorsAppointmentsDataModel? get doctorsAppointmentsDataModel =>
       _doctorsAppointmentsDataModel;
-  setDoctorsAppointmentsData(DoctorsAppointmentsDataModel value) {
-    _doctorsAppointmentsDataModel = value;
 
+  bool _isPastAppointment = false;
+  bool get isPastAppointment => _isPastAppointment;
+  setDoctorsAppointmentsData(DoctorsAppointmentsDataModel value, bool isPast) {
+    _doctorsAppointmentsDataModel = value;
+    _isPastAppointment = isPast;
     notifyListeners();
   }
 
@@ -31,9 +34,9 @@ class DocPatientAppointmentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> docPatientAppointmentApi() async {
+  Future<void> docPatientAppointmentApi({bool loading = true}) async {
     final userId = await UserViewModel().getUser();
-    setLoading(true);
+    setLoading(loading);
     Map data = {
       "doctor_id": userId,
     };

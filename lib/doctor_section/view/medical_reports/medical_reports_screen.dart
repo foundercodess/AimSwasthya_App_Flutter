@@ -66,8 +66,10 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                 final Map<String, dynamic> itemMap = item.toJson();
                 return Column(
                   children: itemMap.entries.map((entry) {
-                    final title = entry.key
-                        .replaceAll('_', ' ');
+                    final title = entry.key.replaceAll('_', ' ');
+                    final formattedTitle = title.isNotEmpty 
+                        ? title[0].toUpperCase() + title.substring(1).toLowerCase()
+                        : title;
                     final value = (entry.value ?? '').toString().isEmpty
                         ? ''
                         : entry.value.toString();
@@ -89,7 +91,7 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextConst(
-                              title,
+                              formattedTitle,
                               size: Sizes.fontSizeFour,
                               fontWeight: FontWeight.w400,
                               color: const Color(0xffD2D2D2),
@@ -257,11 +259,11 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
                                 if (!isRescheduled && !isCancelled)
                                   ButtonConst(
                                       title: "Reschedule",
-                                      size: Sizes.fontSizeTwo,
+                                      size: Sizes.fontSizeThree,
                                       fontWeight: FontWeight.w400,
-                                      borderRadius: 8,
-                                      height: Sizes.screenHeight * 0.031,
-                                      width: Sizes.screenWidth * 0.23,
+                                      borderRadius: 10,
+                                      height: Sizes.screenHeight * 0.038,
+                                      width: Sizes.screenWidth * 0.3,
                                       color: AppColor.blue,
                                       onTap: () {
                                         if (cancelRescheduleAllowed) {
