@@ -28,6 +28,8 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
     final medData = Provider.of<DocHealthReportViewModel>(context);
     final medicalHealthList =
         medData.medicalHealthReportModel?.medicalHealth ?? [];
+    final medicalData = medicalHealthList[0];
+    print(medicalData.bloodGroup);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -55,62 +57,72 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
             Sizes.spaceHeight15,
             patientProfile(),
             Sizes.spaceHeight20,
-
-            ListView.builder(
-              padding: const EdgeInsets.all(15),
-              itemCount: medicalHealthList.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final item = medicalHealthList[index];
-                final Map<String, dynamic> itemMap = item.toJson();
-                return Column(
-                  children: itemMap.entries.map((entry) {
-                    final title = entry.key.replaceAll('_', ' ');
-                    final formattedTitle = title.isNotEmpty 
-                        ? title[0].toUpperCase() + title.substring(1).toLowerCase()
-                        : title;
-                    final value = (entry.value ?? '').toString().isEmpty
-                        ? ''
-                        : entry.value.toString();
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          top: Sizes.screenHeight * 0.01,
-                          left: Sizes.screenWidth * 0.04,
-                          bottom: Sizes.screenHeight * 0.02,
-                        ),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColor.grey,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextConst(
-                              formattedTitle,
-                              size: Sizes.fontSizeFour,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xffD2D2D2),
-                            ),
-                            SizedBox(height: Sizes.screenHeight * 0.004),
-                            TextConst(
-                              value,
-                              size: Sizes.fontSizeFour,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff595959),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
+            reportDataTile("Blood group", medicalData.bloodGroup ?? ""),
+            reportDataTile("Allergies", medicalData.allergies ?? ""),
+            reportDataTile(
+                "Current medication", medicalData.currentMedications ?? ""),
+            reportDataTile(
+                "Current illnesses", medicalData.chronicIllnesses ?? ""),
+            reportDataTile(
+                "Lifestyle habits", medicalData.lifestyleHabbits ?? ""),
+            // ListView.builder(
+            //   padding: const EdgeInsets.all(15),
+            //   itemCount: medicalHealthList.length,
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemBuilder: (context, index) {
+            //     final item = medicalHealthList[index];
+            //     final Map<String, dynamic> itemMap = item.toJson();
+            //     return Column(
+            //       children: itemMap.entries.map((entry) {
+            //         final title = entry.key.replaceAll('_', ' ');
+            //         final formattedTitle = title.isNotEmpty
+            //             ? title[0].toUpperCase() +
+            //                 title.substring(1).toLowerCase()
+            //             : title;
+            //         print(title);
+            //         print(entry.value);
+            //         final value = (entry.value ?? '').toString().isEmpty
+            //             ? ''
+            //             : entry.value.toString();
+            //         print(value);
+            //         return Padding(
+            //           padding: const EdgeInsets.only(bottom: 15),
+            //           child: Container(
+            //             padding: EdgeInsets.only(
+            //               top: Sizes.screenHeight * 0.01,
+            //               left: Sizes.screenWidth * 0.04,
+            //               bottom: Sizes.screenHeight * 0.02,
+            //             ),
+            //             width: double.infinity,
+            //             decoration: BoxDecoration(
+            //               color: AppColor.grey,
+            //               borderRadius: BorderRadius.circular(12),
+            //             ),
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 TextConst(
+            //                   formattedTitle,
+            //                   size: Sizes.fontSizeFour,
+            //                   fontWeight: FontWeight.w400,
+            //                   color: const Color(0xffD2D2D2),
+            //                 ),
+            //                 SizedBox(height: Sizes.screenHeight * 0.004),
+            //                 TextConst(
+            //                   value,
+            //                   size: Sizes.fontSizeFour,
+            //                   fontWeight: FontWeight.w400,
+            //                   color: const Color(0xff595959),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         );
+            //       }).toList(),
+            //     );
+            //   },
+            // ),
             Sizes.spaceHeight20,
             // ListView.builder(
             //       padding: const EdgeInsets.all(15),
@@ -164,6 +176,42 @@ class _DocMedicalReportsScreenState extends State<DocMedicalReportsScreen> {
         width: Sizes.screenWidth,
         color: Colors.transparent,
         child: const DocComBottomNevBar(),
+      ),
+    );
+  }
+
+  Widget reportDataTile(String key, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
+      child: Container(
+        padding: EdgeInsets.only(
+          top: Sizes.screenHeight * 0.01,
+          left: Sizes.screenWidth * 0.04,
+          bottom: Sizes.screenHeight * 0.02,
+        ),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColor.grey,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextConst(
+              key,
+              size: Sizes.fontSizeFour,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xffD2D2D2),
+            ),
+            SizedBox(height: Sizes.screenHeight * 0.004),
+            TextConst(
+              value,
+              size: Sizes.fontSizeFour,
+              fontWeight: FontWeight.w400,
+              color: Colors.black,
+            ),
+          ],
+        ),
       ),
     );
   }

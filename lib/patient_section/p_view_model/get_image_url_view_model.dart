@@ -49,6 +49,8 @@ class GetImageUrlViewModel extends ChangeNotifier {
 
       if (value['status'] == true) {
         uploadFile(context,fileName: value['image_url'], filePath: filePath);
+        Provider.of<PatientMedicalRecordsViewModel>(context, listen: false)
+            .patientMedRecApi(context);
         return true;
       } else {
         debugPrint("status false ${value['message']}");

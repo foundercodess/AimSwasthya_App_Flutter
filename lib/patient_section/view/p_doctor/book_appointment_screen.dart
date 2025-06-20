@@ -199,7 +199,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           Sizes.spaceWidth3,
           Container(
             height: Sizes.screenHeight / 5,
-            color: Colors.transparent,
+            // color: Colors.green,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,11 +211,14 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   fontWeight: FontWeight.w600,
                   color: const Color(0xff959595),
                 ),
-                TextConst(
-                    "$formattedDate at ${_formatTimeWithAmPm(docAppointmentCon.selectedTime!.slotTime!.toString())}",
-                    size: Sizes.fontSizeFive,
-                    fontWeight: FontWeight.w500,
-                    color: AppColor.black),
+                FittedBox(
+                  child: TextConst(
+                      "$formattedDate at ${_formatTimeWithAmPm(docAppointmentCon.selectedTime!.slotTime!.toString())}",
+                      size: Sizes.fontSizeFive,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.black),
+                ),
+                Sizes.spaceHeight10,
                 TextConst(
                   AppLocalizations.of(context)!.clinic_details,
                   size: Sizes.fontSizeFour,
@@ -241,15 +244,14 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                 longitude: double.parse(
                                     clinicData.longitude.toString()))));
                   },
-                  child: SizedBox(
+                  child: Container(
                     width: Sizes.screenWidth * 0.47,
-                    child: ClipRRect(
+                    height: Sizes.screenWidth*0.18,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        Assets.allImagesViewMap,
-                        fit: BoxFit.contain,
-                      ),
+                      image: const DecorationImage(image: AssetImage(Assets.allImagesViewMap), fit: BoxFit.fitHeight)
                     ),
+
                   ),
                 )
               ],

@@ -435,7 +435,7 @@ class DoctorAuthViewModel extends ChangeNotifier {
       "entity_id": userId,
       "entity_type": entityType,
       "image_name":
-          "${fileType == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
+          "${fileTypeName == 'profile_photo' ? 'profile' : 'id_prood'}.$fileType",
       "file_type": fileTypeName
     };
     print("xfghjk" + jsonEncode(data));

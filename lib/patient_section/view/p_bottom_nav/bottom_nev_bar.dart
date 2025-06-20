@@ -54,8 +54,6 @@ class _BottomNevBarState extends State<BottomNevBar> {
       return;
     }
     final makeApiCall = ModalRoute.of(context)?.settings.arguments;
-    print("make api call $makeApiCall");
-    print("make api call ${makeApiCall.runtimeType}");
     if (makeApiCall == true) {
       Provider.of<PatientHomeViewModel>(context, listen: false)
           .getLocationApi(context);

@@ -46,15 +46,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   bool? isInternetConnected;
   @override
   void initState() {
-    _checkConnection();
+    _checkConnection(true);
     super.initState();
   }
 
-  void _checkConnection() async {
+  void _checkConnection(bool isAllAllowed) async {
     isInternetConnected = await NetworkChecker.hasInternetConnection();
     setState(() {});
     if (isInternetConnected!) {
-      if (widget.invokeAllAPi) {
+      if (widget.invokeAllAPi && isAllAllowed) {
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .getLocationApi(context);
       }
@@ -67,6 +67,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           .fetchNotifications(
         type: 'patient',
       );
+      Provider.of<PatientHomeViewModel>(context, listen: false).patientHomeApi(context);
       Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
           .clearValues();
     }
@@ -113,7 +114,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     AppBtn(
                         title: "Refresh",
                         onTap: () {
-                          _checkConnection();
+                          _checkConnection(false);
                         })
                   ],
                 ),
@@ -126,7 +127,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               : RefreshIndicator(
                   color: AppColor.blue,
                   onRefresh: () async {
-                    _checkConnection();
+                    _checkConnection(false);
                   },
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -382,7 +383,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Widget getAppbarContentBasedOnCondition() {
     return Consumer<PatientHomeViewModel>(builder: (context, homeCon, _) {
-      if (!isInternetConnected!) {
+      if (isInternetConnected != null && !isInternetConnected!) {
         return noInternet();
       }
       if ((homeCon.locationData == null ||

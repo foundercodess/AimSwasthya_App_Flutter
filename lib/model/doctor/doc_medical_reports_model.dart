@@ -96,20 +96,20 @@ class MedicalHealth {
         this.lifestyleHabbits});
 
   MedicalHealth.fromJson(Map<String, dynamic> json) {
-    bloodGroup = json['blood_group'];
-    allergies = json['allergies'];
-    currentMedications = json['current_medications'];
-    chronicIllnesses = json['chronic_illnesses'];
-    lifestyleHabbits = json['lifestyle_habbits'];
+    bloodGroup = json['Blood group'];
+    allergies = json['Allergies'];
+    currentMedications = json['Current medication'];
+    chronicIllnesses = json['Chronic illnesses'];
+    lifestyleHabbits = json['Lifestyle habits'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['blood_group'] = bloodGroup;
-    data['allergies'] = allergies;
-    data['current_medications'] = currentMedications;
-    data['chronic_illnesses'] = chronicIllnesses;
-    data['lifestyle_habbits'] = lifestyleHabbits;
+    data['Blood group'] = bloodGroup;
+    data['Allergies'] = allergies;
+    data['Current medication'] = currentMedications;
+    data['Chronic illnesses'] = chronicIllnesses;
+    data['Lifestyle habits'] = lifestyleHabbits;
     return data;
   }
 }

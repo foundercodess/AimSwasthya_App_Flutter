@@ -58,30 +58,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     });
   }
 
-
-  // bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
-  //   print(bookingDate);
-  //   print(hour24Format);
-  //   // Convert ISO8601 to DateTime
-  //   DateTime parsedDate = DateTime.parse(bookingDate).toLocal();
-  //
-  //   // Format it to match "dd-MM-yyyy hh:mm a"
-  //   String formattedDate = DateFormat("dd-MM-yyyy").format(parsedDate);
-  //
-  //   String dateTimeString = "$formattedDate $hour24Format";
-  //   print(dateTimeString);
-  //
-  //   DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
-  //   DateTime bookingDateTime = format.parse(dateTimeString);
-  //
-  //   DateTime now = DateTime.now();
-  //
-  //   Duration difference = bookingDateTime.difference(now);
-  //
-  //   return difference.inMinutes > 60;
-  // }
-
-    bool isMoreThanOneHourAway(String bookingDate, String time) {
+  bool isMoreThanOneHourAway(String bookingDate, String time) {
     try {
       DateTime bookingDateTime;
 
@@ -89,12 +66,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         // Case 1: ISO 8601 format
         DateTime parsed = DateTime.parse(bookingDate).toLocal();
         String formattedDate = DateFormat("dd-MM-yyyy").format(parsed);
-        bookingDateTime = DateFormat("dd-MM-yyyy hh:mm a")
-            .parse("$formattedDate $time");
+        bookingDateTime =
+            DateFormat("dd-MM-yyyy hh:mm a").parse("$formattedDate $time");
       } else {
         // Case 2: Already in dd-MM-yyyy format
-        bookingDateTime = DateFormat("dd-MM-yyyy hh:mm a")
-            .parse("$bookingDate $time");
+        bookingDateTime =
+            DateFormat("dd-MM-yyyy hh:mm a").parse("$bookingDate $time");
       }
 
       DateTime now = DateTime.now();
@@ -105,19 +82,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
       return false;
     }
   }
-
-  // bool isMoreThanOneHourAway(String bookingDate, String hour24Format) {
-  //   String dateTimeString = "$bookingDate $hour24Format";
-  //   print(dateTimeString);
-  //   DateFormat format = DateFormat("dd-MM-yyyy hh:mm a");
-  //   DateTime bookingDateTime = format.parse(dateTimeString);
-  //
-  //   DateTime now = DateTime.now();
-  //
-  //   Duration difference = bookingDateTime.difference(now);
-  //
-  //   return difference.inMinutes > 60;
-  // }
 
   String timeAgo(String isoDateString) {
     final now = DateTime.now().toUtc();
@@ -207,6 +171,12 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               ],
               Sizes.spaceHeight25,
               slotsSection(),
+              if (isAppointmentReschedule) ...[
+                Sizes.spaceHeight25,
+                clinicDetails(),
+                Sizes.spaceHeight35,
+                reviewsSection()
+              ],
               if (!isAppointmentReschedule) ...[
                 Sizes.spaceHeight35,
                 reviewsSection()

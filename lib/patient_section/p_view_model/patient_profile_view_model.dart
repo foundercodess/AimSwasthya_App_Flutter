@@ -86,7 +86,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
   }) async {
     try {
       final userId = await UserViewModel().getUser();
-      
+
       // Clean height and weight values by removing units and any non-numeric characters
       String cleanHeight = height
           .replaceAll(' Cm', '')
@@ -94,14 +94,14 @@ class UserPatientProfileViewModel extends ChangeNotifier {
           .replaceAll('CM', '')
           .replaceAll(RegExp(r'[^0-9.]'), '')
           .trim();
-      
+
       String cleanWeight = weight
           .replaceAll(' Kg', '')
           .replaceAll('kg', '')
           .replaceAll('KG', '')
           .replaceAll(RegExp(r'[^0-9.]'), '')
           .trim();
-      
+
       Map data = {
         "patient_id": "$userId",
         "name": name,
@@ -153,6 +153,7 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       dynamic imagePath, dynamic fileTypeName, BuildContext context,
       {bool isDirectUpdate = false}) async {
     setLoading(true);
+    print("dkdmdkmflmfdm $fileTypeName");
     final userId = await UserViewModel().getUser();
     final fileType = getImageType(imageName);
     Map data = {
@@ -166,10 +167,10 @@ class UserPatientProfileViewModel extends ChangeNotifier {
     print("body: $data");
     if (isDirectUpdate) {
       print("ewewweiwehoei");
-      Provider.of<GetImageUrlViewModel>(context, listen: false)
-          .uploadFile(context,
-              filePath: imagePath,
-              fileName: "patient/$userId/id_prood.$fileType");
+      Provider.of<GetImageUrlViewModel>(context, listen: false).uploadFile(
+          context,
+          filePath: imagePath,
+          fileName: "patient/$userId/profile.$fileType");
       return;
     }
     print("continueeeeeeeeee");
@@ -177,10 +178,10 @@ class UserPatientProfileViewModel extends ChangeNotifier {
       debugPrint("response: $value");
       Utils.show(value['message'], context);
       if (value['status'] == true) {
-        Provider.of<GetImageUrlViewModel>(context, listen: false)
-            .uploadFile(context,
-                filePath: imagePath,
-                fileName: value['image_url']);
+        Provider.of<GetImageUrlViewModel>(context, listen: false).uploadFile(
+            context,
+            filePath: imagePath,
+            fileName: value['image_url']);
         Utils.show(value['message'], context);
       }
     }).onError((error, stackTrace) {
