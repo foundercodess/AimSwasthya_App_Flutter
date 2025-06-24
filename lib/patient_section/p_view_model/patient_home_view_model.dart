@@ -163,16 +163,17 @@ class PatientHomeViewModel extends ChangeNotifier {
   }
 
   Future<void> patientHomeApi(context) async {
+    print("kdknddlkfdklfklfrlekflrke");
     if (_selectedLocationData == null ||
         (_selectedLocationData!.latitude == null &&
             _selectedLocationData!.longitude == null)) {
       debugPrint("Location data not found");
       // return;
     }
-    final latitude = _selectedLocationData!.latitude != null
+    final latitude = _selectedLocationData == null && _selectedLocationData!.latitude != null
         ? double.parse(_selectedLocationData!.latitude!).toStringAsFixed(5)
         : null;
-    final longitude = _selectedLocationData!.longitude != null
+    final longitude = _selectedLocationData == null && _selectedLocationData!.longitude != null
         ? double.parse(_selectedLocationData!.longitude!).toStringAsFixed(5)
         : null;
 

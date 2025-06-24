@@ -46,11 +46,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   bool? isInternetConnected;
   @override
   void initState() {
-    _checkConnection(true);
+    _checkConnection(true, isHomeApiAllowed: false);
     super.initState();
   }
 
-  void _checkConnection(bool isAllAllowed) async {
+  void _checkConnection(bool isAllAllowed, {bool isHomeApiAllowed=true}) async {
     isInternetConnected = await NetworkChecker.hasInternetConnection();
     setState(() {});
     if (isInternetConnected!) {
@@ -67,7 +67,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           .fetchNotifications(
         type: 'patient',
       );
-      if (!isAllAllowed) {
+      if (isHomeApiAllowed) {
         print("sdnfnflkfnlfk");
         Provider.of<PatientHomeViewModel>(context, listen: false)
             .patientHomeApi(context);
@@ -242,7 +242,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         child: Container(
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).padding.top / 1.3,
-            bottom: homeCon.patientHomeModel!.data!.appointments![0].status !=
+            bottom: homeCon.patientHomeModel!.data!.appointments!.isNotEmpty && homeCon.patientHomeModel!.data!.appointments![0].status !=
                     "reschduled"
                 ? 10
                 : 0,
@@ -382,7 +382,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 color: Color(0xff306E92),
               ),
               getAppbarContentBasedOnCondition(),
-              if (homeCon.patientHomeModel!.data!.appointments![0].status !=
+              if (homeCon.patientHomeModel!.data!.appointments!.isNotEmpty && homeCon.patientHomeModel!.data!.appointments![0].status !=
                   "reschduled")
                 Sizes.spaceHeight3,
             ],
