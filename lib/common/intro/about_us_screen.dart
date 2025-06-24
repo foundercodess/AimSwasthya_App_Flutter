@@ -49,6 +49,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               Sizes.spaceHeight10,
               message("We’re here to change that."),
               Sizes.spaceHeight10,
+              title("Our Mission"),
+              Sizes.spaceHeight10,
+              content(
+                  "To simplify early diagnosis by making healthcare accessible, understandable, and personalized—right from your phone. We aim to reduce preventable complications by helping people connect with the right specialist, at the right time, using the language they are most comfortable with."),
+              Sizes.spaceHeight10,
               title(
                 "How We Help",
               ),
@@ -72,9 +77,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               Sizes.spaceHeight10,
               content(
                   "India’s healthcare system is under pressure. But we can ease that pressure by enabling early diagnosis. Early diagnosis leads to better treatment outcomes, lower costs, and healthier communities. By bridging the gap between symptoms and specialists, AIMSwasthya empowers individuals to take control of their health journey—with confidence, clarity, and care."),
-              Sizes.spaceHeight10,
+              Sizes.spaceHeight35,
               Container(
-                // height: Sizes.screenWidth * 0.5,
                 width: Sizes.screenWidth,
                 padding: EdgeInsets.symmetric(
                     horizontal: Sizes.screenWidth * 0.06,
@@ -139,7 +143,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   ],
                 ),
               ),
-              Sizes.spaceHeight10,
+              Sizes.spaceHeight15,
               Center(
                 child: TextConst(
                   "Made with ❤ by AIMSwasthya",

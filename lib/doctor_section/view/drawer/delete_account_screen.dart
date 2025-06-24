@@ -163,7 +163,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           return ActionOverlay(
                             text: "Delete account",
                             subtext:
-                                "Are you sure you want to delete\n your appointment?",
+                                "Are you sure you want to delete\n your account?",
                             onTap: () {
                               deleteAco.deleteAccountApi(context);
                             },

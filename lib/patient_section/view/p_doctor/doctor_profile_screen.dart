@@ -412,25 +412,25 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                     size: Sizes.fontSizeFourPFive,
                   ),
                   Sizes.spaceHeight10,
-                  TextConst(
-                    "Timings",
-                    fontWeight: FontWeight.w600,
-                    size: Sizes.fontSizeFive,
-                  ),
-                  Sizes.spaceHeight3,
-                  Row(
-                    children: [
-                      const Icon(
-                        CupertinoIcons.clock,
-                        size: 10,
-                      ),
-                      TextConst(
-                        clinicData.city!.trimLeft(),
-                        fontWeight: FontWeight.w400,
-                        size: Sizes.fontSizeFourPFive,
-                      ),
-                    ],
-                  ),
+                  // TextConst(
+                  //   "Timings",
+                  //   fontWeight: FontWeight.w600,
+                  //   size: Sizes.fontSizeFive,
+                  // ),
+                  // Sizes.spaceHeight3,
+                  // Row(
+                  //   children: [
+                  //     const Icon(
+                  //       CupertinoIcons.clock,
+                  //       size: 10,
+                  //     ),
+                  //     TextConst(
+                  //       clinicData.city!.trimLeft(),
+                  //       fontWeight: FontWeight.w400,
+                  //       size: Sizes.fontSizeFourPFive,
+                  //     ),
+                  //   ],
+                  // ),
                   Sizes.spaceHeight10,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -441,7 +441,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         },
                         child: Container(
                           width: Sizes.screenWidth / 1.9,
-                          height: 33,
+                          height: Sizes.screenHeight/22,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
@@ -455,11 +455,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       Sizes.spaceWidth10,
                       Expanded(
                         child: Container(
-                          height: 33,
+                          height: Sizes.screenHeight/22,
                           alignment: Alignment.center,
+                          padding:const EdgeInsets.only(bottom: 3),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              // border: Border.all(color: AppColor.blue)
                               color: AppColor.blue),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,

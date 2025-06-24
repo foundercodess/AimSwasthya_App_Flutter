@@ -331,7 +331,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
 
     if (docHomeCon.doctorHomeModel == null ||
         docHomeCon.doctorHomeModel!.data!.appointments!.isEmpty) {
-      return const Center(child: NoDataMessages());
+      return const Center(child: NoDataMessages(isSubTitleAllowed: false,));
     }
 
     return SizedBox(

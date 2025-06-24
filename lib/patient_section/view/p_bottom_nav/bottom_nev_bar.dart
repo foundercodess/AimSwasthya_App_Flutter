@@ -132,53 +132,53 @@ class _BottomNevBarState extends State<BottomNevBar> {
             ),
           ),
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 12,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: BottomAppBar(
-            elevation: 20,
-            shadowColor: AppColor.black,
-            height: 60 + MediaQuery.of(context).padding.bottom,
-            padding: EdgeInsets.only(
-              left: 40,
-              right: 40,
-              bottom: MediaQuery.of(context).padding.bottom,
-            ),
-            shape: const CircularNotchedRectangle(),
-            color: const Color(0xffF0F0F0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    // regCon.disposeKey();
-                    bottomCon.setIndex(0);
-                  },
-                  icon: const Image(
-                    image: AssetImage(Assets.iconsBottomHome),
-                    height: 22,
-                    color: AppColor.blue,
-                  ),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          bottom: true,
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, -5),
                 ),
-                IconButton(
-                  onPressed: () {
-                    // regCon.disposeKey();
-                    bottomCon.setIndex(1);
-                  },
-                  icon: const Image(
-                    image: AssetImage(Assets.iconsUserBottomImg),
-                    height: 22,
-                    color: AppColor.blue,
-                  ),
-                )
               ],
+            ),
+            child: BottomAppBar(
+              elevation: 20,
+              shadowColor: AppColor.black,
+              height: 60,
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              shape: const CircularNotchedRectangle(),
+              color: const Color(0xffF0F0F0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      // regCon.disposeKey();
+                      bottomCon.setIndex(0);
+                    },
+                    icon: const Image(
+                      image: AssetImage(Assets.iconsBottomHome),
+                      height: 22,
+                      color: AppColor.blue,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // regCon.disposeKey();
+                      bottomCon.setIndex(1);
+                    },
+                    icon: const Image(
+                      image: AssetImage(Assets.iconsUserBottomImg),
+                      height: 22,
+                      color: AppColor.blue,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

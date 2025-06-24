@@ -45,23 +45,25 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: Sizes.screenHeight * 0.06),
-            if(docHomeCon.doctorHomeModel !=null && docHomeCon.doctorHomeModel!.data !=null)
-            ListTile(
-              contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036),
-              leading: const Image(
-                image: AssetImage(Assets.iconsProfileIcon),
-                // width: Sizes.screenWidth * 0.07,
-                height: 22,
-                width: 22,
+            if (docHomeCon.doctorHomeModel != null &&
+                docHomeCon.doctorHomeModel!.data != null)
+              ListTile(
+                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036),
+                leading: const Image(
+                  image: AssetImage(Assets.iconsProfileIcon),
+                  // width: Sizes.screenWidth * 0.07,
+                  height: 22,
+                  width: 22,
+                ),
+                title: TextConst(
+                  docHomeCon.doctorHomeModel!.data!.doctors![0].doctorName ??
+                      "",
+                  // size: 13,
+                  size: Sizes.fontSizeSix,
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.white,
+                ),
               ),
-              title: TextConst(
-                docHomeCon.doctorHomeModel!.data!.doctors![0].doctorName??"",
-                // size: 13,
-                size: Sizes.fontSizeSix,
-                fontWeight: FontWeight.w600,
-                color: AppColor.white,
-              ),
-            ),
             Sizes.spaceHeight10,
             ListTile(
               contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036),
@@ -138,38 +140,10 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: (){
-                      Navigator.pushNamed(context, RoutesName.deleteAccountScreen);
-    },
-                    // onTap: () {
-                    //   showCupertinoDialog(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return  ActionOverlay(
-                    //           text: "Delete account",
-                    //           subtext:
-                    //           "Are you sure you want to delete\n your appointment?",
-                    //           yesLabel: "Continue",
-                    //        onTap: (){
-                    //          showCupertinoDialog(
-                    //              context: context,
-                    //              builder: (context) {
-                    //                return  ActionOverlay(
-                    //                  text: "Delete account",
-                    //                  subtext:
-                    //                  "Are you sure you want to delete\n your appointment?",
-                    //                  onTap: (){
-                    //                    deleteAco.deleteAccountApi(context);
-                    //                  },
-                    //                );
-                    //
-                    //              });
-                    //        },
-                    //         );
-                    //
-                    //       });
-                    //   // Navigator.pushNamed(context, RoutesName.aboutUsScreen);
-                    // },
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, RoutesName.deleteAccountScreen);
+                    },
                     child: TextConst(
                       "Delete account",
                       size: Sizes.fontSizeFivePFive,
@@ -189,17 +163,14 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                       color: AppColor.white,
                     ),
                   ),
-
                   Sizes.spaceHeight10,
                   GestureDetector(
                     onTap: () {
                       showCupertinoDialog(
                           context: context,
                           builder: (context) {
-                            return const ActionOverlay(
-                            );
+                            return const ActionOverlay();
                           });
-
                     },
                     child: TextConst(
                       "Log out",

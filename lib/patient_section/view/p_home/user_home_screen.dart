@@ -67,7 +67,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           .fetchNotifications(
         type: 'patient',
       );
-      Provider.of<PatientHomeViewModel>(context, listen: false).patientHomeApi(context);
+      if (!isAllAllowed) {
+        print("sdnfnflkfnlfk");
+        Provider.of<PatientHomeViewModel>(context, listen: false)
+            .patientHomeApi(context);
+      }
+
       Provider.of<VoiceSymptomSearchViewModel>(context, listen: false)
           .clearValues();
     }
@@ -237,7 +242,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         child: Container(
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).padding.top / 1.3,
-            bottom: 10,
+            bottom: homeCon.patientHomeModel!.data!.appointments![0].status !=
+                    "reschduled"
+                ? 10
+                : 0,
             left: Sizes.screenWidth * 0.03,
             right: Sizes.screenWidth * 0.03,
           ),
@@ -305,7 +313,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           children: [
                             Consumer<PatientHomeViewModel>(
                                 builder: (context, homeCon, _) {
-                              if (!isInternetConnected!) {
+                              if (isInternetConnected != null &&
+                                  !isInternetConnected!) {
                                 return const Text("-");
                               }
                               if (homeCon.selectedLocationData == null) {
@@ -373,7 +382,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 color: Color(0xff306E92),
               ),
               getAppbarContentBasedOnCondition(),
-              Sizes.spaceHeight3,
+              if (homeCon.patientHomeModel!.data!.appointments![0].status !=
+                  "reschduled")
+                Sizes.spaceHeight3,
             ],
           ),
         ),
@@ -831,7 +842,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           Row(
             children: [
               TextConst(
-                AppLocalizations.of(context)!.upcoming_appointment,
+                appointmentData.status == null
+                    ? ""
+                    : appointmentData.status == 'scheduled'
+                        ? AppLocalizations.of(context)!.upcoming_appointment
+                        : appointmentData.status == 'reschduled'
+                            ? "Appointent On Hold"
+                            : appointmentData.status,
                 size: Sizes.fontSizeFivePFive,
                 fontWeight: FontWeight.w500,
                 color: AppColor.white,
@@ -939,7 +956,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   ),
                   Sizes.spaceHeight15,
                   ProfileBtnConst(
-                    title: AppLocalizations.of(context)!.reschedule,
+                    title: appointmentData.status == null
+                        ? ""
+                        : appointmentData.status == 'scheduled'
+                            ? AppLocalizations.of(context)!.reschedule
+                            : appointmentData.status == 'reschduled'
+                                ? "Select"
+                                : appointmentData.status,
                     fontSize: Sizes.fontSizeFourPFive,
                     onTap: () {
                       if (isMoreThanOneHourAway(appointmentData.bookingDate!,
@@ -964,11 +987,31 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     height: Sizes.screenHeight * 0.042,
                     width: Sizes.screenWidth * 0.66,
                     color: AppColor.lightBlue,
-                  )
+                  ),
                 ],
               )
             ],
-          )
+          ),
+          if (appointmentData.status == "reschduled")
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              width: Sizes.screenWidth / 1.18,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(top: 7, bottom: 0),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(14),
+                      topRight: Radius.circular(14),
+                      bottomLeft: Radius.circular(1),
+                      bottomRight: Radius.circular(1)),
+                  color: AppColor.lightBlue),
+              child: TextConst(
+                "Doctor has requested a reschedule. Please select a new slot",
+                size: Sizes.fontSizeThree * 1.1,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            )
         ],
       ),
     );

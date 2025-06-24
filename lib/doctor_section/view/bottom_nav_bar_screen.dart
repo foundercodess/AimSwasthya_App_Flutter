@@ -90,49 +90,53 @@ class _DoctorBottomNevBarState extends State<DoctorBottomNevBar> {
             ),
           ),
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 12,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: BottomAppBar(
-            elevation: 20,
-            shadowColor: AppColor.black,
-            height: 60 + MediaQuery.of(context).padding.bottom,
-            padding: const EdgeInsets.only(left: 40, right: 40),
-            shape: const CircularNotchedRectangle(),
-            color: const Color(0xffF0F0F0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    regCon.disposeKey();
-                    bottomCon.setIndex(1);
-                  },
-                  icon: Image.asset(
-                    Assets.iconsBottomProfile,
-                    height: 22,
-                    color: AppColor.blue,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    regCon.disposeKey();
-                    bottomCon.setIndex(2);
-                  },
-                  icon: Image.asset(
-                    Assets.iconsCalendar,
-                    height: 30,
-                    color: AppColor.blue,
-                  ),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          bottom: true,
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, -5),
                 ),
               ],
+            ),
+            child: BottomAppBar(
+              elevation: 20,
+              shadowColor: AppColor.black,
+              height: 60,
+              padding: const EdgeInsets.only(left: 40, right: 40),
+              shape: const CircularNotchedRectangle(),
+              color: const Color(0xffF0F0F0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      regCon.disposeKey();
+                      bottomCon.setIndex(1);
+                    },
+                    icon: Image.asset(
+                      Assets.iconsBottomProfile,
+                      height: 22,
+                      color: AppColor.blue,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      regCon.disposeKey();
+                      bottomCon.setIndex(2);
+                    },
+                    icon: Image.asset(
+                      Assets.iconsCalendar,
+                      height: 30,
+                      color: AppColor.blue,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+// utils/no_data_found.dart
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:flutter/material.dart';
 
@@ -57,8 +58,9 @@ class NoDataMessages extends StatelessWidget {
   final String? title;
   final double? height;
   final dynamic image;
+  final bool? isSubTitleAllowed;
   const NoDataMessages(
-      {super.key, this.message, this.title, this.height, this.image});
+      {super.key, this.message, this.title, this.height, this.image, this.isSubTitleAllowed=true});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,7 @@ class NoDataMessages extends StatelessWidget {
           ),
           Sizes.spaceHeight5,
           // Sizes.spaceHeight3,
-
+          if(isSubTitleAllowed!)
           SizedBox(
             width: Sizes.screenWidth * 0.6,
             child: Center(

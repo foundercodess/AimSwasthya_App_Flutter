@@ -41,61 +41,59 @@ class _CommenBottomNevBarState extends State<CommenBottomNevBar> {
           ),
         ),
       ),
-      bottomNavigationBar:Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          elevation: 20,
-          shadowColor: AppColor.black,
-          height: 60,
-          padding: const EdgeInsets.only(left: 40, right: 40),
-          shape: const CircularNotchedRectangle(),
-          // notchMargin: 10,
-          color: const Color(0xffF0F0F0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {
-                  // regCon.disposeKey();
-                  bottomCon.setIndex(0);
-                   Navigator.pushNamedAndRemoveUntil(context, RoutesName.bottomNavBar, (context)=> false,arguments: false);
-                  // Navigator.pushAndRemoveUntil(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const BottomNevBar()),
-                  //       (Route<dynamic> route) => false,
-                  // );
-                },
-                icon: const Image(
-                  image: AssetImage(Assets.iconsBottomHome),
-                  height: 22,
-                  color: AppColor.blue,
-                ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        bottom: true,
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 12,
+                offset: const Offset(0, -5),
               ),
-              IconButton(
-                onPressed: () {
-                  // regCon.disposeKey();
-                  bottomCon.setIndex(1);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const BottomNevBar()),
-                        (Route<dynamic> route) => false,
-                  );
-                },
-                icon: const Image(
-                  image: AssetImage(Assets.iconsUserBottomImg),
-                  height: 22,
-                  color: AppColor.blue,
-                ),
-              )
             ],
+          ),
+          child: BottomAppBar(
+            elevation: 20,
+            shadowColor: AppColor.black,
+            height: 60,
+            padding: const EdgeInsets.only(left: 40, right: 40),
+            shape: const CircularNotchedRectangle(),
+            color: const Color(0xffF0F0F0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // regCon.disposeKey();
+                    bottomCon.setIndex(0);
+                     Navigator.pushNamedAndRemoveUntil(context, RoutesName.bottomNavBar, (context)=> false,arguments: false);
+                  },
+                  icon: const Image(
+                    image: AssetImage(Assets.iconsBottomHome),
+                    height: 22,
+                    color: AppColor.blue,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    // regCon.disposeKey();
+                    bottomCon.setIndex(1);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BottomNevBar()),
+                          (Route<dynamic> route) => false,
+                    );
+                  },
+                  icon: const Image(
+                    image: AssetImage(Assets.iconsUserBottomImg),
+                    height: 22,
+                    color: AppColor.blue,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

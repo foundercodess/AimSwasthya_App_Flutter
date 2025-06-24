@@ -124,7 +124,7 @@ class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
                           return ActionOverlay(
                             text: "Delete account",
                             subtext:
-                                "Are you sure you want to delete\n your appointment?",
+                                "Are you sure you want to delete\n your account?",
                             onTap: () {
                               deletePro.userDeleteAccountApi(context);
                             },

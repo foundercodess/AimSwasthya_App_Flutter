@@ -165,14 +165,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           },
                           child: TextConst(
                             "Terms of use",
-                            size: Sizes.fontSizeFive,
+                            size: Sizes.fontSizeFour,
                             fontWeight: FontWeight.w500,
                             color: AppColor.white,
                           ),
                         ),
                         TextConst(
                           " & ",
-                          size: Sizes.fontSizeFive,
+                          size: Sizes.fontSizeFour,
                           fontWeight: FontWeight.w500,
                           color: AppColor.white,
                         ),
@@ -188,7 +188,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           },
                           child: TextConst(
                             "Privacy policy",
-                            size: Sizes.fontSizeFive,
+                            size: Sizes.fontSizeFour,
                             fontWeight: FontWeight.w500,
                             color: AppColor.white,
                           ),
@@ -203,7 +203,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       },
                       child: TextConst(
                         AppLocalizations.of(context)!.about_Us,
-                        size: Sizes.fontSizeFive,
+                        size: Sizes.fontSizeFour,
                         fontWeight: FontWeight.w500,
                         color: AppColor.white,
                       ),
