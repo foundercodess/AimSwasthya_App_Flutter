@@ -104,14 +104,13 @@ class PatientHomeViewModel extends ChangeNotifier {
     notifyListeners();
     if ((_locationData == null ||
         locationData!.patientLocation!.name == null)) {
-      print(locationData);
-      print("panddaaa");
       setNoServicesData(true);
     }
-    checkUserSearchingOutOfStation(LatLng(
-        double.parse(value.patientLocation!.latitude.toString()),
-        double.parse(value.patientLocation!.longitude.toString())));
+    // checkUserSearchingOutOfStation(LatLng(
+    //     double.parse(value.patientLocation!.latitude.toString()),
+    //     double.parse(value.patientLocation!.longitude.toString())));
 
+    print("fnfnrenfjef");
     patientHomeApi(context);
     notifyListeners();
   }
@@ -136,7 +135,7 @@ class PatientHomeViewModel extends ChangeNotifier {
       setLoading(false);
       patientHomeApi(context);
       if (kDebugMode) {
-        print('error: $error');
+        print('error in getocation: $error');
       }
     });
     await Future.delayed(const Duration(minutes: 5), () async {
@@ -151,7 +150,6 @@ class PatientHomeViewModel extends ChangeNotifier {
 
   setPatientHomeData(PatientHomeModel value) {
     _patientHomeModel = value;
-    // setSelectedMemberIndex(-1);
     if (value.data!.doctors == []) return;
     setSelectedMemberIndex(0);
     for (var data in value.data!.doctors!) {
@@ -170,10 +168,10 @@ class PatientHomeViewModel extends ChangeNotifier {
       debugPrint("Location data not found");
       // return;
     }
-    final latitude = _selectedLocationData == null && _selectedLocationData!.latitude != null
+    final latitude = _selectedLocationData != null && _selectedLocationData!.latitude != null
         ? double.parse(_selectedLocationData!.latitude!).toStringAsFixed(5)
         : null;
-    final longitude = _selectedLocationData == null && _selectedLocationData!.longitude != null
+    final longitude = _selectedLocationData != null && _selectedLocationData!.longitude != null
         ? double.parse(_selectedLocationData!.longitude!).toStringAsFixed(5)
         : null;
 
@@ -182,9 +180,10 @@ class PatientHomeViewModel extends ChangeNotifier {
       "lat": latitude,
       "lon": longitude,
       "patient_id": userId,
-      "location_id": _selectedLocationData == null
-          ? ""
-          : _selectedLocationData!.locationId ?? "",
+      // "location_id":
+      // _selectedLocationData == null
+      //     ? ""
+      //     : _selectedLocationData!.locationId ?? "",
     };
     debugPrint("ansjn${jsonEncode(data)}");
     _patientHomeRepo.patientHomeApi(data).then((value) {
