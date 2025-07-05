@@ -67,11 +67,14 @@ class ActionOverlay extends StatelessWidget {
             ),
             // Sizes.spaceHeight5,
             const Spacer(),
-            TextConst(
-              textAlign: TextAlign.center,
-              subtext ?? 'Are you sure you want to Log out?',
-              size: Sizes.fontSizeFourPFive,
-              fontWeight: FontWeight.w400,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextConst(
+                textAlign: TextAlign.center,
+                subtext ?? 'Are you sure you want to Log out?',
+                size: Sizes.fontSizeFourPFive,
+                fontWeight: FontWeight.w400,
+              ),
             ),
             const Spacer(),
             Sizes.spaceHeight10,

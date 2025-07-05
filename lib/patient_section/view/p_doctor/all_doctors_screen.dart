@@ -1,4 +1,3 @@
-// patient_section/view/p_doctor/all_doctors_screen.dart
 import 'package:aim_swasthya/res/user_button_const.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
 import 'package:aim_swasthya/utils/no_data_found.dart';
@@ -8,7 +7,7 @@ import 'package:aim_swasthya/patient_section/p_view_model/voice_search_view_mode
 import 'package:flutter/material.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 
 class AllDoctorsScreen extends StatefulWidget {
   const AllDoctorsScreen({super.key});

@@ -6,7 +6,7 @@ import 'package:aim_swasthya/patient_section/view/p_home/doctor_Tile.dart';
 import 'package:aim_swasthya/patient_section/view/p_bottom_nav/secound_nav_bar.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/patient_pref_doc_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class MyDoctorsScreen extends StatefulWidget {

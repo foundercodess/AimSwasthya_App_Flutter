@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../utils/load_data.dart';
 import '../../../utils/no_data_found.dart';
 import '../../p_view_model/voice_search_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 
 import '../p_home/specialists_top_screen.dart';
 

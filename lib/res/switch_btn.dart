@@ -17,21 +17,6 @@ class _CustomSwitchState extends State<CustomSwitch>
   late AnimationController _animationController;
   late Animation<Alignment> _circleAnimation;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   print("value gotten: ${widget.value}");
-  //   _animationController = AnimationController(
-  //     vsync: this,
-  //     duration: const Duration(milliseconds: 200),
-  //   );
-  //
-  //   _circleAnimation = AlignmentTween(
-  //     begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
-  //     end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
-  //   ).animate(_animationController);
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -41,15 +26,14 @@ class _CustomSwitchState extends State<CustomSwitch>
     );
 
 
-    // Add this to reflect the initial value visually
     if (widget.value) {
-      _animationController.value = 1.0; // Blue, right-aligned
+      _animationController.value = 1.0;
       _circleAnimation = AlignmentTween(
         begin: widget.value ? Alignment.centerLeft : Alignment.centerRight,
         end: widget.value ? Alignment.centerRight : Alignment.centerLeft,
       ).animate(_animationController);
     } else {
-      _animationController.value = 0.0; // Grey, left-aligned
+      _animationController.value = 0.0;
       _circleAnimation = AlignmentTween(
         begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
         end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
@@ -76,7 +60,6 @@ class _CustomSwitchState extends State<CustomSwitch>
   }
 
   void _toggleSwitch() {
-    print("sjabvdjb: ${widget.value}");
     if (widget.value) {
       _animationController.reverse();
       widget.onChanged(false);
@@ -122,44 +105,3 @@ class _CustomSwitchState extends State<CustomSwitch>
     );
   }
 }
-
-// import 'package:flutter/material.dart';
-//
-// class SwitchExample extends StatefulWidget {
-//   @override
-//   _SwitchExampleState createState() => _SwitchExampleState();
-// }
-//
-// class _SwitchExampleState extends State<SwitchExample> {
-//   bool _isSwitched = false; // Initial switch state
-//
-//   void _toggleSwitch(bool value) {
-//     setState(() {
-//       _isSwitched = value;
-//       print('Switch is ${_isSwitched ? "ON" : "OFF"}'); // Debugging log
-//     });
-//
-//     // Call your function when switch changes
-//     _onSwitchChanged(value);
-//   }
-//
-//   void _onSwitchChanged(bool value) {
-//     // Perform some action when the switch changes
-//     print('Switch changed to: $value');
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Switch Button Example')),
-//       body: Center(
-//         child: Switch(
-//           value: _isSwitched,
-//           onChanged: _toggleSwitch,
-//           activeColor: Colors.green, // Customize switch color
-//           inactiveThumbColor: Colors.grey,
-//         ),
-//       ),
-//     );
-//   }
-// }

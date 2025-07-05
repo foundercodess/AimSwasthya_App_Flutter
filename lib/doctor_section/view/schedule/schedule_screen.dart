@@ -5,10 +5,11 @@ import 'package:aim_swasthya/doctor_section/view/schedule/range_calander_overlay
 import 'package:aim_swasthya/doctor_section/view/schedule/schedule_hour.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/bottom_nav_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/slot_schedule_view_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 import 'clinic_location_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -19,13 +20,6 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  // int selectedIndex = 0;
-  // void toggleSelection(int index) {
-  //   setState(() {
-  //     selectedIndex = index;
-  //   });
-  // }
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,12 +32,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomCon = Provider.of<BottomNavProvider>(context);
     final slotScheduleCon = Provider.of<SlotScheduleViewModel>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.white,
-      appBar: appBarConstant(context, isBottomAllowed: true, onTap: () {
+      appBar: appBarConstant(
+          context, isBottomAllowed: true, onTap: () {
         if (slotScheduleCon.widgetIndex > 1) {
           slotScheduleCon.setWidgetIndex(slotScheduleCon.widgetIndex - 1);
         } else {
@@ -115,30 +109,51 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           left: Sizes.screenWidth * 0.1,
           right: Sizes.screenWidth * 0.1,
           bottom: Sizes.screenHeight * 0.04),
-      child: AppBtn(
-        height: Sizes.screenHeight * 0.06,
-        width: Sizes.screenWidth,
-        title: slotScheduleCon.widgetIndex <= 2
-            ? AppLocalizations.of(context)!.continue_con
-            : AppLocalizations.of(context)!.save,
-        color: AppColor.blue,
-        borderRadius: 18,
-        fontWidth: FontWeight.w400,
-        onTap: () {
-          if (slotScheduleCon.widgetIndex == 1) {
-            if (slotScheduleCon.selectedClinicId == null) {
-              Utils.show("Please select a clinic to continue schedule creation",
-                  context);
-            } else {
-              slotScheduleCon.docScheduleApi();
-              slotScheduleCon.setWidgetIndex(2);
-            }
-          } else if (slotScheduleCon.widgetIndex == 2) {
-            slotScheduleCon.docScheduleSlotTypeApi(context);
-          } else {
-            slotScheduleCon.docScheduleInsertApi(context);
-          }
-        },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (slotScheduleCon.widgetIndex > 2) ...[
+            GestureDetector(
+              onTap: () {
+                slotScheduleCon.setWidgetIndex(2);
+              },
+              child: TextConst(
+                "Re-select date range",
+                color: const Color(0xff767676),
+                decoration: TextDecoration.underline,
+                decorationColor: const Color(0xff767676),
+                size: Sizes.fontSizeFourPFive,
+              ),
+            ),
+            Sizes.spaceHeight35,
+          ],
+          AppBtn(
+            height: Sizes.screenHeight * 0.06,
+            width: Sizes.screenWidth,
+            title: slotScheduleCon.widgetIndex <= 2
+                ? AppLocalizations.of(context)!.continue_con
+                : AppLocalizations.of(context)!.save,
+            color: AppColor.blue,
+            borderRadius: 18,
+            fontWidth: FontWeight.w400,
+            onTap: () {
+              if (slotScheduleCon.widgetIndex == 1) {
+                if (slotScheduleCon.selectedClinicId == null) {
+                  Utils.show(
+                      "Please select a clinic to continue schedule creation",
+                      context);
+                } else {
+                  slotScheduleCon.docScheduleApi();
+                  slotScheduleCon.setWidgetIndex(2);
+                }
+              } else if (slotScheduleCon.widgetIndex == 2) {
+                slotScheduleCon.docScheduleSlotTypeApi(context);
+              } else {
+                slotScheduleCon.docScheduleInsertApi(context);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -149,6 +164,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       String? label,
       void Function()? onTap}) {
     return AppBar(
+      elevation: 0,
+        scrolledUnderElevation: 0,
         backgroundColor: AppColor.white,
         leadingWidth: 30,
         toolbarHeight: 30,
@@ -159,7 +176,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 },
             child: const Padding(
               padding: EdgeInsets.only(left: 12),
-              child: Image(image: AssetImage('assets/icons/back.png'), width: 20,height: 20,alignment: Alignment.center,),
+              child: Image(
+                image: AssetImage('assets/icons/back.png'),
+                width: 20,
+                height: 20,
+                alignment: Alignment.center,
+              ),
             )),
         bottom: isBottomAllowed
             ? PreferredSize(
@@ -196,62 +218,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             SizedBox(
               height: Sizes.screenHeight * 0.09,
             ),
-            // Center(
-            //   child: Container(
-            //     width: Sizes.screenWidth / 1.29,
-            //     height: 55,
-            //     decoration: BoxDecoration(
-            //         color: AppColor.grey,
-            //         borderRadius: BorderRadius.circular(15)),
-            //     padding: EdgeInsets.only(
-            //         left: Sizes.screenWidth * 0.03,
-            //         right: Sizes.screenWidth * 0.03),
-            //     child: DropdownButton<String>(
-            //       value: slotScheduleCon.selectedClinicId,
-            //       hint: TextConst(
-            //         "Select option",
-            //         size: Sizes.fontSizeFour,
-            //         color: AppColor.textfieldTextColor,
-            //         fontWeight: FontWeight.w400,
-            //       ),
-            //       underline: const SizedBox(),
-            //       isExpanded: true,
-            //       items: docProfileCon.doctorProfileModel!.data!.clinics!
-            //           .map((clinic) => DropdownMenuItem<String>(
-            //                 value: clinic.clinicId.toString(),
-            //                 child: TextConst(
-            //                   clinic.name.toString(),
-            //                   fontWeight: FontWeight.w500,
-            //                   size: Sizes.fontSizeFive,
-            //                   color: AppColor.blue,
-            //                 ),
-            //               ))
-            //           .toList(),
-            //       onChanged: (String? newId) {
-            //         slotScheduleCon.setSelectedClinicId(newId!);
-            //       },
-            //     ),
-            //   ),
-            // ),
             Sizes.spaceHeight10,
-            // Container(
-            //   padding: EdgeInsets.only(
-            //       left: Sizes.screenWidth * 0.03,
-            //       right: Sizes.screenWidth * 0.03),
-            //   child: CustomTextField(
-            //     keyboardType: TextInputType.number,
-            //     contentPadding:
-            //         const EdgeInsets.only(top: 18, bottom: 18, left: 10),
-            //     fillColor: AppColor.grey,
-            //     hintText: "Consultation fee",
-            //     hintWeight: FontWeight.w400,
-            //     hintSize: Sizes.fontSizeFour,
-            //     cursorColor: AppColor.textGrayColor,
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: Sizes.screenHeight * 0.08,
-            // ),
             TextConst(
               AppLocalizations.of(context)!.appointment_duration,
               size: Sizes.fontSizeFivePFive,
@@ -284,7 +251,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             final time = slotScheduleCon.appointmentDurationList[index];
             return GestureDetector(
               onTap: () {
-                print("asdfghjkl;: ${time['value']}");
                 slotScheduleCon.setAppointmentDuration(time['value']!);
               },
               child: Container(
@@ -416,7 +382,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           children: [
             if (slotScheduleCon.selectedRange != null)
               TextConst(
-                "${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.start.toLocal())} - ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.end.toLocal())}",
+                "${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.start.toLocal())} - ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.end.toLocal())} ${DateFormat('yyyy').format(slotScheduleCon.selectedRange!.end.toLocal())}",
                 size: Sizes.fontSizeThree * 1.06,
                 fontWeight: FontWeight.w400,
                 color: AppColor.lightBlack,
@@ -432,164 +398,4 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       ),
     );
   }
-
-  // bool enable = false;
-  // Widget scheduleHours() {
-  //   return Consumer<SlotScheduleViewModel>(
-  //       builder: (context, slotScheduleCon, _) {
-  //     return Padding(
-  //       padding: EdgeInsets.symmetric(
-  //           horizontal: Sizes.screenWidth * 0.05,
-  //           vertical: Sizes.screenHeight * 0.02),
-  //       child: Column(
-  //         children: [
-  //           Sizes.spaceHeight10,
-  //           TextConst(
-  //             AppLocalizations.of(context)!.working_hours,
-  //             size: Sizes.fontSizeSix * 1.07,
-  //             fontWeight: FontWeight.w500,
-  //           ),
-  //           SizedBox(
-  //             height: Sizes.screenHeight * 0.05,
-  //           ),
-  //           Column(
-  //             spacing: 15,
-  //             children:
-  //                 List.generate(slotScheduleCon.allSlots.length, (slotIndex) {
-  //               final slotData = slotScheduleCon.allSlots[slotIndex];
-  //               return Row(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   CustomSwitch(
-  //                     value: slotData['available_flag'] == 'Y',
-  //                     onChanged: (bool val) {
-  //                       slotScheduleCon
-  //                           .toggleSelectedDateAvailability(slotIndex);
-  //                     },
-  //                   ),
-  //                   Sizes.spaceWidth15,
-  //                   SizedBox(
-  //                     width: Sizes.screenWidth * 0.12,
-  //                     child: TextConst(
-  //                       slotData['dd_month_name'],
-  //                       size: Sizes.fontSizeFourPFive,
-  //                       fontWeight: FontWeight.w400,
-  //                       color: AppColor.textfieldGrayColor,
-  //                     ),
-  //                   ),
-  //                   Sizes.spaceWidth5,
-  //                   Sizes.spaceWidth3,
-  //                   Column(
-  //                     children:
-  //                         List.generate(slotData['timing'].length, (timeIndex) {
-  //                       final timingData = slotData['timing'][timeIndex];
-  //                       return Container(
-  //                         margin: const EdgeInsets.only(bottom: 8),
-  //                         alignment: Alignment.centerRight,
-  //                         width: Sizes.screenWidth * 0.61,
-  //                         child: Row(
-  //                           children: [
-  //                             GestureDetector(
-  //                               onTap: () {
-  //                                 slotScheduleCon.selectTime(context, slotIndex,
-  //                                     timeIndex, 'start_time');
-  //                               },
-  //                               child: Container(
-  //                                 height: Sizes.screenHeight * 0.03,
-  //                                 width: Sizes.screenWidth * 0.24,
-  //                                 decoration: BoxDecoration(
-  //                                     borderRadius: BorderRadius.circular(7),
-  //                                     color: AppColor.textfieldGrayColor
-  //                                         .withOpacity(0.5)),
-  //                                 child: Center(
-  //                                   child: TextConst(
-  //                                     timingData['start_time'],
-  //                                     size: Sizes.fontSizeFourPFive,
-  //                                     fontWeight: FontWeight.w400,
-  //                                     color: AppColor.textfieldTextColor
-  //                                         .withOpacity(0.8),
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                             Sizes.spaceWidth3,
-  //                             const Icon(
-  //                               Icons.remove,
-  //                               size: 15,
-  //                               color: AppColor.textfieldTextColor,
-  //                             ),
-  //                             Sizes.spaceWidth3,
-  //                             GestureDetector(
-  //                               onTap: () {
-  //                                 slotScheduleCon.selectTime(context, slotIndex,
-  //                                     timeIndex, 'end_time');
-  //                               },
-  //                               child: Container(
-  //                                 height: Sizes.screenHeight * 0.03,
-  //                                 width: Sizes.screenWidth * 0.24,
-  //                                 decoration: BoxDecoration(
-  //                                     borderRadius: BorderRadius.circular(7),
-  //                                     color: AppColor.textfieldGrayColor
-  //                                         .withOpacity(0.5)),
-  //                                 child: Center(
-  //                                   child: TextConst(
-  //                                     timingData['end_time'],
-  //                                     size: Sizes.fontSizeFourPFive,
-  //                                     fontWeight: FontWeight.w400,
-  //                                     color: AppColor.textfieldTextColor
-  //                                         .withOpacity(0.8),
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                             Sizes.spaceWidth10,
-  //                             (timeIndex == 0)
-  //                                 ? GestureDetector(
-  //                                     onTap: () {
-  //                                       if (slotData['timing'].length < 3) {
-  //                                         slotScheduleCon.addMoreTimeAtDate(
-  //                                             slotIndex,
-  //                                             slotData['timing'].length);
-  //                                       } else {
-  //                                         debugPrint(
-  //                                             "No more slot addition allowed");
-  //                                       }
-  //                                     },
-  //                                     child: const Icon(
-  //                                       Icons.add_circle_outline,
-  //                                       size: 15,
-  //                                       color: AppColor.black,
-  //                                     ),
-  //                                   )
-  //                                 : GestureDetector(
-  //                                     onTap: () {
-  //                                       if (slotData['timing'].length > 1) {
-  //                                         slotScheduleCon.removeTimeAtDate(
-  //                                             slotIndex, timeIndex);
-  //                                       } else {
-  //                                         debugPrint(
-  //                                             "No more slot deletion allowed");
-  //                                       }
-  //                                     },
-  //                                     child: const Icon(
-  //                                       Icons.cancel_outlined,
-  //                                       size: 15,
-  //                                       color: Colors.red,
-  //                                     ),
-  //                                   ),
-  //                           ],
-  //                         ),
-  //                       );
-  //                     }),
-  //                   )
-  //                 ],
-  //               );
-  //             }),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   });
-  // }
 }

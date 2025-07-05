@@ -59,6 +59,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // AppbarConst(title: "Appointments",),
                   _buildAppBar(bottomCon),
                   Sizes.spaceHeight20,
                   _buildSectionTitle("Active appointments"),
@@ -82,6 +83,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
   /// Builds the custom app bar for the appointments screen.
   Widget _buildAppBar(BottomNavProvider bottomCon) {
     return appBarConstant(
+      topAllowed: false,
       context,
       onTap: () {
         if (bottomCon.currentIndex == 2) {

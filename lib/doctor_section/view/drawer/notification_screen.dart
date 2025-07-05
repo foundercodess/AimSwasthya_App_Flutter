@@ -1,4 +1,5 @@
 // doctor_section/view/drawer/notification_screen.dart
+import 'package:aim_swasthya/patient_section/view/p_bottom_nav/secound_nav_bar.dart';
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/utils/load_data.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../common/view_model/notification_view_model.dart';
 import '../../../model/doctor/notification_model.dart';
+import '../common_nav_bar.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -29,6 +31,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: Container(
+          height: 70,
+          width: Sizes.screenWidth,
+          color: Colors.transparent,
+          child: const DocComBottomNevBar()),
       body: Consumer<NotificationViewModel>(
         builder: (context, viewModel, child) {
           final notifications = viewModel.notificationModel?.data ?? [];
@@ -57,7 +64,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Expanded(
                 child: viewModel.loading
                     ? const Scaffold(
-                        body: Center(child: LoadData(),),
+                        body: Center(
+                          child: LoadData(),
+                        ),
                       )
                     : ListView(
                         padding: const EdgeInsets.symmetric(
@@ -67,7 +76,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             _sectionHeader('Today'),
                             ...todayList.map(
                                 (n) => _notificationTile(n, highlight: true)),
-                                Sizes.spaceHeight10,
+                            Sizes.spaceHeight10,
                           ],
                           if (allList.isNotEmpty) ...[
                             _sectionHeader('All notifications'),
@@ -78,11 +87,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 32.0),
                               child: Center(
-                                  child: NoDataMessages(image:
-                                    Image.asset(Assets.iconsNotification,
-                                        height: Sizes.screenHeight * 0.03,
-                                        width: Sizes.screenHeight * 0.03),
-                                    // image: AssetImage(Assets.iconsNotification,),
+                                  child: NoDataMessages(
+                                image: Image.asset(Assets.iconsNotification,
+                                    height: Sizes.screenHeight * 0.03,
+                                    width: Sizes.screenHeight * 0.03),
+                                // image: AssetImage(Assets.iconsNotification,),
                                 message: "All quiet here",
                                 title:
                                     "You’ll receive updates here when\nsomething needs your attention",
@@ -108,9 +117,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
               fontWeight: FontWeight.w400, size: Sizes.fontSizeFivePFive),
           Row(
             children: [
-              TextConst('Sort', color: Colors.grey),
+              TextConst(
+                'Sort',
+                color: AppColor.textfieldTextColor,
+                size: Sizes.fontSizeFour,
+              ),
               const Icon(Icons.keyboard_arrow_down_rounded,
-                  color: Colors.grey, size: 18),
+                  color: AppColor.textfieldTextColor, size: 18),
             ],
           ),
         ],

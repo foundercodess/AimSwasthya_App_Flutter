@@ -1,6 +1,8 @@
 // patient_section/p_view_model/slot_schedule_view_model.dart
 import 'dart:convert';
 import 'package:aim_swasthya/res/api_urls.dart';
+import 'package:aim_swasthya/res/color_const.dart';
+import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:aim_swasthya/utils/show_server_error.dart';
 import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/user_view_model.dart';
@@ -235,8 +237,17 @@ class SlotScheduleViewModel extends ChangeNotifier {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
+        builder: (context, child){
+          return Theme(data: Theme.of(context).copyWith(
+            timePickerTheme: const TimePickerThemeData(
+              dialBackgroundColor: AppColor.purple,
+              dialTextColor: AppColor.white,
+              dayPeriodTextColor: AppColor.textGrayColor,
+              dayPeriodColor: AppColor.purple,
+            )
+          ), child: child!);
+        }
       );
-
       if (pickedTime != null) {
         final now = DateTime.now();
         final formatted = DateFormat('hh:mm a').format(
@@ -254,8 +265,8 @@ class SlotScheduleViewModel extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>> flattenTimingsWith24HrFormat() {
-    final inputFormat = DateFormat.jm(); // For parsing 12-hour format
-    final outputFormat = DateFormat.Hm(); // For outputting 24-hour format
+    final inputFormat = DateFormat.jm();
+    final outputFormat = DateFormat.Hm();
 
     List<Map<String, dynamic>> result = [];
 
@@ -385,10 +396,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
   Future<void> docScheduleApi() async {
     final userId = await UserViewModel().getUser();
     setLoading(true);
-    Map data = {
-      "doctor_id": userId.toString(),
-      "clinic_id": _selectedClinicId
-    };
+    Map data = {"doctor_id": userId.toString(), "clinic_id": _selectedClinicId};
     print("ijfeiorjfio${jsonEncode(data)}");
     _docScheduleRepo.docScheduleApi(data).then((value) {
       if (value.status == true) {
@@ -476,7 +484,7 @@ class SlotScheduleViewModel extends ChangeNotifier {
       if (value["status"] == true) {
         docScheduleApi();
         // showInfoOverlay(title: "Success", errorMessage: value['message']);
-        setWidgetIndex(2);
+        Navigator.pushNamedAndRemoveUntil(context, RoutesName.doctorBottomNevBar, (context)=>false, arguments: true);
       }
       setLoading(false);
     }).onError((error, stackTrace) {

@@ -6,7 +6,7 @@ import 'package:aim_swasthya/utils/routes/routes_name.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:aim_swasthya/res/common_material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../p_view_model/voice_search_view_model.dart';

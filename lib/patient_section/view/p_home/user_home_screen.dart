@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 import 'package:aim_swasthya/common/view_model/notification_view_model.dart';
 
 import '../../../common/view_model/network_check.dart';

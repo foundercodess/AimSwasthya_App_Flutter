@@ -33,12 +33,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   int currentPage = 0;
   bool isClicked = false;
   final List<String> genderOptions = ['Male', 'Female', 'Other'];
-  
-  // Generate years list for experience dropdown (1950 to current year)
+
   final List<String> yearOptions = List.generate(
-    DateTime.now().year - 1949, 
-    (index) => (1950 + index).toString()
-  );
+      DateTime.now().year - 1949, (index) => (1950 + index).toString());
 
   @override
   void initState() {
@@ -50,12 +47,14 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
   }
 
   void _toggleEditMode() {
-    final docProfileCon = Provider.of<DoctorProfileViewModel>(context, listen: false);
+    final docProfileCon =
+        Provider.of<DoctorProfileViewModel>(context, listen: false);
     docProfileCon.setEditMode(!docProfileCon.isEditMode);
   }
 
   void _saveProfile() async {
-    final docProfileCon = Provider.of<DoctorProfileViewModel>(context, listen: false);
+    final docProfileCon =
+        Provider.of<DoctorProfileViewModel>(context, listen: false);
     final success = await docProfileCon.updateDoctorProfileApi(
       context,
       name: _nameController.text,
@@ -65,8 +64,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
       specializationId: _speController.text,
       practiceStartYear: _expController.text,
     );
-  
-    if (success) {  
+
+    if (success) {
       setState(() {
         _nameController.clear();
         _genderController.clear();
@@ -91,17 +90,17 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
             backgroundColor: AppColor.white,
             body: Padding(
               padding: EdgeInsets.only(
-                left: Sizes.screenWidth * 0.05,
-                right: Sizes.screenWidth * 0.05,
+                left: Sizes.screenWidth * 0.04,
+                right: Sizes.screenWidth * 0.04,
               ),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Sizes.spaceHeight20,
                     appBarConstant(
+                      top: .03,
+                      left: 0,
                       context,
-                      paddingAllowed: false,
                       isBottomAllowed: true,
                       child: Center(
                         child: TextConst(
@@ -117,9 +116,9 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       size: Sizes.fontSizeFivePFive,
                       fontWeight: FontWeight.w500,
                     ),
-                    Sizes.spaceHeight20,
+                    Sizes.spaceHeight15,
                     docProfileSec(),
-                    Sizes.spaceHeight30,
+                    Sizes.spaceHeight20,
                     CustomTextField(
                       contentPadding:
                           const EdgeInsets.only(top: 18, bottom: 20, left: 10),
@@ -278,14 +277,14 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       ),
                     ),
                     Sizes.spaceHeight10,
-                    // Experience field - dropdown in edit mode, view in non-edit mode
                     docProfileCon.isEditMode
                         ? Center(
                             child: Container(
                               height: 55,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                                color: AppColor.textfieldGrayColor
+                                    .withOpacity(0.4),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               padding: EdgeInsets.symmetric(
@@ -300,8 +299,8 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                     ? _expController.text
                                     : null,
                                 hint: TextConst(
-                                  docProfileCon.doctorProfileModel?.data?.doctors?[0]
-                                          .experience ??
+                                  docProfileCon.doctorProfileModel?.data
+                                          ?.doctors?[0].experience ??
                                       "Practice Start Year",
                                   size: Sizes.fontSizeFive,
                                   color: AppColor.textfieldTextColor,
@@ -335,11 +334,14 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 18, horizontal: 10),
                             decoration: BoxDecoration(
-                              color: AppColor.textfieldGrayColor.withOpacity(0.4),
+                              color:
+                                  AppColor.textfieldGrayColor.withOpacity(0.4),
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: TextConst(
-                              docProfileCon.doctorProfileModel?.data?.doctors?[0].experience ?? "Not specified",
+                              docProfileCon.doctorProfileModel?.data
+                                      ?.doctors?[0].experience ??
+                                  "Not specified",
                               size: Sizes.fontSizeFive,
                               fontWeight: FontWeight.w400,
                               color: AppColor.textfieldTextColor,
@@ -351,9 +353,10 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       size: Sizes.fontSizeFive * 1.1,
                       fontWeight: FontWeight.w500,
                     ),
-                    // Sizes.spaceHeight10,
+                    Sizes.spaceHeight15,
                     ListView.builder(
                       shrinkWrap: true,
+                      padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: docProfileCon
                               .doctorProfileModel?.data?.clinics?.length ??
@@ -361,26 +364,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                       itemBuilder: (context, index) {
                         final clinic = docProfileCon
                             .doctorProfileModel!.data!.clinics![index];
-
-                        Widget clinicInfoTile(dynamic label) {
-                          return Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 18, horizontal: 10),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color:
-                                  AppColor.textfieldGrayColor.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: TextConst(
-                              label.toString(),
-                              size: Sizes.fontSizeFourPFive,
-                              fontWeight: FontWeight.normal,
-                              color: AppColor.textGrayColor,
-                            ),
-                          );
-                        }
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -405,18 +388,18 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                       addClinicVM.setEditMode(true,
                                           clinicIndex: index);
                                       addClinicVM.setEditClinicData(
-                                        name: clinic.name,
-                                        address: clinic.address,
-                                        phone: clinic.phoneNumber,
-                                        landmark: clinic.landmark,
-                                        city: clinic.city,
-                                        clinicId: clinic.clinicId.toString(),
-                                        latitude: double.tryParse(
-                                            clinic.latitude ?? '0'),
-                                        longitude: double.tryParse(
-                                            clinic.longitude ?? '0'),
-                                            editCFees: clinic.consultationFee.toString()
-                                      );
+                                          name: clinic.name,
+                                          address: clinic.address,
+                                          phone: clinic.phoneNumber,
+                                          landmark: clinic.landmark,
+                                          city: clinic.city,
+                                          clinicId: clinic.clinicId.toString(),
+                                          latitude: double.tryParse(
+                                              clinic.latitude ?? '0'),
+                                          longitude: double.tryParse(
+                                              clinic.longitude ?? '0'),
+                                          editCFees: clinic.consultationFee
+                                              .toString());
                                       showModalBottomSheet(
                                         elevation: 10,
                                         isScrollControlled: true,
@@ -454,7 +437,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                 longitude: double.parse(clinic.longitude!),
                               ),
                             ),
-                            Sizes.spaceHeight35,
+                            Sizes.spaceHeight25,
                             clinicInfoTile(clinic.name ?? "Clinic name"),
                             clinicInfoTile(clinic.address ?? "Address"),
                             // clinicInfoTile(clinic. ?? "Address"),
@@ -464,7 +447,7 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                                 clinic.landmark ?? "Landmark (optional)"),
                             clinicInfoTile(
                                 clinic.consultationFee ?? "Consultation Fees"),
-                            Sizes.spaceHeight35,
+                            Sizes.spaceHeight20,
                           ],
                         );
                       },
@@ -526,13 +509,25 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
               color: Colors.transparent,
               child: const DocComBottomNevBar(),
             ),
-            // bottomNavigationBar: Container(
-            //   height: 70,
-            //   width: Sizes.screenWidth,
-            //   color: Colors.transparent,
-            //   child: const DocComBottomNevBar(),
-            // ),
           );
+  }
+
+  Widget clinicInfoTile(dynamic label) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 10),
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColor.textfieldGrayColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextConst(
+        label.toString(),
+        size: Sizes.fontSizeFourPFive,
+        fontWeight: FontWeight.normal,
+        color: AppColor.textGrayColor,
+      ),
+    );
   }
 
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
@@ -560,12 +555,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                 }
               }
             },
-            // onTap: () async {
-            //   Navigator.pop(context);
-            //  final img= await _imagePickerHelper.pickImageFromCamera(context, isProfileSelection: true);
-            //  print("xfile: ${img!.path}");
-            //  Provider.of<DoctorAuthViewModel>(context).profileImage;
-            // },
           ),
           ListTile(
             leading: const Icon(Icons.photo_library),
@@ -589,21 +578,6 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
     );
   }
 
-  Future<void> _selectLocation() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SelectLocationScreen(),
-      ),
-    );
-
-    final viewModel =
-        Provider.of<AddClinicDoctorViewModel>(context, listen: false);
-    if (viewModel.selectedAddress != null) {
-      // addressController.text = viewModel.selectedAddress!;
-    }
-  }
-
   Widget docProfileSec() {
     final docProfileCon = Provider.of<DoctorProfileViewModel>(context);
     return GestureDetector(
@@ -613,14 +587,16 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
         },
         child: Container(
           width: Sizes.screenWidth,
+          padding: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               color: AppColor.textfieldGrayColor.withOpacity(0.5)),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: Sizes.screenHeight * 0.18,
-                width: Sizes.screenWidth / 3.2,
+                height: Sizes.screenHeight * 0.16,
+                width: Sizes.screenWidth / 3.5,
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(15),
@@ -633,9 +609,10 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                             ? NetworkImage(docProfileCon.doctorProfileModel!
                                 .data!.doctors![0].signedImageUrl!)
                             : const AssetImage(Assets.logoDoctor),
-                        fit: BoxFit.fitHeight)),
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter)),
               ),
-              Sizes.spaceWidth15,
+              Sizes.spaceWidth10,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -643,22 +620,26 @@ class _UserDocProfilePageState extends State<UserDocProfilePage> {
                   TextConst(
                     docProfileCon
                             .doctorProfileModel!.data!.doctors![0].experience ??
-                        "5 years Experience",
+                        "-- years Experience",
                     size: Sizes.fontSizeFour,
                     fontWeight: FontWeight.w400,
                   ),
                   Sizes.spaceHeight5,
                   TextConst(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     docProfileCon
                             .doctorProfileModel!.data!.doctors![0].doctorName ??
                         "",
-                    size: Sizes.fontSizeSix * 1.06,
+                    size: Sizes.fontSizeSix * 1.1,
                     fontWeight: FontWeight.w500,
                   ),
                   Sizes.spaceHeight3,
                   TextConst(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     "${docProfileCon.doctorProfileModel!.data!.doctors![0].qualification ?? "MBBS, MD"} (${docProfileCon.doctorProfileModel!.data!.doctors![0].specializationName ?? "Cardiology"})",
-                    size: Sizes.fontSizeFive * 1.08,
+                    size: Sizes.fontSizeFourPFive,
                     fontWeight: FontWeight.w400,
                   ),
                 ],

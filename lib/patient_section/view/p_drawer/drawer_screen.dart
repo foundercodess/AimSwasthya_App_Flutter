@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart'
     show CupertinoAlertDialog, CupertinoDialogAction, showCupertinoDialog;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 
 import '../../p_view_model/patient_home_view_model.dart';
 
@@ -196,7 +196,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       ],
                     ),
 
-                    Sizes.spaceHeight10,
+                    Sizes.spaceHeight20,
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, RoutesName.aboutUsScreen);
@@ -208,7 +208,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         color: AppColor.white,
                       ),
                     ),
-                    Sizes.spaceHeight10,
+                    Sizes.spaceHeight20,
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
@@ -221,7 +221,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         color: AppColor.white,
                       ),
                     ),
-                    Sizes.spaceHeight10,
+                    Sizes.spaceHeight20,
                     GestureDetector(
                       onTap: () {
                         showCupertinoDialog(

@@ -24,7 +24,6 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
   Widget build(BuildContext context) {
     final bottomCon = Provider.of<BottomNavProvider>(context);
     final docHomeCon = Provider.of<DoctorHomeViewModel>(context);
-    final deleteAco = Provider.of<DeleteAccountViewModel>(context);
 
     return Drawer(
       backgroundColor: Colors.transparent,
@@ -48,7 +47,7 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
             if (docHomeCon.doctorHomeModel != null &&
                 docHomeCon.doctorHomeModel!.data != null)
               ListTile(
-                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036),
+                contentPadding: EdgeInsets.only(left: Sizes.screenWidth * .036, right: 10),
                 leading: const Image(
                   image: AssetImage(Assets.iconsProfileIcon),
                   // width: Sizes.screenWidth * 0.07,
@@ -56,6 +55,8 @@ class _DrawerScreenState extends State<DoctorDrawerScreen> {
                   width: 22,
                 ),
                 title: TextConst(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   docHomeCon.doctorHomeModel!.data!.doctors![0].doctorName ??
                       "",
                   // size: 13,

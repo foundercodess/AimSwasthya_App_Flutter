@@ -22,7 +22,7 @@ import 'package:aim_swasthya/doctor_section/view/patients/show_all_patient.dart'
 import 'package:aim_swasthya/doctor_section/view/payout/payout_screen.dart';
 import 'package:aim_swasthya/doctor_section/view/profile/doctor_profile_screen.dart';
 import 'package:aim_swasthya/doctor_section/view/patients/patient_profile_screen.dart';
-import 'package:aim_swasthya/doctor_section/view/schedule/schedule_hours_screen.dart';
+import 'package:aim_swasthya/doctor_section/view/transaction/revenue_screen.dart';
 import 'package:aim_swasthya/doctor_section/view/schedule/schedule_screen.dart';
 import 'package:aim_swasthya/doctor_section/view/test_project.dart';
 import 'package:aim_swasthya/doctor_section/view/transaction/view_all_transaction_screen.dart';
@@ -70,9 +70,9 @@ class Routers {
         return (context) => const IntroScreen();
       // doctor
       case RoutesName.userRegisterScreen:
-        return (context) =>  UserRegisterScreen();
+        return (context) =>  const UserRegisterScreen();
       case RoutesName.userHomeScreen:
-        return (context) =>  UserHomeScreen(
+        return (context) =>  const UserHomeScreen(
               scaffoldKey: null, invokeAllAPi: true,
             );
       case RoutesName.allSymptomsScreen:
@@ -90,13 +90,13 @@ class Routers {
       case RoutesName.searchDoctorScreen:
         return (context) => const SearchDoctorScreen();
       case RoutesName.doctorProfileScreen:
-        return (context) =>  DoctorProfileScreen();
+        return (context) =>  const DoctorProfileScreen();
       case RoutesName.bookAppointmentScreen:
-        return (context) =>  BookAppointmentScreen();
+        return (context) =>  const BookAppointmentScreen();
       case RoutesName.successSplashScreen:
-        return (context) =>  SuccessSplashScreen();
+        return (context) =>  const SuccessSplashScreen();
       case RoutesName.viewAppointmentsScreen:
-        return (context) =>  ViewAppointmentsScreen();
+        return (context) =>  const ViewAppointmentsScreen();
       case RoutesName.medicalReportsScreen:
         return (context) => const MedicalReportsScreen();
       case RoutesName.myDoctorsScreen:
@@ -106,15 +106,15 @@ class Routers {
       case RoutesName.otpScreen:
         return (context) => const OtpScreen();
       case RoutesName.signUpScreen:
-        return (context) =>  SignUpScreen();
+        return (context) =>  const SignUpScreen();
       case RoutesName.userDeleteAccountScreen:
-        return (context) =>  UserDeleteAccountScreen();
+        return (context) =>  const UserDeleteAccountScreen();
       case RoutesName.wellnesslibraryScreen:
-        return (context) =>  WellnesslibraryScreen();
+        return (context) =>  const WellnesslibraryScreen();
       case RoutesName.userNotificationScreen:
-        return (context) =>  UserNotificationScreen();
+        return (context) =>  const UserNotificationScreen();
         case RoutesName.yourProfileScreen:
-        return (context) =>  YourProfileScreen();
+        return (context) =>  const YourProfileScreen();
 
 
 
@@ -136,8 +136,6 @@ class Routers {
         return (context) => const ViewAllTransactionScreen();
       case RoutesName.payoutScreen:
         return (context) => const PayoutScreen();
-      // case RoutesName.secoundBottomNevBar:
-      // return (context) => const SecoundBottomNevBar();
       case RoutesName.myAppointmentsScreen:
         return (context) => const MyAppointmentsScreen();
       case RoutesName.uploadedOn:
@@ -146,8 +144,6 @@ class Routers {
         return (context) => const AboutUsScreen();
       case RoutesName.clinicLocationScreen:
         return (context) => const ClinicLocationScreen();
-      case RoutesName.fullScreenMapPage:
-        return (context) => FullScreenMapPage();
       case RoutesName.docMedicalReportsScreen:
         return (context) => const DocMedicalReportsScreen();
       case RoutesName.notificationScreen:

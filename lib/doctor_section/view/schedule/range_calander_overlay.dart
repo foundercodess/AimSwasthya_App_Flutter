@@ -54,21 +54,26 @@ class RangeCalenderOverlay extends StatelessWidget {
             children: [
               if (slotScheduleCon.selectedRange != null)
                 Padding(
-                  padding:const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   child: TextConst(
-                    "Selected Date- ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.start.toLocal())} - ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.end.toLocal())}",
+                    "Selected Date: ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.start.toLocal())} - ${DateFormat('d MMMM').format(slotScheduleCon.selectedRange!.end.toLocal())}",
                     size: Sizes.fontSizeFour,
                     fontWeight: FontWeight.w400,
                     color: AppColor.lightBlack,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Padding(
                     padding: const EdgeInsets.only(right: 15),
-                    child: TextConst("Done", color: AppColor.blue,)),
+                    child: TextConst(
+                      "Done",
+                      color: AppColor.blue,
+                    )),
               ),
             ],
           )

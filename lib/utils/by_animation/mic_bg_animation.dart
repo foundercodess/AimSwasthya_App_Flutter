@@ -164,3 +164,145 @@ class _SecMicAnimation extends State<SecMicAnimation>
     );
   }
 }
+
+class MicWaveSideAnimation extends StatefulWidget {
+  final bool isListening;
+  final double size;
+  const MicWaveSideAnimation({Key? key, required this.isListening, this.size = 180}) : super(key: key);
+
+  @override
+  State<MicWaveSideAnimation> createState() => _MicWaveSideAnimationState();
+}
+
+class _MicWaveSideAnimationState extends State<MicWaveSideAnimation> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _circleAnim;
+  late Animation<Color?> _micColorAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    if (widget.isListening) {
+      _controller.repeat(reverse: true);
+    }
+    _circleAnim = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _micColorAnim = ColorTween(
+      begin: Colors.white,
+      end: Colors.purple,
+    ).animate(_controller);
+  }
+
+  @override
+  void didUpdateWidget(MicWaveSideAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isListening && !_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    } else if (!widget.isListening && _controller.isAnimating) {
+      _controller.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double borderWidth = widget.size * 0.06;
+    final double circleSize = widget.size * 1.7;
+    final double horizontalOffset = widget.size * 0.65;
+    final double verticalOffset = (widget.size - borderWidth * 2) / 2;
+
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Purple border circle
+          Container(
+            width: widget.size,
+            height: widget.size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.purple, width: borderWidth),
+            ),
+          ),
+          // Clip the animation to the inside of the border
+          ClipOval(
+            child: SizedBox(
+              width: widget.size - borderWidth * 2,
+              height: widget.size - borderWidth * 2,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Left circle
+                  AnimatedBuilder(
+                    animation: _circleAnim,
+                    builder: (context, child) {
+                      final dx = -horizontalOffset * (1 - _circleAnim.value);
+                      final dy = verticalOffset * (1 - _circleAnim.value) - verticalOffset * _circleAnim.value;
+                      return Opacity(
+                        opacity: _circleAnim.value,
+                        child: Transform.translate(
+                          offset: Offset(dx, dy),
+                          child: Container(
+                            width: circleSize,
+                            height: circleSize,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[700]!.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  // Right circle
+                  AnimatedBuilder(
+                    animation: _circleAnim,
+                    builder: (context, child) {
+                      final dx = horizontalOffset * (1 - _circleAnim.value);
+                      final dy = verticalOffset * (1 - _circleAnim.value) - verticalOffset * _circleAnim.value;
+                      return Opacity(
+                        opacity: _circleAnim.value,
+                        child: Transform.translate(
+                          offset: Offset(dx, dy),
+                          child: Container(
+                            width: circleSize,
+                            height: circleSize,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[300]!.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Mic icon in the center with animated color
+          AnimatedBuilder(
+            animation: _micColorAnim,
+            builder: (context, child) {
+              return Icon(
+                Icons.mic,
+                size: widget.size * 0.36,
+                color: _micColorAnim.value,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -3,33 +3,44 @@ import 'package:aim_swasthya/res/common_material.dart';
 import 'package:flutter/material.dart';
 
 Widget appBarConstant(BuildContext context,
-    {Widget? child, void Function()? onTap,
+    {Widget? child,
+    void Function()? onTap,
     bool isBottomAllowed = false,
+    bool topAllowed = true,
     String? label,
-    bool paddingAllowed = true}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SizedBox(height: 16),
-      GestureDetector(
-        onTap: onTap??() {
-          Navigator.pop(context);
-        },
-        child: Padding(
-          padding: paddingAllowed
-              ? EdgeInsets.only(
-                  left: Sizes.screenWidth * 0.047,
-                  top: Sizes.screenHeight * 0.03)
-              : const EdgeInsets.all(0),
-          child: const Image(image: AssetImage('assets/icons/back.png'),width: 20,),
+    bool paddingAllowed = true,
+    double? top,
+    double? left}) {
+  return Padding(
+    padding: EdgeInsetsGeometry.only(top: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        GestureDetector(
+          onTap: onTap ??
+              () {
+                Navigator.pop(context);
+              },
+          child: Padding(
+            padding: paddingAllowed
+                ? EdgeInsets.only(
+                    left: Sizes.screenWidth * (left ?? 0.047),
+                    top: Sizes.screenHeight * (top ?? 0.03))
+                : const EdgeInsets.all(0),
+            child: const Image(
+              image: AssetImage('assets/icons/back.png'),
+              width: 20,
+            ),
+          ),
         ),
-      ),
-      if (isBottomAllowed)
-        Padding(
-          padding: const EdgeInsets.only(top: 0),
-          child: child ?? TextConst(label ?? ""),
-        ),
-    ],
+        if (isBottomAllowed)
+          Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: child ?? TextConst(label ?? ""),
+          ),
+      ],
+    ),
   );
 }
 
@@ -88,11 +99,17 @@ class AppbarConst extends StatelessWidget {
   final Color? titleColor;
   final Color? iconColor;
   final double? size;
- final FontWeight? fontWeight;
+  final FontWeight? fontWeight;
   final void Function()? onPressed;
   const AppbarConst({
     super.key,
-    required this.title, this.onPressed, this.color, this.titleColor, this.iconColor, this.size,this.fontWeight,
+    required this.title,
+    this.onPressed,
+    this.color,
+    this.titleColor,
+    this.iconColor,
+    this.size,
+    this.fontWeight,
   });
 
   @override
@@ -101,27 +118,31 @@ class AppbarConst extends StatelessWidget {
       padding: const EdgeInsets.only(top: 18),
       height: Sizes.screenHeight * 0.12,
       width: Sizes.screenWidth,
-      decoration: BoxDecoration(color:color?? AppColor.white),
+      decoration: BoxDecoration(color: color ?? AppColor.white),
       child: Padding(
         padding: const EdgeInsets.only(top: 15, left: 0),
         child: Row(
           children: [
             IconButton(
-              onPressed:onPressed?? () {
-                Navigator.of(context).pop();
-              },
-              icon: Image(image: AssetImage('assets/icons/back.png'),width: 20,) 
-              // Icon(
-              //   Icons.arrow_back,
-              //   color:iconColor?? AppColor.black,
-              //   size: 25,
-              // ),
-            ),
+                onPressed: onPressed ??
+                    () {
+                      Navigator.of(context).pop();
+                    },
+                icon: const Image(
+                  image: AssetImage('assets/icons/back.png'),
+                  width: 20,
+                )
+                // Icon(
+                //   Icons.arrow_back,
+                //   color:iconColor?? AppColor.black,
+                //   size: 25,
+                // ),
+                ),
             TextConst(
               title,
               size: Sizes.fontSizeFive,
-              fontWeight: fontWeight?? FontWeight.w400,
-              color:titleColor?? AppColor.blue,
+              fontWeight: fontWeight ?? FontWeight.w400,
+              color: titleColor ?? AppColor.blue,
             ),
           ],
         ),

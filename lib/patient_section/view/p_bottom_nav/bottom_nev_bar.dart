@@ -80,7 +80,6 @@ class _BottomNevBarState extends State<BottomNevBar> {
       ),
       const MedicalReportsScreen(),
     ];
-    final regCon = Provider.of<UserRoleViewModel>(context);
     final bottomCon = Provider.of<BottomNavProvider>(context);
     return WillPopScope(
       onWillPop: () async {

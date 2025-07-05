@@ -6,7 +6,7 @@ import 'package:aim_swasthya/utils/utils.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/doctor_avl_appointment_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/services/payment_con.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +41,49 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             doctorSection(),
             Sizes.spaceHeight20,
             paymentSection(),
+            Sizes.spaceHeight5,
+            Container(
+              margin: const EdgeInsets.all(10),
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: TextField(
+                      // controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'Have a coupon code? Type here',
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    // onTap: onApply,
+                    child: const Text(
+                      'Apply',
+                      style: TextStyle(
+                        color: AppColor.blue,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Sizes.spaceHeight5,
             paymentHistory(),
             SizedBox(height: Sizes.screenHeight * 0.2),
@@ -83,8 +126,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   if (_selectedPaymentIndex != null) {
                     final phone = userProfileVm.phoneNumber ?? "";
                     final email = userProfileVm.email ?? "";
-                    final amount =
-                        getPayableAmount().toString();
+                    final amount = getPayableAmount().toString();
 
                     if (_selectedPaymentIndex == 0) {
                       paymentCon.payWithRazorpay(context, amount, phone, email);
@@ -246,12 +288,12 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   },
                   child: Container(
                     width: Sizes.screenWidth * 0.47,
-                    height: Sizes.screenWidth*0.18,
+                    height: Sizes.screenWidth * 0.18,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: const DecorationImage(image: AssetImage(Assets.allImagesViewMap), fit: BoxFit.fitHeight)
-                    ),
-
+                        borderRadius: BorderRadius.circular(8),
+                        image: const DecorationImage(
+                            image: AssetImage(Assets.allImagesViewMap),
+                            fit: BoxFit.fitHeight)),
                   ),
                 )
               ],
@@ -263,9 +305,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   }
 
   Widget paymentSection() {
-    final paymentCon = Provider.of<PaymentViewModel>(context);
-    final docAppointmentCon =
-        Provider.of<DoctorAvlAppointmentViewModel>(context);
     List payments = [
       {'image': Assets.iconsRazorpayIcon, 'name': 'Razor pay'},
       {'image': Assets.iconsPhonepeIcon, 'name': 'PhonePe'},
@@ -322,51 +361,51 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     );
   }
 
-  Widget paymentScreen() {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: Sizes.screenWidth * 0.03,
-              vertical: Sizes.screenHeight * 0.004),
-          height: Sizes.screenHeight * 0.3,
-          width: Sizes.screenWidth,
-          child: const Image(
-            image: AssetImage(
-              Assets.imagesPaymentHis,
-            ),
-            fit: BoxFit.contain,
-          ),
-        ),
-        Positioned(
-            top: 17,
-            child: Container(
-              height: Sizes.screenHeight * 0.035,
-              width: Sizes.screenWidth * 0.82,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                gradient: const LinearGradient(
-                  colors: [AppColor.lightPurpleColor, AppColor.purple],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              // alignment: Alignment.center,
-              child: Center(
-                child: TextConst(
-                  // textAlign: TextAlign.center,
-                  AppLocalizations.of(context)!.get_digiSwasthya_card,
-                  size: Sizes.screenWidth / 46,
-                  // size:  Sizes.screenWidth ,
-                  fontWeight: FontWeight.w600,
-                  color: AppColor.white,
-                ),
-              ),
-            ))
-      ],
-    );
-  }
+  // Widget paymentScreen() {
+  //   return Stack(
+  //     alignment: Alignment.topCenter,
+  //     children: [
+  //       Container(
+  //         margin: EdgeInsets.symmetric(
+  //             horizontal: Sizes.screenWidth * 0.03,
+  //             vertical: Sizes.screenHeight * 0.004),
+  //         height: Sizes.screenHeight * 0.3,
+  //         width: Sizes.screenWidth,
+  //         child: const Image(
+  //           image: AssetImage(
+  //             Assets.imagesPaymentHis,
+  //           ),
+  //           fit: BoxFit.contain,
+  //         ),
+  //       ),
+  //       Positioned(
+  //           top: 17,
+  //           child: Container(
+  //             height: Sizes.screenHeight * 0.035,
+  //             width: Sizes.screenWidth * 0.82,
+  //             decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.circular(8),
+  //               gradient: const LinearGradient(
+  //                 colors: [AppColor.lightPurpleColor, AppColor.purple],
+  //                 begin: Alignment.topLeft,
+  //                 end: Alignment.bottomRight,
+  //               ),
+  //             ),
+  //             // alignment: Alignment.center,
+  //             child: Center(
+  //               child: TextConst(
+  //                 // textAlign: TextAlign.center,
+  //                 AppLocalizations.of(context)!.get_digiSwasthya_card,
+  //                 size: Sizes.screenWidth / 46,
+  //                 // size:  Sizes.screenWidth ,
+  //                 fontWeight: FontWeight.w600,
+  //                 color: AppColor.white,
+  //               ),
+  //             ),
+  //           ))
+  //     ],
+  //   );
+  // }
 
   Widget paymentHistory() {
     final docAppointmentCon =
@@ -396,7 +435,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             children: [
               textConstent(),
               TextConst(
-                "${getFee().toStringAsFixed(2)}",
+                getFee().toStringAsFixed(2),
                 size: Sizes.fontSizeTen,
                 fontWeight: FontWeight.w600,
                 color: AppColor.black,
@@ -426,13 +465,21 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   }
 
   double getFee() {
-    final docAppointmentCon = Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
-    return double.tryParse(docAppointmentCon.doctorAvlAppointmentModel!.data!.clinics![0].fee.toString()) ?? 0.0;
+    final docAppointmentCon =
+        Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
+    return double.tryParse(docAppointmentCon
+            .doctorAvlAppointmentModel!.data!.clinics![0].fee
+            .toString()) ??
+        0.0;
   }
 
   double getDiscountPercent() {
-    final docAppointmentCon = Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
-    return double.tryParse(docAppointmentCon.doctorAvlAppointmentModel!.data!.discountPercent![0].discount.toString()) ?? 0.0;
+    final docAppointmentCon =
+        Provider.of<DoctorAvlAppointmentViewModel>(context, listen: false);
+    return double.tryParse(docAppointmentCon
+            .doctorAvlAppointmentModel!.data!.discountPercent![0].discount
+            .toString()) ??
+        0.0;
   }
 
   double getDiscountAmount() {
@@ -522,7 +569,8 @@ class PaymentOptionWidget extends StatelessWidget {
           Checkbox(
               value: isSelected,
               onChanged: (_) => onSelect(),
-              activeColor: AppColor.blue,
+              activeColor: AppColor.white,
+              checkColor: AppColor.blue,
               hoverColor: Colors.red),
         ],
       ),

@@ -1,4 +1,4 @@
-// doctor_section/view/schedule/schedule_hours_screen.dart
+// doctor_section/view/schedule/revenue_screen.dart
 import 'package:aim_swasthya/res/appbar_const.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:aim_swasthya/res/user_button_const.dart';
@@ -19,16 +19,6 @@ class ScheduleHoursScreen extends StatefulWidget {
 
 class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
   @override
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //   final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
-  //   _selectedMonth = revenueDocCon.revenueDoctorModel?.earningMonth?.isNotEmpty == true
-  //       ? revenueDocCon.revenueDoctorModel!.earningMonth!.first.monthYear ?? ""
-  //       : "";
-  // });
-  // }
   Widget build(BuildContext context) {
     final revenueDocCon = Provider.of<RevenueDoctorViewModel>(context);
     return Scaffold(
@@ -49,6 +39,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
                   SizedBox(
                     height: Sizes.screenHeight * 0.05,
                   ),
+                  scheduleGraph(),
                   scheduleGraph(),
                   SizedBox(
                     height: Sizes.screenHeight * 0.03,
@@ -225,7 +216,7 @@ class _ScheduleHoursScreenState extends State<ScheduleHoursScreen> {
       return const Center(
           child: NoDataMessages(
         message: "No Revenue analytics found",
-        title: "You haven't recived any revenue analytics yet",
+        title: "You haven't received any revenue analytics yet",
       ));
     }
 

@@ -1,7 +1,7 @@
 // view/doctor/schedule/schedule_hour.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 
 import '../../../res/color_const.dart';
 import '../../../res/size_const.dart';
@@ -57,7 +57,7 @@ class ScheduleHour extends StatelessWidget {
                             .toggleSelectedDateAvailability(slotIndex);
                       },
                     ),
-                    Sizes.spaceWidth15,
+                    Sizes.spaceWidth10,
                     SizedBox(
                       width: Sizes.screenWidth * 0.12,
                       child: TextConst(
@@ -68,7 +68,6 @@ class ScheduleHour extends StatelessWidget {
                       ),
                     ),
                     Sizes.spaceWidth5,
-                    Sizes.spaceWidth3,
                     Column(
                       children: List.generate(slotData['timings'].length,
                           (timeIndex) {
@@ -76,7 +75,7 @@ class ScheduleHour extends StatelessWidget {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           alignment: Alignment.centerRight,
-                          width: Sizes.screenWidth * 0.61,
+                          width: Sizes.screenWidth * 0.62,
                           child: Row(
                             children: [
                               GestureDetector(
@@ -85,8 +84,9 @@ class ScheduleHour extends StatelessWidget {
                                       timeIndex, 'start_time');
                                 },
                                 child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 3),
                                   height: Sizes.screenHeight * 0.03,
-                                  width: Sizes.screenWidth * 0.24,
+                                  width: Sizes.screenWidth * 0.23,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(7),
                                       color: AppColor.textfieldGrayColor
@@ -115,8 +115,9 @@ class ScheduleHour extends StatelessWidget {
                                       timeIndex, 'end_time');
                                 },
                                 child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 3),
                                   height: Sizes.screenHeight * 0.03,
-                                  width: Sizes.screenWidth * 0.24,
+                                  width: Sizes.screenWidth * 0.23,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(7),
                                       color: AppColor.textfieldGrayColor
@@ -132,7 +133,8 @@ class ScheduleHour extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Sizes.spaceWidth10,
+                              // Sizes.spaceWidth5,
+                              Spacer(),
                               if (timeIndex == 0 && slotData['timings'].length < 3)
                                 GestureDetector(
                                   onTap: () {

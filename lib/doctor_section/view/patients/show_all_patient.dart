@@ -46,6 +46,7 @@ class _ShowAllPatientState extends State<ShowAllPatient> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   appBarConstant(
+                    topAllowed: false,
                     context,
                     onTap: () {
                       if (bottomCon.currentIndex == 1) {

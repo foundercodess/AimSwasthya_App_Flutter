@@ -5,7 +5,7 @@ import 'package:aim_swasthya/patient_section/p_view_model/auth_view_model.dart';
 import 'package:aim_swasthya/patient_section/p_view_model/user_role_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 
 class AuthHomeScreen extends StatefulWidget {
   const AuthHomeScreen({super.key});

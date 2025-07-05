@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import '../../../../local_db/download_image.dart';
 import '../../../../model/user/patient_medical_records_model.dart';
 import '../../../p_view_model/bottom_nav_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
 
 import '../../symptoms/dowenloade_image.dart';
 

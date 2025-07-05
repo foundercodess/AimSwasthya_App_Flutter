@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:aim_swasthya/res/common_material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:aim_swasthya/l10n/app_localizations.dart';
+
 
 class UserRegisterScreen extends StatefulWidget {
   const UserRegisterScreen({super.key});
@@ -25,7 +26,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
   final TextEditingController _weightController = TextEditingController();
   String selectedGender = '';
   dynamic dateTime;
-  DateTime? _selectedDob;
+  // DateTime? _selectedDob;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
